@@ -80,10 +80,11 @@ parallel_9gpu/
 git clone https://github.com/Tankthesigma/nod2-screening-data.git
 cd nod2-screening-data/PHASE_6
 
-# 3. Install OpenMM
+# 3. Install OpenMM + OpenFF (CRITICAL!)
 conda create -n nod2md python=3.10 -y
 conda activate nod2md
-conda install -c conda-forge openmm cudatoolkit=11.8 -y
+conda install -c conda-forge openmm openmmforcefields openff-toolkit cudatoolkit=11.8 -y
+pip install mdtraj  # For analysis
 
 # 4. Launch all 9 GPUs in parallel
 cd gpu_scripts
@@ -121,10 +122,11 @@ watch -n 5 nvidia-smi
 git clone https://github.com/Tankthesigma/nod2-screening-data.git
 cd nod2-screening-data/PHASE_6
 
-# 3. Install OpenMM
+# 3. Install OpenMM + OpenFF (CRITICAL!)
 conda create -n nod2md python=3.10 -y
 conda activate nod2md
-conda install -c conda-forge openmm cudatoolkit=11.8 -y
+conda install -c conda-forge openmm openmmforcefields openff-toolkit cudatoolkit=11.8 -y
+pip install mdtraj  # For analysis
 
 # 4. Run sequentially
 chmod +x gpu_scripts/master_md_pipeline.sh
@@ -255,8 +257,15 @@ kill <PID>  # Kill other processes
 
 ### "Module not found"
 ```bash
-pip install mdtraj openmm numpy pandas matplotlib
+# Install all required packages
+conda install -c conda-forge openmm openmmforcefields openff-toolkit mdtraj -y
+pip install numpy pandas matplotlib
 ```
+
+### "No template found for residue LIG/FEB/URS..."
+This means ligand parameterization failed. The scripts now use OpenFF to handle this automatically, but you need:
+1. The SDF file for each ligand in `structures/`
+2. `openmmforcefields` and `openff-toolkit` installed
 
 ### Simulation crashes
 - Check: `cat logs/*.log`
