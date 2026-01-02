@@ -1,0 +1,51 @@
+Rank,Compound,Type,Class,Score,Novel Finding
+1,ZURANOLONE,FDA Drug,Neurosteroid,0.8586955509549702,NOVEL: GABA modulator - neuroimmune axis
+2,Cabastine,Natural Product,Natural Product,0.8376411,To be investigated
+3,"5-(3,14-dihydroxy-10,13-dimethyl-1,2,3,4,5,6,7,8,9,11,12,15,16,17-tetradecahydrocyclopenta[a]phenanthren-17-yl)pyran-2-one",Natural Product,Cardiac Glycoside,0.8374857,Traditional: Heart medicine
+4,DESOXIMETASONE,FDA Drug,Corticosteroid,0.8359011609431783,Steroid class
+5,MEDRYSONE,FDA Drug,Corticosteroid,0.834971399595859,Steroid class
+6,CHEMBL355996,Natural Product,Natural Product,0.8306968,To be investigated
+7,NORGESTREL,FDA Drug,Other,0.8294932098021053,To be classified
+8,LEVONORGESTREL,FDA Drug,Other,0.8270904406089076,To be classified
+9,545-51-7,Natural Product,Natural Product,0.8267062,To be investigated
+10,DTXSID60860647,Natural Product,Natural Product,0.825216,To be investigated
+11,I.S. 3231,Natural Product,Natural Product,0.8250834,To be investigated
+12,ABIRATERONE,FDA Drug,Other,0.8250212031125358,To be classified
+13,RIMEXOLONE,FDA Drug,Other,0.8247171314537998,To be classified
+14,NANDROLONE PHENPROPIONATE,FDA Drug,Other,0.8218026823095866,To be classified
+15,CID_100290,Natural Product,Natural Product,0.82169676,To be investigated
+16,75660-48-9,Natural Product,Natural Product,0.82095784,To be investigated
+17,DESOXYCORTICOSTERONE,FDA Drug,Corticosteroid,0.8188294867118608,Steroid class
+18,CID_2705,Natural Product,Natural Product,0.81825393,To be investigated
+19,600-59-9,Natural Product,Natural Product,0.81818575,To be investigated
+20,CID_10120,Natural Product,Natural Product,0.8181015,To be investigated
+21,"[8-[2-(4-hydroxy-6-oxooxan-2-yl)ethyl]-7-methyl-1,2,3,7,8,8a-hexahydronaphthalen-1-yl] 2-methylbutanoate",Natural Product,Natural Product,0.8164314,To be investigated
+22,570-52-5,Natural Product,Natural Product,0.81610245,To be investigated
+23,39632-88-7,Natural Product,Natural Product,0.81501055,To be investigated
+24,LOMEFLOXACIN,FDA Drug,Antibiotic,0.8142701072741602,Antimicrobial
+25,79952-43-5,Natural Product,Natural Product,0.81328195,To be investigated
+26,QUINESTROL,FDA Drug,Other,0.812201471050354,To be classified
+27,PRAZIQUANTEL,FDA Drug,Other,0.8118344742769834,To be classified
+28,DYDROGESTERONE,FDA Drug,Other,0.8110557054650421,To be classified
+29,TRIAZOLAM,FDA Drug,Other,0.8105164995480982,To be classified
+30,HALCINONIDE,FDA Drug,Other,0.8104339440797466,To be classified
+31,Linopirdine,Natural Product,Synthetic,0.81034833,Novel: K+ channel modulation
+32,SULINDAC,FDA Drug,Other,0.809827536342145,To be classified
+33,NORETHINDRONE,FDA Drug,Other,0.8094549316112892,To be classified
+34,celecoxib,Natural Product,COX-2 Inhibitor,0.8088706,Novel: Anti-inflammatory
+35,STANOZOLOL,FDA Drug,Other,0.8085583281905072,To be classified
+36,MEDROXYPROGESTERONE ACETATE,FDA Drug,Other,0.8083070438481113,To be classified
+37,TESTOSTERONE PROPIONATE,FDA Drug,Other,0.8079253000438612,To be classified
+38,NANDROLONE,FDA Drug,Other,0.8077694944590582,To be classified
+39,30635-00-8,Natural Product,Natural Product,0.8076402,To be investigated
+40,ESCITALOPRAM,FDA Drug,Other,0.8075111647228559,To be classified
+41,EINECS 252-661-1,Natural Product,Natural Product,0.8075028,To be investigated
+42,DIENOGEST,FDA Drug,Other,0.8064470631031468,To be classified
+43,CHOLECALCIFEROL,FDA Drug,Vitamin D,0.8057815724421572,NOVEL: Immunomodulatory - IBD association
+44,ESTRADIOL VALERATE,FDA Drug,Other,0.8055984517909903,To be classified
+45,BUDESONIDE,FDA Drug,Corticosteroid,0.8046708006510969,Known IBD drug - first-line therapy
+46,PERGOLIDE,FDA Drug,Other,0.804303644971482,To be classified
+47,GANAXOLONE,FDA Drug,Neurosteroid,0.804189184746027,NOVEL: GABA modulator
+48,MESTRANOL,FDA Drug,Other,0.804077712219716,To be classified
+49,DEOXYCHOLIC ACID,FDA Drug,Other,0.8035313171272368,To be classified
+50,LEVOCABASTINE,FDA Drug,Antihistamine,0.8029362456208865,NOVEL: H1 antagonist - gut mast cells

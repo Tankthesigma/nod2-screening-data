@@ -1,0 +1,88 @@
+drug_name,smiles,livertox_category,livertox_notes,faers_cardiac,lookup_url
+MESTRANOL,C#C[C@]1(O)CC[C@H]2[C@@H]3CCc4cc(OC)ccc4[C@H]3CC[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=MESTRANOL
+NANDROLONE,C[C@]12CC[C@H]3[C@@H](CCC4=CC(=O)CC[C@@H]43)[C@@H]1CC[C@@H]2O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=NANDROLONE
+BELZUTIFAN,CS(=O)(=O)c1ccc(Oc2cc(F)cc(C#N)c2)c2c1[C@H](O)[C@H](F)[C@@H]2F,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=BELZUTIFAN
+NORGESTREL,C#C[C@@]1(O)CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@@H]4[C@H]3CC[C@@]21CC,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=NORGESTREL
+PERGOLIDE,CCCN1C[C@H](CSC)C[C@@H]2c3cccc4[nH]cc(c34)C[C@H]21,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=PERGOLIDE
+EQUILIN,C[C@]12CC[C@H]3C(=CCc4cc(O)ccc43)[C@@H]1CCC2=O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=EQUILIN
+PHENPROCOUMON,CC[C@H](c1ccccc1)c1c(O)oc2ccccc2c1=O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=PHENPROCOUMON
+TESTOLACTONE,C[C@]12C=CC(=O)C=C1CC[C@@H]1[C@@H]2CC[C@]2(C)OC(=O)CC[C@@H]12,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=TESTOLACTONE
+ESTRADIOL,C[C@]12CC[C@@H]3c4ccc(O)cc4CC[C@H]3[C@@H]1CC[C@@H]2O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ESTRADIOL
+LEVONORGESTREL,C#C[C@]1(O)CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@@H]4[C@H]3CC[C@@]21CC,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=LEVONORGESTREL
+LOMEFLOXACIN,CCn1cc(C(=O)[O-])c(=O)c2cc(F)c(N3CCN[C@H](C)C3)c(F)c21,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=LOMEFLOXACIN
+CLOBAZAM,CN1C(=O)CC(=O)N(c2ccccc2)c2cc(Cl)ccc21,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=CLOBAZAM
+DYDROGESTERONE,CC(=O)[C@H]1CC[C@H]2[C@@H]3C=CC4=CC(=O)CC[C@@]4(C)[C@@H]3CC[C@]12C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DYDROGESTERONE
+OXANDROLONE,C[C@]12COC(=O)C[C@@H]1CC[C@@H]1[C@@H]2CC[C@@]2(C)[C@H]1CC[C@]2(C)O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=OXANDROLONE
+DESOXIMETASONE,C[C@@H]1C[C@H]2[C@@H]3CCC4=CC(=O)C=C[C@]4(C)[C@@]3(F)[C@@H](O)C[C@]2(C)[C@H]1C(=O)CO,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DESOXIMETASONE
+ETHYLESTRENOL,CC[C@]1(O)CC[C@H]2[C@@H]3CCC4=CCCC[C@@H]4[C@H]3CC[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ETHYLESTRENOL
+ZURANOLONE,C[C@@]1(O)CC[C@H]2[C@H](CC[C@@H]3[C@@H]2CC[C@]2(C)[C@@H](C(=O)Cn4cc(C#N)cn4)CC[C@@H]32)C1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ZURANOLONE
+STANOZOLOL,C[C@]12Cc3cn[nH]c3C[C@@H]1CC[C@@H]1[C@@H]2CC[C@@]2(C)[C@H]1CC[C@]2(C)O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=STANOZOLOL
+DIENOGEST,C[C@]12CCC3=C4CCC(=O)C=C4CC[C@H]3[C@@H]1CC[C@@]2(O)CC#N,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DIENOGEST
+ESTRONE,C[C@]12CC[C@@H]3c4ccc(O)cc4CC[C@H]3[C@@H]1CCC2=O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ESTRONE
+PRASTERONE,C[C@]12CC[C@H](O)CC1=CC[C@@H]1[C@@H]2CC[C@]2(C)C(=O)CC[C@@H]12,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=PRASTERONE
+HALCINONIDE,CC1(C)O[C@@H]2C[C@H]3[C@@H]4CCC5=CC(=O)CC[C@]5(C)[C@@]4(F)[C@@H](O)C[C@]3(C)[C@]2(C(=O)CCl)O1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=HALCINONIDE
+MIDAZOLAM,Cc1ncc2n1-c1ccc(Cl)cc1C(c1ccccc1F)=NC2,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=MIDAZOLAM
+ETHINYL ESTRADIOL,C#C[C@]1(O)CC[C@H]2[C@@H]3CCc4cc(O)ccc4[C@H]3CC[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ETHINYL+ESTRADIOL
+PROPIOMAZINE,CCC(=O)c1ccc2c(c1)N(C[C@H](C)N(C)C)c1ccccc1S2,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=PROPIOMAZINE
+M TAZAROTENE,CC1(C)CCSc2ccc(C#Cc3ccc(C(=O)[O-])cn3)cc21,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=M+TAZAROTENE
+DESOXYCORTICOSTERONE,C[C@]12CC[C@H]3[C@@H](CCC4=CC(=O)CC[C@@]43C)[C@@H]1CC[C@@H]2C(=O)CO,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DESOXYCORTICOSTERONE
+TESTOSTERONE PROPIONATE,CCC(=O)O[C@H]1CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@]4(C)[C@H]3CC[C@]12C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=TESTOSTERONE+PROPIONATE
+METHYLTESTOSTERONE,C[C@]12CCC(=O)C=C1CC[C@@H]1[C@@H]2CC[C@@]2(C)[C@H]1CC[C@]2(C)O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=METHYLTESTOSTERONE
+GANAXOLONE,CC(=O)[C@H]1CC[C@H]2[C@@H]3CC[C@H]4C[C@](C)(O)CC[C@]4(C)[C@H]3CC[C@]12C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=GANAXOLONE
+EXEMESTANE,C=C1C[C@@H]2[C@H](CC[C@]3(C)C(=O)CC[C@@H]23)[C@@]2(C)C=CC(=O)C=C12,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=EXEMESTANE
+BREXANOLONE,CC(=O)[C@H]1CC[C@H]2[C@@H]3CC[C@H]4C[C@H](O)CC[C@]4(C)[C@H]3CC[C@]12C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=BREXANOLONE
+TRILOSTANE,C[C@]12CC[C@H]3[C@@H](CC[C@@]45O[C@@H]4C(O)=C(C#N)C[C@]35C)[C@@H]1CC[C@@H]2O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=TRILOSTANE
+FLUOXYMESTERONE,C[C@]1(O)CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@]4(C)[C@@]3(F)[C@@H](O)C[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=FLUOXYMESTERONE
+RIMEXOLONE,CCC(=O)[C@@]1(C)[C@H](C)C[C@H]2[C@@H]3CCC4=CC(=O)C=C[C@]4(C)[C@H]3[C@@H](O)C[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=RIMEXOLONE
+ABIRATERONE,C[C@]12CC[C@H](O)CC1=CC[C@@H]1[C@@H]2CC[C@]2(C)C(c3cccnc3)=CC[C@@H]12,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ABIRATERONE
+CLASCOTERONE,CCC(=O)O[C@]1(C(=O)CO)CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@]4(C)[C@H]3CC[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=CLASCOTERONE
+NORETHINDRONE ACETATE,C#C[C@]1(OC(C)=O)CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@@H]4[C@H]3CC[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=NORETHINDRONE+ACETATE
+LOMEFLOXACIN,CCn1cc(C(=O)[O-])c(=O)c2cc(F)c(N3CCN[C@@H](C)C3)c(F)c21,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=LOMEFLOXACIN
+PROGESTERONE,CC(=O)[C@H]1CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@]4(C)[C@H]3CC[C@]12C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=PROGESTERONE
+ESCITALOPRAM,CN(C)CCC[C@@]1(c2ccc(F)cc2)OCc2cc(C#N)ccc21,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ESCITALOPRAM
+M SULINDAC,CSc1ccc(/C=C2/C(C)=C(CC(=O)[O-])c3cc(F)ccc32)cc1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=M+SULINDAC
+DEXAMETHASONE ACETATE,CC(=O)OCC(=O)[C@@]1(O)[C@H](C)C[C@H]2[C@@H]3CCC4=CC(=O)C=C[C@]4(C)[C@@]3(F)[C@@H](O)C[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DEXAMETHASONE+ACETATE
+ETONOGESTREL,C#C[C@]1(O)CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@@H]4[C@H]3C(=C)C[C@@]21CC,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ETONOGESTREL
+M OZANIMOD,CC(C)Oc1ccc(-c2nc(-c3cccc4c3CC[C@@H]4O)no2)cc1C#N,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=M+OZANIMOD
+SULINDAC,CC1=C(CC(=O)[O-])c2cc(F)ccc2/C1=C\c1ccc([S@](C)=O)cc1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=SULINDAC
+OBETICHOLIC ACID,CC[C@H]1[C@@H](O)[C@@H]2[C@H](CC[C@]3(C)[C@@H]([C@H](C)CCC(=O)[O-])CC[C@@H]23)[C@@]2(C)CC[C@@H](O)C[C@@H]12,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=OBETICHOLIC+ACID
+OLAPARIB,O=C(c1cc(Cc2n[nH]c(=O)c3ccccc23)ccc1F)N1CCN(C(=O)C2CC2)CC1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=OLAPARIB
+DANAZOL,C#C[C@]1(O)CC[C@H]2[C@@H]3CCC4=Cc5oncc5C[C@]4(C)[C@H]3CC[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DANAZOL
+PENTAZOCINE,CC(C)=CCN1CC[C@]2(C)c3cc(O)ccc3C[C@H]1[C@H]2C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=PENTAZOCINE
+MEDROXYPROGESTERONE ACETATE,CC(=O)O[C@]1(C(C)=O)CC[C@H]2[C@@H]3C[C@H](C)C4=CC(=O)CC[C@]4(C)[C@H]3CC[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=MEDROXYPROGESTERONE+ACETATE
+TRIAMCINOLONE ACETONIDE,CC1(C)O[C@@H]2C[C@H]3[C@@H]4CCC5=CC(=O)C=C[C@]5(C)[C@@]4(F)[C@@H](O)C[C@]3(C)[C@]2(C(=O)CO)O1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=TRIAMCINOLONE+ACETONIDE
+CELECOXIB,Cc1ccc(-c2cc(C(F)(F)F)nn2-c2ccc(S(N)(=O)=O)cc2)cc1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=CELECOXIB
+TALAZOPARIB,Cn1ncnc1[C@H]1c2n[nH]c(=O)c3cc(F)cc(c23)N[C@@H]1c1ccc(F)cc1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=TALAZOPARIB
+ESTRADIOL VALERATE,CCCCC(=O)O[C@H]1CC[C@H]2[C@@H]3CCc4cc(O)ccc4[C@H]3CC[C@]12C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ESTRADIOL+VALERATE
+TAZAROTENE,CCOC(=O)c1ccc(C#Cc2ccc3c(c2)C(C)(C)CCS3)nc1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=TAZAROTENE
+MEGESTROL ACETATE,CC(=O)O[C@]1(C(C)=O)CC[C@H]2[C@@H]3C=C(C)C4=CC(=O)CC[C@]4(C)[C@H]3CC[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=MEGESTROL+ACETATE
+VAMOROLONE,C[C@@H]1C[C@H]2[C@@H]3CCC4=CC(=O)C=C[C@]4(C)C3=CC[C@]2(C)[C@@]1(O)C(=O)CO,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=VAMOROLONE
+AZELASTINE,CN1CCC[C@H](n2nc(Cc3ccc(Cl)cc3)c3ccccc3c2=O)CC1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=AZELASTINE
+LOVASTATIN,CC[C@H](C)C(=O)O[C@H]1C[C@@H](C)C=C2C=C[C@H](C)[C@H](CC[C@@H]3C[C@@H](O)CC(=O)O3)[C@H]21,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=LOVASTATIN
+BETAMETHASONE BENZOATE,C[C@H]1C[C@H]2[C@@H]3CCC4=CC(=O)C=C[C@]4(C)[C@@]3(F)[C@@H](O)C[C@]2(C)[C@@]1(OC(=O)c1ccccc1)C(=O)CO,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=BETAMETHASONE+BENZOATE
+BETAMETHASONE VALERATE,CCCCC(=O)O[C@]1(C(=O)CO)[C@@H](C)C[C@H]2[C@@H]3CCC4=CC(=O)C=C[C@]4(C)[C@@]3(F)[C@@H](O)C[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=BETAMETHASONE+VALERATE
+QUINESTROL,C#C[C@]1(O)CC[C@H]2[C@@H]3CCc4cc(OC5CCCC5)ccc4[C@H]3CC[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=QUINESTROL
+CITALOPRAM,CN(C)CCC[C@]1(c2ccc(F)cc2)OCc2cc(C#N)ccc21,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=CITALOPRAM
+NANDROLONE PHENPROPIONATE,C[C@]12CC[C@H]3[C@@H](CCC4=CC(=O)CC[C@@H]43)[C@@H]1CC[C@@H]2OC(=O)CCc1ccccc1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=NANDROLONE+PHENPROPIONATE
+M CICLESONIDE,C[C@]12C=CC(=O)C=C1CC[C@@H]1[C@@H]2[C@@H](O)C[C@@]2(C)[C@H]1C[C@H]1O[C@@H](C3CCCCC3)O[C@]12C(=O)CO,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=M+CICLESONIDE
+FLUOROMETHOLONE,CC(=O)[C@@]1(O)CC[C@H]2[C@@H]3C[C@H](C)C4=CC(=O)C=C[C@]4(C)[C@@]3(F)[C@@H](O)C[C@@]21C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=FLUOROMETHOLONE
+DROSPIRENONE,C[C@]12CCC(=O)C=C1[C@@H]1C[C@@H]1[C@H]1[C@@H]3[C@@H]4C[C@@H]4[C@@]4(CCC(=O)O4)[C@@]3(C)CC[C@@H]12,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DROSPIRENONE
+DESOXYCORTICOSTERONE ACETATE,CC(=O)OCC(=O)[C@H]1CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@]4(C)[C@H]3CC[C@]12C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DESOXYCORTICOSTERONE+ACETATE
+BEXAROTENE,C=C(c1ccc(C(=O)[O-])cc1)c1cc2c(cc1C)C(C)(C)CCC2(C)C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=BEXAROTENE
+DROMOSTANOLONE PROPIONATE,CCC(=O)O[C@H]1CC[C@H]2[C@@H]3CC[C@H]4CC(=O)[C@H](C)C[C@]4(C)[C@H]3CC[C@]12C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DROMOSTANOLONE+PROPIONATE
+BUTORPHANOL,Oc1ccc2c(c1)[C@@]13CCCC[C@@]1(O)[C@@H](C2)N(CC1CCC1)CC3,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=BUTORPHANOL
+LEMBOREXANT,Cc1ncc(OC[C@@]2(c3cccc(F)c3)C[C@H]2C(=O)Nc2ccc(F)cn2)c(C)n1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=LEMBOREXANT
+RISPERIDONE,Cc1nc2n(c(=O)c1CCN1CCC(c3noc4cc(F)ccc34)CC1)CCCC2,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=RISPERIDONE
+CALCIPOTRIENE,C=C1/C(=C\C=C2/CCC[C@]3(C)[C@@H]([C@H](C)/C=C/[C@@H](O)C4CC4)CC[C@@H]23)C[C@@H](O)C[C@@H]1O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=CALCIPOTRIENE
+DESOXYCORTICOSTERONE PIVALATE,CC(C)(C)C(=O)OCC(=O)[C@H]1CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@]4(C)[C@H]3CC[C@]12C,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DESOXYCORTICOSTERONE+PIVALATE
+LEVOCABASTINE,C[C@@H]1CN([C@H]2CC[C@](C#N)(c3ccc(F)cc3)CC2)CC[C@]1(C(=O)[O-])c1ccccc1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=LEVOCABASTINE
+ALECTINIB,CCc1cc2c(cc1N1CCC(N3CCOCC3)CC1)C(C)(C)c1[nH]c3cc(C#N)ccc3c1C2=O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ALECTINIB
+ESTRAMUSTINE,C[C@]12CC[C@@H]3c4ccc(OC(=O)N(CCCl)CCCl)cc4CC[C@H]3[C@@H]1CC[C@@H]2O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ESTRAMUSTINE
+UBROGEPANT,C[C@@H]1[C@H](c2ccccc2)C[C@H](NC(=O)c2cnc3c(c2)C[C@@]2(C3)C(=O)Nc3ncccc32)C(=O)N1CC(F)(F)F,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=UBROGEPANT
+CHOLECALCIFEROL,C=C1CC[C@@H](O)C/C1=C/C=C1\CCC[C@]2(C)[C@@H]([C@H](C)CCCC(C)C)CC[C@@H]12,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=CHOLECALCIFEROL
+ABIRATERONE ACETATE,CC(=O)O[C@H]1CC[C@@]2(C)C(=CC[C@@H]3[C@@H]2CC[C@]2(C)C(c4cccnc4)=CC[C@@H]32)C1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ABIRATERONE+ACETATE
+ESTRADIOL CYPIONATE,C[C@]12CC[C@@H]3c4ccc(O)cc4CC[C@H]3[C@@H]1CC[C@@H]2OC(=O)CCC1CCCC1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=ESTRADIOL+CYPIONATE
+TESTOSTERONE CYPIONATE,C[C@]12CC[C@H]3[C@@H](CCC4=CC(=O)CC[C@@]43C)[C@@H]1CC[C@@H]2OC(=O)CCC1CCCC1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=TESTOSTERONE+CYPIONATE
+DOXERCALCIFEROL,C=C1/C(=C\C=C2/CCC[C@]3(C)[C@@H]([C@H](C)/C=C/[C@H](C)C(C)C)CC[C@@H]23)C[C@@H](O)C[C@@H]1O,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=DOXERCALCIFEROL
+OMAVELOXOLONE,CC1(C)CC[C@]2(NC(=O)C(C)(F)F)CC[C@]3(C)[C@H](C(=O)C=C4[C@@]5(C)C=C(C#N)C(=O)C(C)(C)[C@@H]5CC[C@]43C)[C@@H]2C1,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=OMAVELOXOLONE
+NORELGESTROMIN,C#C[C@]1(O)CC[C@H]2[C@@H]3CCC4=C/C(=N/O)CC[C@@H]4[C@H]3CC[C@@]21CC,,,,https://www.ncbi.nlm.nih.gov/books/NBK547852/?term=NORELGESTROMIN

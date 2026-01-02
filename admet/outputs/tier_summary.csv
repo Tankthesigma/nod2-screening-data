@@ -1,0 +1,7 @@
+,FINAL_SCORE,FINAL_SCORE,FINAL_SCORE,ADMET_score,safety_score
+,count,mean,std,mean,mean
+Tier,,,,,
+1,14,0.825,0.046,0.89,0.901
+2,98,0.785,0.055,0.785,0.837
+3,36,0.771,0.066,0.821,0.87
+4,2,0.0,0.0,0.702,0.695

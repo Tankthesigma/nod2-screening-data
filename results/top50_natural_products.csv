@@ -1,0 +1,51 @@
+Rank,CID,Compound,Class,Source,Traditional Use,Score
+1,3915,Cabastine,Natural Product,Various,To be investigated,0.8376411
+2,2464,"5-(3,14-dihydroxy-10,13-dimethyl-1,2,3,4,5,6,7,8,9,11,12,15,16,17-tetradecahydrocyclopenta[a]phenanthren-17-yl)pyran-2-one",Cardiac Glycoside,Plant/Animal,Traditional: Heart medicine,0.8374857
+3,10062,CHEMBL355996,Cardiac Glycoside,Plant/Animal,Traditional: Heart medicine,0.8306968
+4,11014,545-51-7,Cardiac Glycoside,Plant/Animal,Traditional: Heart medicine,0.8267062
+5,2476,DTXSID60860647,Natural Product,Various,To be investigated,0.825216
+6,20182,I.S. 3231,Natural Product,Various,To be investigated,0.8250834
+7,100290,CID_100290,Natural Product,Various,To be investigated,0.82169676
+8,100758,75660-48-9,Natural Product,Various,To be investigated,0.82095784
+9,2705,CID_2705,Natural Product,Various,To be investigated,0.81825393
+10,101789,600-59-9,Natural Product,Various,To be investigated,0.81818575
+11,10120,CID_10120,Cardiac Glycoside,Plant/Animal,Traditional: Heart medicine,0.8181015
+12,2854,"[8-[2-(4-hydroxy-6-oxooxan-2-yl)ethyl]-7-methyl-1,2,3,7,8,8a-hexahydronaphthalen-1-yl] 2-methylbutanoate",Natural Product,Various,To be investigated,0.8164314
+13,101773,570-52-5,Natural Product,Various,To be investigated,0.81610245
+14,100494,39632-88-7,Natural Product,Various,To be investigated,0.81501055
+15,3962,79952-43-5,Natural Product,Various,To be investigated,0.81328195
+16,3932,Linopirdine,Synthetic,Potassium channel,Novel: K+ channel modulation,0.81034833
+17,2662,celecoxib,COX-2 Inhibitor,Synthetic,Novel: Anti-inflammatory,0.8088706
+18,2987,30635-00-8,Natural Product,Various,To be investigated,0.8076402
+19,100105,EINECS 252-661-1,Natural Product,Various,To be investigated,0.8075028
+20,100668,NSC341931,Natural Product,Various,To be investigated,0.7987251
+21,10604,Forbisen,Natural Product,Various,To be investigated,0.7984923
+22,10053,Gamabufotalin (Gamabufagin; Gamabufogenin),Bufadienolide,Toad venom,TCM: Chan Su - anti-inflammatory,0.7972792
+23,201522,Rubijervine hydrobromide,Natural Product,Various,To be investigated,0.79656875
+24,10059,CID_10059,Cardiac Glycoside,Plant/Animal,Traditional: Heart medicine,0.79617184
+25,10592,CID_10592,Natural Product,Various,To be investigated,0.7956947
+26,101688,"3-hydroxy-17-(7-hydroxy-6-methyl-3-oxoheptan-2-yl)-10,13-dimethyl-1,2,3,4,7,8,9,11,12,14,15,17-dodecahydrocyclopenta[a]phenanthren-16-one",Natural Product,Various,To be investigated,0.79101
+27,201157,CID_201157,Natural Product,Various,To be investigated,0.78870785
+28,2516,"7-(hydroxymethyl)-10b-methyl-3b,4,5,6,7,8,9,10,10a,10b,11,12-dodecahydro-5a,8-methanocyclohepta[5,6]naphtho[2,1-b]furan-7-ol",Natural Product,Various,To be investigated,0.7869977
+29,10119,Bufotaline,Bufadienolide,Toad venom,TCM: Chan Su - anti-inflammatory,0.78583616
+30,51724,72935-75-2,Natural Product,Various,To be investigated,0.78405285
+31,401474,NSC715132,Natural Product,Various,To be investigated,0.7801848
+32,3796,WHI-P97,Natural Product,Various,To be investigated,0.7801256
+33,100059,86422-04-0,Natural Product,Various,To be investigated,0.77707297
+34,2392,Pibenzimol,Natural Product,Various,To be investigated,0.77616954
+35,20728,NS00031576,Natural Product,Various,To be investigated,0.7739014
+36,101967,PREGNANETRIOL,Steroid,Steroid precursor,Neurosteroid - neuroimmune,0.77237
+37,100718,8IU5EE8ZMA,Natural Product,Various,To be investigated,0.76936126
+38,201120,"Imidazo(1,2-a)pyridine, 2-(p-nitrophenyl)-3-(piperidinomethyl)-",Natural Product,Various,To be investigated,0.7618953
+39,100760,82232-19-7,Natural Product,Various,To be investigated,0.7579857
+40,100442,24488-96-8,Natural Product,Various,To be investigated,0.7574493
+41,400715,713079-03-9,Natural Product,Various,To be investigated,0.7557722
+42,100679,82585-94-2,Natural Product,Various,To be investigated,0.7532124
+43,100354,72766-24-6,Natural Product,Various,To be investigated,0.7482624
+44,3813,97161-97-2,Natural Product,Various,To be investigated,0.74175096
+45,3536,GW-8510,Natural Product,Various,To be investigated,0.73268306
+46,755,Urosodeoxycholic Acid Impurity 11,Bile Acid,Primary bile acid,Traditional: Gallstone dissolution,0.7324514
+47,2348,benzylhydrochlorothiazide,Natural Product,Various,To be investigated,0.7195105
+48,100626,CID_100626,Natural Product,Various,To be investigated,0.7015454
+49,400954,CID_400954,Natural Product,Various,To be investigated,0.69020385
+50,3790,HDInhib_000075,Natural Product,Various,To be investigated,0.65325063

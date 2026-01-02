@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-01-02T15:19:13.429038",
+  "pipeline": "NOD2-Scout Phase 6 MD Simulation",
+  "status": "GPU_SCRIPTS_GENERATED",
+  "targets": [
+    "febuxostat",
+    "ursodiol",
+    "budesonide"
+  ],
+  "protocol": {
+    "minimization_steps": 5000,
+    "nvt_equilibration_ps": 100,
+    "npt_equilibration_ps": 500,
+    "production_ns": 20,
+    "n_replicates": 3,
+    "temperature_K": 310.15,
+    "pressure_atm": 1.0
+  },
+  "files_generated": {
+    "gpu_scripts": [
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/05_mmgbsa_budesonide.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/03_run_md_budesonide.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/04_analyze_budesonide.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/04_analyze_ursodiol.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/03_run_md_ursodiol.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/03_run_md_febuxostat.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/05_mmgbsa_ursodiol.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/04_analyze_febuxostat.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/03_run_md_apo.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/04_analyze_apo.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/05_mmgbsa_febuxostat.py",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/gpu_scripts/master_md_pipeline.sh"
+    ],
+    "figures": [
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/figures/fig2_rmsf_profile.png",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/figures/fig3_hbond_persistence.png",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/figures/fig1_rmsd_comparison.png",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/figures/fig6_key_residue_distances.png",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/figures/fig4_1007fs_proximity.png",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/figures/fig5_mmgbsa_comparison.png",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/figures/fig7_stability_heatmap.png",
+      "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/figures/fig8_summary_dashboard.png"
+    ],
+    "instructions": "/Users/tanmaydagoat/nod2-crohn/nod2-scout/md_simulation/GPU_RENTAL_INSTRUCTIONS.md"
+  },
+  "note": "Placeholder figures generated for demonstration. Run on GPU for actual results."
+}
