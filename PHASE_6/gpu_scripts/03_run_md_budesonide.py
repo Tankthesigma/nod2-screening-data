@@ -21,8 +21,9 @@ import sys
 SYSTEM_NAME = "budesonide"
 TEMPERATURE = 310.15  # K
 PRESSURE = 1.0  # atm
-TIMESTEP = 2.0  # fs
+TIMESTEP = 4.0  # fs (4fs with HMR enabled)
 FRICTION = 1.0  # 1/ps
+USE_HMR = True  # Hydrogen Mass Repartitioning for 4fs timestep
 
 MINIMIZATION_STEPS = 5000
 EQUILIBRATION_NVT_PS = 100
@@ -56,7 +57,8 @@ def run_simulation(complex_pdb, replicate):
         pdb.topology,
         nonbondedMethod=PME,
         nonbondedCutoff=1.0*nanometers,
-        constraints=HBonds
+        constraints=AllBonds,  # Required for HMR
+        hydrogenMass=1.5*amu if USE_HMR else None  # HMR
     )
 
     # Integrator
