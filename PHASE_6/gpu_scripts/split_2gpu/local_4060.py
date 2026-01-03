@@ -173,20 +173,20 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs, is_apo=False
     if OPENFF_AVAILABLE:
         try:
             print("      Trying OpenFF...")
+            # nonbondedMethod goes in forcefield_kwargs, not create_system()
+            ff_kwargs = forcefield_kwargs.copy()
+            ff_kwargs['nonbondedMethod'] = PME
+            ff_kwargs['nonbondedCutoff'] = 1.0*nanometers
+
             system_generator = SystemGenerator(
                 forcefields=['amber14-all.xml', 'amber14/tip3pfb.xml'],
                 small_molecule_forcefield='openff-2.1.0',
                 molecules=[ligand_mol],
-                forcefield_kwargs=forcefield_kwargs
+                forcefield_kwargs=ff_kwargs
             )
             modeller.addSolvent(system_generator.forcefield, model='tip3p',
                               padding=1.0*nanometers, ionicStrength=0.15*molar)
-            system = system_generator.create_system(
-                modeller.topology,
-                nonbondedMethod=PME,
-                nonbondedCutoff=1.0*nanometers,
-                hydrogenMass=HYDROGEN_MASS if USE_HMR else None  # CRITICAL: Apply HMR!
-            )
+            system = system_generator.create_system(modeller.topology)
             # Add dispersion correction for accurate NPT density
             for force in system.getForces():
                 if isinstance(force, NonbondedForce):
@@ -297,18 +297,44 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
         return False
     print(f"      Final: {energy}")
 
-    # NVT with position restraints (use MINIMIZED positions, not original!)
-    print(f"\n[6/8] NVT EQUILIBRATION ({EQUILIBRATION_NVT_PS} ps) - WITH RESTRAINTS")
-    minimized_positions = simulation.context.getState(getPositions=True).getPositions()
-    restraint_idx = add_position_restraints(system, modeller.topology, minimized_positions, k=1000.0)
-    simulation.context.reinitialize(preserveState=True)
-    simulation.context.setVelocitiesToTemperature(TEMPERATURE, random_seed)
-    nvt_steps = int(EQUILIBRATION_NVT_PS * 1000 / TIMESTEP.value_in_unit(femtoseconds))
-    simulation.step(nvt_steps)
+    # NVT with position restraints and GRADUAL HEATING
+    print(f"\n[6/8] NVT EQUILIBRATION ({EQUILIBRATION_NVT_PS} ps) - GRADUAL HEATING")
 
-    ok, energy = check_energy(simulation, "NVT")
+    # Add restraints with LOWER force constant (100 instead of 1000)
+    minimized_positions = simulation.context.getState(getPositions=True).getPositions()
+    restraint_idx = add_position_restraints(system, modeller.topology, minimized_positions, k=100.0)
+    simulation.context.reinitialize(preserveState=True)
+
+    # Mini-minimize after adding restraints
+    print("      Re-minimizing with restraints...")
+    simulation.minimizeEnergy(maxIterations=1000)
+
+    ok, energy = check_energy(simulation, "post-restraint-minimization")
     if not ok:
         return False
+
+    # GRADUAL HEATING: 100K → 200K → 310K
+    heating_stages = [
+        (100*kelvin, 10),   # 10ps at 100K
+        (200*kelvin, 10),   # 10ps at 200K
+        (TEMPERATURE, 80),  # 80ps at 310K
+    ]
+
+    for temp, duration_ps in heating_stages:
+        print(f"      Heating: {duration_ps}ps at {temp}")
+        simulation.context.setVelocitiesToTemperature(temp, random_seed)
+
+        # Update integrator temperature
+        integrator.setTemperature(temp)
+
+        steps = int(duration_ps * 1000 / TIMESTEP.value_in_unit(femtoseconds))
+        simulation.step(steps)
+
+        ok, energy = check_energy(simulation, f"NVT-{temp}")
+        if not ok:
+            return False
+
+    print("      NVT complete")
 
     # Remove restraints for NPT
     print("      Removing position restraints...")
