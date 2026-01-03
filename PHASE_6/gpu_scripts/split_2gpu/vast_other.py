@@ -72,14 +72,12 @@ REPORT_INTERVAL = 2500
 TRAJECTORY_INTERVAL = 2500
 CHECKPOINT_INTERVAL = 250000
 
-# === 5090 SET (5 sims): feb_rep2, feb_rep3, ursodiol x3 ===
+# === OTHER GPU SET (4 sims): budesonide x3 + natural_top_rep1 ===
 SIMULATIONS = [
-    # ("febuxostat", 1, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),  # DONE on 4090
-    ("febuxostat", 2, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),
-    ("febuxostat", 3, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),
-    ("ursodiol", 1, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
-    ("ursodiol", 2, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
-    ("ursodiol", 3, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
+    ("budesonide", 1, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
+    ("budesonide", 2, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
+    ("budesonide", 3, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
+    ("natural_top", 1, "NOD2_LRR_clean.pdb", "natural_top_docked.sdf"),
 ]
 
 # ============================================================
