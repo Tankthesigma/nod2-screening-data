@@ -38,6 +38,14 @@ except ImportError:
     print("Run: conda install -c conda-forge openmm openmmforcefields openff-toolkit -y")
     sys.exit(1)
 
+try:
+    from pdbfixer import PDBFixer
+    PDBFIXER_AVAILABLE = True
+except ImportError:
+    print("WARNING: PDBFixer not installed - will skip structure fixing")
+    print("Run: conda install -c conda-forge pdbfixer -y")
+    PDBFIXER_AVAILABLE = False
+
 # ============================================================
 # CONFIGURATION
 # ============================================================
@@ -123,6 +131,29 @@ def setup_directories():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     os.makedirs(LOG_DIR, exist_ok=True)
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+
+def fix_pdb_structure(pdb_path):
+    """Fix PDB structure using PDBFixer - adds missing atoms/residues."""
+    if not PDBFIXER_AVAILABLE:
+        print("      PDBFixer not available, loading as-is")
+        return PDBFile(pdb_path)
+
+    print("      Running PDBFixer...")
+    fixer = PDBFixer(filename=pdb_path)
+    fixer.findMissingResidues()
+    fixer.findMissingAtoms()
+    fixer.addMissingAtoms()
+    fixer.addMissingHydrogens(7.0)  # pH 7.0
+
+    print(f"      Fixed: {fixer.topology.getNumAtoms()} atoms")
+
+    # Return a simple object with topology and positions
+    class FixedPDB:
+        def __init__(self, topology, positions):
+            self.topology = topology
+            self.positions = positions
+
+    return FixedPDB(fixer.topology, fixer.positions)
 
 def check_energy(simulation, stage=""):
     """Check if energy is valid (not NaN/Inf). Returns False if exploded."""
@@ -247,19 +278,11 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
         ligand_mol = ligand_mol[0]
     print(f"      Atoms: {ligand_mol.n_atoms}")
 
-    # Load structure and add missing hydrogens
-    print("\n[2/8] Loading structure...")
-    pdb = PDBFile(pdb_path)
-    print(f"      Atoms (before H): {pdb.topology.getNumAtoms()}")
-
-    # Add missing hydrogens to receptor
-    print("      Adding missing hydrogens...")
-    forcefield_for_h = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
+    # Load and fix structure (adds missing atoms + hydrogens)
+    print("\n[2/8] Loading and fixing structure...")
+    pdb = fix_pdb_structure(pdb_path)
     modeller_h = Modeller(pdb.topology, pdb.positions)
-    modeller_h.addHydrogens(forcefield_for_h)
-    pdb_topology = modeller_h.topology
-    pdb_positions = modeller_h.positions
-    print(f"      Atoms (after H): {pdb_topology.getNumAtoms()}")
+    print(f"      Ready: {modeller_h.topology.getNumAtoms()} atoms")
 
     # Create system
     print("\n[3/8] Setting up force fields...")

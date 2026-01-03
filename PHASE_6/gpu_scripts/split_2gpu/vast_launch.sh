@@ -72,7 +72,7 @@ conda activate nod2md
 
 # Install dependencies (openff-forcefields has the actual offxml files)
 echo "Installing dependencies..."
-conda install -c conda-forge openmm openmmforcefields openff-toolkit openff-forcefields -y
+conda install -c conda-forge openmm openmmforcefields openff-toolkit openff-forcefields pdbfixer -y
 
 #===============================================================================
 # PREFLIGHT CHECKS

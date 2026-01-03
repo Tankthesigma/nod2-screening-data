@@ -43,7 +43,7 @@ else
     echo "Create it with:"
     echo "  conda create -n nod2md python=3.10 -y"
     echo "  conda activate nod2md"
-    echo "  conda install -c conda-forge openmm openmmforcefields openff-toolkit openff-forcefields -y"
+    echo "  conda install -c conda-forge openmm openmmforcefields openff-toolkit openff-forcefields pdbfixer -y"
     exit 1
 fi
 
