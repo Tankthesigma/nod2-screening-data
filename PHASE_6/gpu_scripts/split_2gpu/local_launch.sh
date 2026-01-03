@@ -58,9 +58,11 @@ python3 -c "import openmm; print(f'  OpenMM: {openmm.__version__}')" || {
     exit 1
 }
 
-# Check OpenFF
+# Check OpenFF (REQUIRED - not optional!)
 python3 -c "from openff.toolkit import Molecule; print('  OpenFF: OK')" || {
-    echo "WARNING: OpenFF not installed, will use GAFF fallback"
+    echo "ERROR: OpenFF not installed! This is REQUIRED."
+    echo "Run: conda install -c conda-forge openff-toolkit openmmforcefields -y"
+    exit 1
 }
 
 # Check CUDA

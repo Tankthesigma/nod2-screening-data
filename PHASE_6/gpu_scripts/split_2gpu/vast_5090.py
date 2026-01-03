@@ -34,8 +34,9 @@ try:
     from openff.toolkit import Molecule
     OPENFF_AVAILABLE = True
 except ImportError:
-    OPENFF_AVAILABLE = False
-    print("WARNING: OpenFF not available, using GAFF only")
+    print("FATAL: OpenFF/openmmforcefields not installed!")
+    print("Run: conda install -c conda-forge openmm openmmforcefields openff-toolkit -y")
+    sys.exit(1)
 
 # ============================================================
 # CONFIGURATION
@@ -203,6 +204,12 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
     system, modeller = create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs)
     print(f"      Solvated atoms: {modeller.topology.getNumAtoms()}")
 
+    # Save solvated topology for analysis (needed for DCD loading)
+    solvated_pdb = f"{OUTPUT_DIR}/{output_prefix}_solvated.pdb"
+    with open(solvated_pdb, 'w') as f:
+        PDBFile.writeFile(modeller.topology, modeller.positions, f)
+    print(f"      Saved: {solvated_pdb}")
+
     # Setup simulation
     print(f"\n[4/8] Setting up CUDA (GPU {GPU_ID})...")
     integrator = LangevinMiddleIntegrator(TEMPERATURE, FRICTION, TIMESTEP)
@@ -298,9 +305,9 @@ def main():
             success = run_simulation(name, rep, pdb, sdf, i, len(SIMULATIONS))
             results.append((f"{name}_rep{rep}", success))
 
-            # SAVE TO GIT AFTER EACH SIMULATION
-            if success:
-                save_to_git(f"Completed {name}_rep{rep} ({i}/{len(SIMULATIONS)})")
+            # SAVE TO GIT AFTER EACH SIMULATION (even if failed!)
+            status = "SUCCESS" if success else "FAILED"
+            save_to_git(f"{name}_rep{rep} {status} ({i}/{len(SIMULATIONS)})")
 
         except Exception as e:
             print(f"\nERROR in {name}_rep{rep}: {e}")
