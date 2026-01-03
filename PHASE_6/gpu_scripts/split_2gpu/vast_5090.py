@@ -328,7 +328,7 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
     except Exception as e:
         print(f"      CUDA failed: {e}, trying OpenCL...")
         platform = Platform.getPlatformByName('OpenCL')
-        properties = {'Precision': 'mixed', 'DeviceIndex': str(GPU_ID)}
+        properties = {'Precision': 'mixed', 'OpenCLPlatformIndex': '0', 'DeviceIndex': str(GPU_ID)}
         simulation = Simulation(modeller.topology, system, integrator, platform, properties)
     simulation.context.setPositions(modeller.positions)
 
