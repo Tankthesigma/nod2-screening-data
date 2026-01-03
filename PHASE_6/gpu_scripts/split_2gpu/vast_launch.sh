@@ -52,7 +52,6 @@ conda activate nod2md
 # Install dependencies
 echo "Installing dependencies..."
 conda install -c conda-forge openmm openmmforcefields openff-toolkit -y
-pip install mdtraj
 
 #===============================================================================
 # PREFLIGHT CHECKS

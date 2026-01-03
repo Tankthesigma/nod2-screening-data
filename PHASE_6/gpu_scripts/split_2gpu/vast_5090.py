@@ -119,6 +119,33 @@ def check_energy(simulation, stage=""):
         return False, energy
     return True, energy
 
+def add_position_restraints(system, topology, positions, k=1000.0):
+    """Add position restraints to heavy atoms (non-hydrogen).
+
+    Returns the force object so it can be removed later.
+    k is in kJ/mol/nm^2 (1000 = strong restraint)
+    """
+    restraint = CustomExternalForce("0.5*k*((x-x0)^2+(y-y0)^2+(z-z0)^2)")
+    restraint.addGlobalParameter("k", k * kilojoules_per_mole / nanometers**2)
+    restraint.addPerParticleParameter("x0")
+    restraint.addPerParticleParameter("y0")
+    restraint.addPerParticleParameter("z0")
+
+    restrained_count = 0
+    for atom in topology.atoms():
+        if atom.element.symbol != 'H':  # Heavy atoms only
+            pos = positions[atom.index]
+            restraint.addParticle(atom.index, [
+                pos[0].value_in_unit(nanometers),
+                pos[1].value_in_unit(nanometers),
+                pos[2].value_in_unit(nanometers)
+            ])
+            restrained_count += 1
+
+    force_idx = system.addForce(restraint)
+    print(f"      Added restraints to {restrained_count} heavy atoms (k={k} kJ/mol/nm²)")
+    return force_idx
+
 def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
     """Create system with OpenFF, falling back to GAFF if needed."""
     modeller = Modeller(pdb.topology, pdb.positions)
@@ -232,8 +259,10 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
         return False
     print(f"      Final: {energy}")
 
-    # NVT with check
-    print(f"\n[6/8] NVT EQUILIBRATION ({EQUILIBRATION_NVT_PS} ps)")
+    # NVT with position restraints
+    print(f"\n[6/8] NVT EQUILIBRATION ({EQUILIBRATION_NVT_PS} ps) - WITH RESTRAINTS")
+    restraint_idx = add_position_restraints(system, modeller.topology, modeller.positions, k=1000.0)
+    simulation.context.reinitialize(preserveState=True)
     simulation.context.setVelocitiesToTemperature(TEMPERATURE, random_seed)
     nvt_steps = int(EQUILIBRATION_NVT_PS * 1000 / TIMESTEP.value_in_unit(femtoseconds))
     simulation.step(nvt_steps)
@@ -241,6 +270,11 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
     ok, energy = check_energy(simulation, "NVT")
     if not ok:
         return False
+
+    # Remove restraints for NPT
+    print("      Removing position restraints...")
+    system.removeForce(restraint_idx)
+    simulation.context.reinitialize(preserveState=True)
 
     # NPT with check
     print(f"\n[7/8] NPT EQUILIBRATION ({EQUILIBRATION_NPT_PS} ps)")
@@ -291,7 +325,7 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
 # MAIN
 # ============================================================
 def preflight_check():
-    """Check ALL input files exist BEFORE starting any simulation."""
+    """Check ALL input files exist AND ligands can be loaded BEFORE starting."""
     print("\n[PREFLIGHT] Checking input files...")
     missing = []
     for name, rep, pdb, sdf in SIMULATIONS:
@@ -310,6 +344,23 @@ def preflight_check():
         sys.exit(1)
 
     print(f"    All {len(SIMULATIONS) * 2} input files found.")
+
+    # Validate ligands can be loaded (catches bad SDF geometry/bonding)
+    print("\n[PREFLIGHT] Validating ligand files...")
+    unique_sdfs = set(sdf for _, _, _, sdf in SIMULATIONS)
+    for sdf in unique_sdfs:
+        sdf_path = f"{STRUCTURES_DIR}/{sdf}"
+        try:
+            mol = Molecule.from_file(sdf_path)
+            print(f"    ✓ {sdf}: {mol.n_atoms} atoms, {mol.n_bonds} bonds")
+        except Exception as e:
+            print(f"\n!!! FATAL: Cannot load ligand {sdf} !!!")
+            print(f"    Error: {e}")
+            print("\nThis SDF file has bad geometry or bonding.")
+            print("Fix: Re-export from RDKit or check original docking output.")
+            sys.exit(1)
+
+    print("    All ligands validated successfully.")
 
 def main():
     print("=" * 70)
