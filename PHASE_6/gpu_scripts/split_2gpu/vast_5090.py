@@ -73,7 +73,7 @@ TRAJECTORY_INTERVAL = 2500
 CHECKPOINT_INTERVAL = 250000
 
 SIMULATIONS = [
-    ("febuxostat", 1, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),
+    # ("febuxostat", 1, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),  # DONE on 4090
     ("febuxostat", 2, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),
     ("febuxostat", 3, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),
     ("ursodiol", 1, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
