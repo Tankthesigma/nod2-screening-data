@@ -242,6 +242,9 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
     # Load ligand
     print("\n[1/8] Loading ligand...")
     ligand_mol = Molecule.from_file(sdf_path)
+    # Handle case where SDF has multiple conformers (returns list)
+    if isinstance(ligand_mol, list):
+        ligand_mol = ligand_mol[0]
     print(f"      Atoms: {ligand_mol.n_atoms}")
 
     # Load structure
@@ -382,7 +385,10 @@ def preflight_check():
         sdf_path = f"{STRUCTURES_DIR}/{sdf}"
         try:
             mol = Molecule.from_file(sdf_path)
-            print(f"    ✓ {sdf}: {mol.n_atoms} atoms, {mol.n_bonds} bonds")
+            # Handle case where SDF has multiple conformers (returns list)
+            if isinstance(mol, list):
+                mol = mol[0]
+            print(f"    OK {sdf}: {mol.n_atoms} atoms, {mol.n_bonds} bonds")
         except Exception as e:
             print(f"\n!!! FATAL: Cannot load ligand {sdf} !!!")
             print(f"    Error: {e}")
