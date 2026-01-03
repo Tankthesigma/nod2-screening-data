@@ -105,6 +105,24 @@ echo "Creating output directories..."
 mkdir -p trajectories logs checkpoints
 
 #===============================================================================
+# SETUP GIT IGNORE (CRITICAL FOR AUTO-SHUTDOWN)
+#===============================================================================
+echo ""
+echo "Configuring .gitignore for auto-shutdown..."
+
+# Create/Overwrite .gitignore to prevent pushing large binary files
+# If this is missing, git push will fail, instance won't shutdown, and you pay $
+cat > .gitignore << 'EOF'
+trajectories/
+checkpoints/
+*.dcd
+*.chk
+*.xml
+EOF
+
+echo "  .gitignore created/updated (DCD/checkpoints excluded from git)"
+
+#===============================================================================
 # RUN SIMULATIONS
 #===============================================================================
 echo ""
