@@ -221,10 +221,17 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
         print("\n[1/8] APO system - no ligand")
         ligand_mol = None
 
-    # Load structure
+    # Load structure and add missing hydrogens
     print("\n[2/8] Loading structure...")
     pdb = PDBFile(pdb_path)
-    print(f"      Atoms: {pdb.topology.getNumAtoms()}")
+    print(f"      Atoms (before H): {pdb.topology.getNumAtoms()}")
+
+    # Add missing hydrogens to receptor
+    print("      Adding missing hydrogens...")
+    forcefield_for_h = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
+    modeller_h = Modeller(pdb.topology, pdb.positions)
+    modeller_h.addHydrogens(forcefield_for_h)
+    print(f"      Atoms (after H): {modeller_h.topology.getNumAtoms()}")
 
     # Create system
     print("\n[3/8] Setting up force fields...")
@@ -234,7 +241,7 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
         'removeCMMotion': True,
         'hydrogenMass': HYDROGEN_MASS if USE_HMR else None
     }
-    system, modeller = create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs, is_apo)
+    system, modeller = create_system_with_fallback(modeller_h, ligand_mol, forcefield_kwargs, is_apo)
     print(f"      Solvated atoms: {modeller.topology.getNumAtoms()}")
 
     # Save solvated topology for analysis (needed for DCD loading)
@@ -402,7 +409,7 @@ def main():
     print("\n" + "=" * 70)
     print("FINAL SUMMARY")
     print("=" * 70)
-    success_count = sum(1 for _, s in results if s)
+    success_count = len([s for _, s in results if s])
     for name, success in results:
         status = "COMPLETE" if success else "FAILED"
         print(f"  {name}: {status}")
