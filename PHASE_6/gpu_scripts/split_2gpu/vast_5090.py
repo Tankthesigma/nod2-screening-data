@@ -73,16 +73,16 @@ TRAJECTORY_INTERVAL = 2500
 CHECKPOINT_INTERVAL = 250000
 
 SIMULATIONS = [
-    ("febuxostat", 1, "complex_febuxostat_fixed.pdb", "febuxostat_docked.sdf"),
-    ("febuxostat", 2, "complex_febuxostat_fixed.pdb", "febuxostat_docked.sdf"),
-    ("febuxostat", 3, "complex_febuxostat_fixed.pdb", "febuxostat_docked.sdf"),
-    ("ursodiol", 1, "complex_ursodiol_fixed.pdb", "ursodiol_docked.sdf"),
-    ("ursodiol", 2, "complex_ursodiol_fixed.pdb", "ursodiol_docked.sdf"),
-    ("ursodiol", 3, "complex_ursodiol_fixed.pdb", "ursodiol_docked.sdf"),
-    ("budesonide", 1, "complex_budesonide_fixed.pdb", "budesonide_docked.sdf"),
-    ("budesonide", 2, "complex_budesonide_fixed.pdb", "budesonide_docked.sdf"),
-    ("budesonide", 3, "complex_budesonide_fixed.pdb", "budesonide_docked.sdf"),
-    ("natural_top", 1, "complex_natural_cid10592_fixed.pdb", "natural_top_docked.sdf"),
+    ("febuxostat", 1, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),
+    ("febuxostat", 2, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),
+    ("febuxostat", 3, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),
+    ("ursodiol", 1, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
+    ("ursodiol", 2, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
+    ("ursodiol", 3, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
+    ("budesonide", 1, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
+    ("budesonide", 2, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
+    ("budesonide", 3, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
+    ("natural_top", 1, "NOD2_LRR_clean.pdb", "natural_top_docked.sdf"),
 ]
 
 # ============================================================

@@ -97,11 +97,11 @@ echo "    Linux: sudo systemctl mask sleep.target suspend.target"
 echo ""
 
 #===============================================================================
-# FIX RECEPTOR PDB FILES
+# DOWNLOAD FRESH RECEPTOR FROM ALPHAFOLD
 #===============================================================================
 echo ""
-echo "Fixing receptor PDB files..."
-python3 fix_receptor.py
+echo "Downloading fresh NOD2 receptor from AlphaFold..."
+python3 download_receptor.py
 
 #===============================================================================
 # RUN SIMULATIONS
