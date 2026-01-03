@@ -71,10 +71,10 @@ TRAJECTORY_INTERVAL = 2500
 CHECKPOINT_INTERVAL = 250000
 
 SIMULATIONS = [
-    ("natural_top", 2, "complex_natural_cid10592.pdb", "natural_top_docked.sdf"),
-    ("natural_top", 3, "complex_natural_cid10592.pdb", "natural_top_docked.sdf"),
-    ("apo", 1, "complex_apo.pdb", None),
-    ("decoy", 1, "complex_decoy.pdb", "decoy_docked.sdf"),
+    ("natural_top", 2, "complex_natural_cid10592_fixed.pdb", "natural_top_docked.sdf"),
+    ("natural_top", 3, "complex_natural_cid10592_fixed.pdb", "natural_top_docked.sdf"),
+    ("apo", 1, "complex_apo_fixed.pdb", None),
+    ("decoy", 1, "complex_decoy_fixed.pdb", "decoy_docked.sdf"),
 ]
 
 # ============================================================
