@@ -18,24 +18,61 @@ echo "Working directory: $(pwd)"
 echo ""
 
 #===============================================================================
+# ENVIRONMENT SETUP (CRITICAL!)
+#===============================================================================
+echo "Setting up conda environment..."
+
+# Ensure conda is available
+if command -v conda &> /dev/null; then
+    source "$(conda info --base)/etc/profile.d/conda.sh"
+else
+    echo "ERROR: conda not found!"
+    echo "Install Miniconda: https://docs.conda.io/en/latest/miniconda.html"
+    exit 1
+fi
+
+# Check if nod2md environment exists
+if conda env list | grep -q "nod2md"; then
+    echo "Activating nod2md environment..."
+    conda activate nod2md
+else
+    echo "ERROR: 'nod2md' conda environment not found!"
+    echo ""
+    echo "Create it with:"
+    echo "  conda create -n nod2md python=3.10 -y"
+    echo "  conda activate nod2md"
+    echo "  conda install -c conda-forge openmm openmmforcefields openff-toolkit -y"
+    exit 1
+fi
+
+#===============================================================================
 # PREFLIGHT CHECKS
 #===============================================================================
+echo ""
 echo "Preflight checks..."
 
 # Check OpenMM
-python3 -c "import openmm; print(f'OpenMM: {openmm.__version__}')" || {
+python3 -c "import openmm; print(f'  OpenMM: {openmm.__version__}')" || {
     echo "ERROR: OpenMM not installed!"
-    echo "Install with: conda install -c conda-forge openmm openmmforcefields openff-toolkit"
+    echo "Run: conda install -c conda-forge openmm openmmforcefields openff-toolkit -y"
     exit 1
 }
 
+# Check OpenFF
+python3 -c "from openff.toolkit import Molecule; print('  OpenFF: OK')" || {
+    echo "WARNING: OpenFF not installed, will use GAFF fallback"
+}
+
 # Check CUDA
-python3 -c "from openmm import Platform; p = Platform.getPlatformByName('CUDA'); print('CUDA: OK')" || {
+python3 -c "from openmm import Platform; p = Platform.getPlatformByName('CUDA'); print('  CUDA: OK')" || {
     echo "ERROR: CUDA not available!"
+    echo "Make sure you have an NVIDIA GPU with CUDA drivers"
     exit 1
 }
 
 # Check GPU
+echo ""
+echo "GPU Info:"
 nvidia-smi --query-gpu=name,memory.total --format=csv
 
 #===============================================================================
@@ -44,14 +81,23 @@ nvidia-smi --query-gpu=name,memory.total --format=csv
 echo ""
 echo "Creating output directories..."
 mkdir -p trajectories logs checkpoints
+echo "  Done"
+
+#===============================================================================
+# PREVENT SLEEP (reminder)
+#===============================================================================
+echo ""
+echo "!!! IMPORTANT: Disable sleep mode to prevent interruption !!!"
+echo "    Windows: Power Settings -> Sleep: Never"
+echo "    Linux: sudo systemctl mask sleep.target suspend.target"
+echo ""
 
 #===============================================================================
 # RUN SIMULATIONS
 #===============================================================================
-echo ""
 echo "============================================================"
 echo "STARTING 4 SIMULATIONS (80ns total)"
-echo "Expected runtime: ~8-10 hours on RTX 4060 Ti"
+echo "Expected runtime: ~8-10 hours"
 echo "============================================================"
 echo ""
 

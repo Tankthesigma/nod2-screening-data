@@ -3,13 +3,19 @@
 VAST.AI RTX 5090 - Heavy Load (10 simulations, 200ns total)
 Sequential execution with auto-shutdown on completion.
 
+SAFETY FEATURES:
+- Git push after EACH simulation (crash protection)
+- Git push on ANY error (never lose data)
+- NaN energy check (fail fast)
+- Robust shutdown with fallback
+
 Simulations:
 1. Febuxostat rep1-3 (60ns)
 2. Ursodiol rep1-3 (60ns)
 3. Budesonide rep1-3 (60ns)
 4. Natural_top rep1 (20ns)
 
-Expected runtime: ~5 hours on RTX 5090 with HMR
+Expected runtime: ~5 hours on RTX 5090 with HMR (~1000 ns/day)
 """
 
 from openmm import *
@@ -18,6 +24,8 @@ from openmm.unit import *
 import sys
 import os
 import gc
+import math
+import subprocess
 from datetime import datetime
 import traceback
 
@@ -32,38 +40,30 @@ except ImportError:
 # ============================================================
 # CONFIGURATION
 # ============================================================
-GPU_ID = 0  # Single GPU on rented instance
+GPU_ID = 0
 
-# Directories (relative to PHASE_6/)
 STRUCTURES_DIR = "structures"
 OUTPUT_DIR = "trajectories"
 LOG_DIR = "logs"
 CHECKPOINT_DIR = "checkpoints"
 
-# Physics
 TEMPERATURE = 310.15 * kelvin
 PRESSURE = 1.0 * atmospheres
 TIMESTEP = 4.0 * femtoseconds
 FRICTION = 1.0 / picoseconds
 USE_HMR = True
-HYDROGEN_MASS = 3.0 * amu  # Proper HMR for 4fs
+HYDROGEN_MASS = 3.0 * amu
 
-# Protocol
 MINIMIZATION_STEPS = 5000
 EQUILIBRATION_NVT_PS = 100
 EQUILIBRATION_NPT_PS = 500
 PRODUCTION_NS = 20
 
-# Output intervals
-REPORT_INTERVAL = 2500       # 10ps
-TRAJECTORY_INTERVAL = 2500   # 10ps
-CHECKPOINT_INTERVAL = 250000 # 1ns
+REPORT_INTERVAL = 2500
+TRAJECTORY_INTERVAL = 2500
+CHECKPOINT_INTERVAL = 250000
 
-# ============================================================
-# SIMULATIONS TO RUN (10 total = 200ns)
-# ============================================================
 SIMULATIONS = [
-    # (name, replicate, pdb_file, sdf_file)
     ("febuxostat", 1, "complex_febuxostat.pdb", "febuxostat_docked.sdf"),
     ("febuxostat", 2, "complex_febuxostat.pdb", "febuxostat_docked.sdf"),
     ("febuxostat", 3, "complex_febuxostat.pdb", "febuxostat_docked.sdf"),
@@ -77,6 +77,27 @@ SIMULATIONS = [
 ]
 
 # ============================================================
+# GIT SAVE FUNCTION (CRITICAL - NEVER LOSE DATA)
+# ============================================================
+def save_to_git(message="Auto-save simulation results"):
+    """Push results to git. Called after each sim and on crash."""
+    try:
+        print(f"\n>>> SAVING TO GIT: {message}")
+        subprocess.run(["git", "add", "-A"], check=False, capture_output=True)
+        subprocess.run(
+            ["git", "commit", "-m", f"{message} - {datetime.now().strftime('%Y-%m-%d %H:%M')}"],
+            check=False, capture_output=True
+        )
+        result = subprocess.run(["git", "push"], check=False, capture_output=True)
+        if result.returncode == 0:
+            print(">>> GIT PUSH: SUCCESS")
+        else:
+            print(f">>> GIT PUSH: FAILED (but local commit saved)")
+            print(f"    Error: {result.stderr.decode()[:200]}")
+    except Exception as e:
+        print(f">>> GIT SAVE ERROR: {e}")
+
+# ============================================================
 # HELPER FUNCTIONS
 # ============================================================
 def setup_directories():
@@ -84,11 +105,22 @@ def setup_directories():
     os.makedirs(LOG_DIR, exist_ok=True)
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
 
+def check_energy(simulation, stage=""):
+    """Check if energy is valid (not NaN/Inf). Returns False if exploded."""
+    state = simulation.context.getState(getEnergy=True)
+    energy = state.getPotentialEnergy()
+    energy_val = energy.value_in_unit(kilojoules_per_mole)
+
+    if math.isnan(energy_val) or math.isinf(energy_val):
+        print(f"\n!!! CRITICAL: Energy exploded during {stage}!")
+        print(f"!!! Energy = {energy}")
+        print("!!! Check input PDB/SDF for clashes or bad geometry")
+        return False, energy
+    return True, energy
+
 def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
     """Create system with OpenFF, falling back to GAFF if needed."""
     modeller = Modeller(pdb.topology, pdb.positions)
-
-    # Remove existing water to prevent doubling
     modeller.deleteWater()
     print("      Deleted existing water molecules")
 
@@ -113,7 +145,6 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
             modeller = Modeller(pdb.topology, pdb.positions)
             modeller.deleteWater()
 
-    # Fallback to GAFF
     print("      Using GAFF...")
     forcefield = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
     gaff_generator = GAFFTemplateGenerator(molecules=[ligand_mol])
@@ -131,7 +162,7 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
 # SIMULATION FUNCTION
 # ============================================================
 def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
-    """Run a single MD simulation."""
+    """Run a single MD simulation with full error checking."""
     random_seed = sim_num * 1000 + replicate
     output_prefix = f"{name}_rep{replicate}"
 
@@ -176,31 +207,44 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
     print(f"\n[4/8] Setting up CUDA (GPU {GPU_ID})...")
     integrator = LangevinMiddleIntegrator(TEMPERATURE, FRICTION, TIMESTEP)
     integrator.setRandomNumberSeed(random_seed)
+    integrator.setConstraintTolerance(1e-6)  # Tighter tolerance for stability
     platform = Platform.getPlatformByName('CUDA')
     properties = {'Precision': 'mixed', 'DeviceIndex': str(GPU_ID)}
     simulation = Simulation(modeller.topology, system, integrator, platform, properties)
     simulation.context.setPositions(modeller.positions)
 
-    # Minimization
+    # Minimization with NaN check
     print("\n[5/8] MINIMIZATION")
-    state = simulation.context.getState(getEnergy=True)
-    print(f"      Initial: {state.getPotentialEnergy()}")
-    simulation.minimizeEnergy(maxIterations=MINIMIZATION_STEPS)
-    state = simulation.context.getState(getEnergy=True)
-    print(f"      Final: {state.getPotentialEnergy()}")
+    ok, energy = check_energy(simulation, "pre-minimization")
+    print(f"      Initial: {energy}")
 
-    # NVT
+    simulation.minimizeEnergy(maxIterations=MINIMIZATION_STEPS)
+
+    ok, energy = check_energy(simulation, "post-minimization")
+    if not ok:
+        return False
+    print(f"      Final: {energy}")
+
+    # NVT with check
     print(f"\n[6/8] NVT EQUILIBRATION ({EQUILIBRATION_NVT_PS} ps)")
     simulation.context.setVelocitiesToTemperature(TEMPERATURE, random_seed)
     nvt_steps = int(EQUILIBRATION_NVT_PS * 1000 / TIMESTEP.value_in_unit(femtoseconds))
     simulation.step(nvt_steps)
 
-    # NPT
+    ok, energy = check_energy(simulation, "NVT")
+    if not ok:
+        return False
+
+    # NPT with check
     print(f"\n[7/8] NPT EQUILIBRATION ({EQUILIBRATION_NPT_PS} ps)")
     system.addForce(MonteCarloBarostat(PRESSURE, TEMPERATURE, 25))
     simulation.context.reinitialize(preserveState=True)
     npt_steps = int(EQUILIBRATION_NPT_PS * 1000 / TIMESTEP.value_in_unit(femtoseconds))
     simulation.step(npt_steps)
+
+    ok, energy = check_energy(simulation, "NPT")
+    if not ok:
+        return False
 
     # Production
     print(f"\n[8/8] PRODUCTION ({PRODUCTION_NS} ns)")
@@ -221,6 +265,11 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
 
     simulation.step(production_steps)
     simulation.saveState(f'{CHECKPOINT_DIR}/{output_prefix}_final.xml')
+
+    # Final energy check
+    ok, energy = check_energy(simulation, "production")
+    if not ok:
+        print("WARNING: Final energy check failed but trajectory saved")
 
     print(f"\n>>> COMPLETE: {output_prefix}")
     print(f"    Finished: {datetime.now().strftime('%H:%M:%S')}")
@@ -248,10 +297,19 @@ def main():
         try:
             success = run_simulation(name, rep, pdb, sdf, i, len(SIMULATIONS))
             results.append((f"{name}_rep{rep}", success))
+
+            # SAVE TO GIT AFTER EACH SIMULATION
+            if success:
+                save_to_git(f"Completed {name}_rep{rep} ({i}/{len(SIMULATIONS)})")
+
         except Exception as e:
             print(f"\nERROR in {name}_rep{rep}: {e}")
             traceback.print_exc()
             results.append((f"{name}_rep{rep}", False))
+
+            # SAVE TO GIT ON ERROR
+            save_to_git(f"ERROR in {name}_rep{rep} - saving progress")
+
             print("\nContinuing to next simulation...")
             gc.collect()
 
@@ -267,7 +325,10 @@ def main():
     print(f"Finished: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 70)
 
-    # AUTO-SHUTDOWN
+    # FINAL GIT SAVE
+    save_to_git(f"ALL DONE: {success_count}/{len(results)} simulations complete")
+
+    # SHUTDOWN
     print("\n" + "!" * 70)
     print("ALL SIMULATIONS COMPLETE - SHUTTING DOWN IN 60 SECONDS")
     print("!" * 70)
@@ -276,13 +337,24 @@ def main():
     time.sleep(60)
 
     print("SHUTTING DOWN NOW...")
-    os.system('sudo shutdown now')
+    # Try passwordless shutdown first
+    result = subprocess.run(["sudo", "-n", "shutdown", "-h", "now"], capture_output=True)
+    if result.returncode != 0:
+        print("WARNING: Passwordless shutdown failed!")
+        print("Trying regular shutdown...")
+        os.system('sudo shutdown -h now')
+        # If that also fails, at least data is saved to git
 
 if __name__ == "__main__":
-    # Change to PHASE_6 directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
     phase6_dir = os.path.join(script_dir, "../..")
     os.chdir(phase6_dir)
     print(f"Working directory: {os.getcwd()}")
 
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(f"\n!!! FATAL ERROR: {e}")
+        traceback.print_exc()
+        save_to_git("FATAL ERROR - emergency save")
+        sys.exit(1)
