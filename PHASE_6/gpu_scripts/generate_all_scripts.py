@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """
-GPU 3: URSODIOL Replicate 1
+Generate all GPU scripts from template.
+Run this to create gpu1-gpu7 scripts with correct parameters.
+"""
+
+import os
+
+# Template for single-compound scripts (GPU 0-7)
+SINGLE_TEMPLATE = '''#!/usr/bin/env python3
+"""
+GPU {gpu_id}: {compound_upper} Replicate {replicate}
 RTX 5090 + HMR (4fs timestep) - ~30 min per 20ns
 
 FULLY FIXED VERSION:
@@ -30,11 +39,11 @@ except ImportError:
 # ============================================================
 # CONFIGURATION
 # ============================================================
-GPU_ID = 3
-SYSTEM_NAME = "ursodiol"
-REPLICATE = 1
-PDB_FILE = "../structures/complex_ursodiol.pdb"
-SDF_FILE = "../structures/ursodiol_docked.sdf"
+GPU_ID = {gpu_id}
+SYSTEM_NAME = "{compound}"
+REPLICATE = {replicate}
+PDB_FILE = "../structures/complex_{compound}.pdb"
+SDF_FILE = "../structures/{sdf_file}"
 
 OUTPUT_DIR = "../trajectories"
 LOG_DIR = "../logs"
@@ -61,12 +70,12 @@ CHECKPOINT_INTERVAL = 250000 # 1ns
 def validate_inputs():
     errors = []
     if not os.path.exists(PDB_FILE):
-        errors.append(f"PDB not found: {PDB_FILE}")
+        errors.append(f"PDB not found: {{PDB_FILE}}")
     if not os.path.exists(SDF_FILE):
-        errors.append(f"SDF not found: {SDF_FILE}")
+        errors.append(f"SDF not found: {{SDF_FILE}}")
     if errors:
         for e in errors:
-            print(f"ERROR: {e}")
+            print(f"ERROR: {{e}}")
         sys.exit(1)
 
 def setup_directories():
@@ -93,7 +102,7 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
             print("      SUCCESS: OpenFF")
             return system, modeller
         except Exception as e:
-            print(f"      OpenFF failed: {e}, trying GAFF...")
+            print(f"      OpenFF failed: {{e}}, trying GAFF...")
 
     try:
         forcefield = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
@@ -108,69 +117,108 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
         print("      SUCCESS: GAFF")
         return system, modeller
     except Exception as e:
-        raise RuntimeError(f"Parameterization failed: {e}")
+        raise RuntimeError(f"Parameterization failed: {{e}}")
 
 def run():
     print("=" * 70)
-    print(f"GPU {GPU_ID}: {SYSTEM_NAME.upper()} - Replicate {REPLICATE}")
-    print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"GPU {{GPU_ID}}: {{SYSTEM_NAME.upper()}} - Replicate {{REPLICATE}}")
+    print(f"Started: {{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}}")
     print("=" * 70)
 
     validate_inputs()
     setup_directories()
-    output_prefix = f"{SYSTEM_NAME}_rep{REPLICATE}"
+    output_prefix = f"{{SYSTEM_NAME}}_rep{{REPLICATE}}"
 
-    print("\n[1/8] Loading ligand...")
+    print("\\n[1/8] Loading ligand...")
     ligand_mol = Molecule.from_file(SDF_FILE)
-    print(f"      Atoms: {ligand_mol.n_atoms}")
+    print(f"      Atoms: {{ligand_mol.n_atoms}}")
 
-    print("\n[2/8] Loading structure...")
+    print("\\n[2/8] Loading structure...")
     pdb = PDBFile(PDB_FILE)
-    print(f"      Atoms: {pdb.topology.getNumAtoms()}")
+    print(f"      Atoms: {{pdb.topology.getNumAtoms()}}")
 
-    print("\n[3/8] Setting up force fields...")
-    forcefield_kwargs = {'constraints': AllBonds, 'rigidWater': True,
-        'removeCMMotion': True, 'hydrogenMass': HYDROGEN_MASS if USE_HMR else None}
+    print("\\n[3/8] Setting up force fields...")
+    forcefield_kwargs = {{'constraints': AllBonds, 'rigidWater': True,
+        'removeCMMotion': True, 'hydrogenMass': HYDROGEN_MASS if USE_HMR else None}}
     system, modeller = create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs)
-    print(f"      Solvated: {modeller.topology.getNumAtoms()}")
+    print(f"      Solvated: {{modeller.topology.getNumAtoms()}}")
 
-    print(f"\n[4/8] Setting up CUDA (GPU {GPU_ID})...")
+    print(f"\\n[4/8] Setting up CUDA (GPU {{GPU_ID}})...")
     integrator = LangevinMiddleIntegrator(TEMPERATURE, FRICTION, TIMESTEP)
     integrator.setRandomNumberSeed(RANDOM_SEED)
     platform = Platform.getPlatformByName('CUDA')
-    properties = {'Precision': 'mixed', 'DeviceIndex': str(GPU_ID)}
+    properties = {{'Precision': 'mixed', 'DeviceIndex': str(GPU_ID)}}
     simulation = Simulation(modeller.topology, system, integrator, platform, properties)
     simulation.context.setPositions(modeller.positions)
 
-    print("\n[5/8] MINIMIZATION")
+    print("\\n[5/8] MINIMIZATION")
     simulation.minimizeEnergy(maxIterations=MINIMIZATION_STEPS)
 
-    print(f"\n[6/8] NVT EQUILIBRATION ({EQUILIBRATION_NVT_PS} ps)")
+    print(f"\\n[6/8] NVT EQUILIBRATION ({{EQUILIBRATION_NVT_PS}} ps)")
     simulation.context.setVelocitiesToTemperature(TEMPERATURE, RANDOM_SEED)
     simulation.step(int(EQUILIBRATION_NVT_PS * 1000 / TIMESTEP.value_in_unit(femtoseconds)))
 
-    print(f"\n[7/8] NPT EQUILIBRATION ({EQUILIBRATION_NPT_PS} ps)")
+    print(f"\\n[7/8] NPT EQUILIBRATION ({{EQUILIBRATION_NPT_PS}} ps)")
     system.addForce(MonteCarloBarostat(PRESSURE, TEMPERATURE, 25))
     simulation.context.reinitialize(preserveState=True)
     simulation.step(int(EQUILIBRATION_NPT_PS * 1000 / TIMESTEP.value_in_unit(femtoseconds)))
 
-    print(f"\n[8/8] PRODUCTION ({PRODUCTION_NS} ns)")
+    print(f"\\n[8/8] PRODUCTION ({{PRODUCTION_NS}} ns)")
     production_steps = int(PRODUCTION_NS * 1e6 / TIMESTEP.value_in_unit(femtoseconds))
-    simulation.reporters.append(DCDReporter(f'{OUTPUT_DIR}/{output_prefix}.dcd', TRAJECTORY_INTERVAL))
-    simulation.reporters.append(StateDataReporter(f'{LOG_DIR}/{output_prefix}.log', REPORT_INTERVAL,
+    simulation.reporters.append(DCDReporter(f'{{OUTPUT_DIR}}/{{output_prefix}}.dcd', TRAJECTORY_INTERVAL))
+    simulation.reporters.append(StateDataReporter(f'{{LOG_DIR}}/{{output_prefix}}.log', REPORT_INTERVAL,
         step=True, time=True, potentialEnergy=True, kineticEnergy=True,
         temperature=True, speed=True, progress=True, remainingTime=True, totalSteps=production_steps))
-    simulation.reporters.append(CheckpointReporter(f'{CHECKPOINT_DIR}/{output_prefix}.chk', CHECKPOINT_INTERVAL))
+    simulation.reporters.append(CheckpointReporter(f'{{CHECKPOINT_DIR}}/{{output_prefix}}.chk', CHECKPOINT_INTERVAL))
     simulation.step(production_steps)
-    simulation.saveState(f'{CHECKPOINT_DIR}/{output_prefix}_final.xml')
+    simulation.saveState(f'{{CHECKPOINT_DIR}}/{{output_prefix}}_final.xml')
 
-    print(f"\nCOMPLETE: {output_prefix} at {datetime.now().strftime('%H:%M:%S')}")
+    print(f"\\nCOMPLETE: {{output_prefix}} at {{datetime.now().strftime('%H:%M:%S')}}")
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)) + "/..")
     try:
         run()
     except Exception as e:
-        print(f"FATAL ERROR: {e}")
+        print(f"FATAL ERROR: {{e}}")
         traceback.print_exc()
         sys.exit(1)
+'''
+
+# GPU assignments
+ASSIGNMENTS = [
+    (0, "febuxostat", 1, "febuxostat_docked.sdf"),
+    (1, "febuxostat", 2, "febuxostat_docked.sdf"),
+    (2, "febuxostat", 3, "febuxostat_docked.sdf"),
+    (3, "ursodiol", 1, "ursodiol_docked.sdf"),
+    (4, "ursodiol", 2, "ursodiol_docked.sdf"),
+    (5, "ursodiol", 3, "ursodiol_docked.sdf"),
+    (6, "budesonide", 1, "budesonide_docked.sdf"),
+    (7, "budesonide", 2, "budesonide_docked.sdf"),
+]
+
+def main():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = os.path.join(script_dir, "parallel_9gpu")
+    os.makedirs(output_dir, exist_ok=True)
+
+    for gpu_id, compound, replicate, sdf_file in ASSIGNMENTS:
+        filename = f"gpu{gpu_id}_{compound}_rep{replicate}.py"
+        filepath = os.path.join(output_dir, filename)
+
+        content = SINGLE_TEMPLATE.format(
+            gpu_id=gpu_id,
+            compound=compound,
+            compound_upper=compound.upper(),
+            replicate=replicate,
+            sdf_file=sdf_file
+        )
+
+        with open(filepath, 'w') as f:
+            f.write(content)
+        print(f"Generated: {filename}")
+
+    print(f"\nGenerated {len(ASSIGNMENTS)} scripts in {output_dir}")
+
+if __name__ == "__main__":
+    main()
