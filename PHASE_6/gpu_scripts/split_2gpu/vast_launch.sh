@@ -17,20 +17,20 @@ echo ""
 # GITHUB TOKEN FOR AUTO-SAVE (REQUIRED FOR AUTO-SHUTDOWN)
 #===============================================================================
 if [ -z "$GITHUB_TOKEN" ]; then
-    echo "!!! GITHUB_TOKEN not set !!!"
+    echo "!!! WARNING: GITHUB_TOKEN not set !!!"
     echo ""
-    echo "For auto-save and auto-shutdown, run:"
+    echo ">>> Simulations will run but:"
+    echo "    - Git push will fail"
+    echo "    - NO auto-shutdown (data stays local)"
+    echo "    - You must manually scp data and shutdown"
+    echo ""
+    echo "To enable auto-save, set in Vast.ai 'Env Vars' or run:"
     echo "  export GITHUB_TOKEN=ghp_your_token_here"
-    echo "  bash vast_launch.sh"
     echo ""
-    echo "Or run without (data stays local, no auto-shutdown):"
-    read -p "Continue without GitHub token? [y/N] " -n 1 -r
-    echo ""
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
-    fi
+    echo "Continuing in 10 seconds..."
+    sleep 10
 else
-    echo ">>> GITHUB_TOKEN is set - auto-save enabled"
+    echo ">>> GITHUB_TOKEN is set - auto-save + auto-shutdown enabled"
 fi
 echo ""
 
@@ -70,9 +70,9 @@ fi
 echo "Activating nod2md environment..."
 conda activate nod2md
 
-# Install dependencies
+# Install dependencies (openff-forcefields has the actual offxml files)
 echo "Installing dependencies..."
-conda install -c conda-forge openmm openmmforcefields openff-toolkit -y
+conda install -c conda-forge openmm openmmforcefields openff-toolkit openff-forcefields -y
 
 #===============================================================================
 # PREFLIGHT CHECKS
@@ -84,7 +84,7 @@ echo "Preflight checks..."
 python3 -c "import openmm; print(f'  OpenMM: {openmm.__version__}')"
 
 # Check OpenFF (REQUIRED)
-python3 -c "from openff.toolkit import Molecule; print('  OpenFF: OK')" || {
+python3 -c "from openff.toolkit.topology import Molecule; print('  OpenFF: OK')" || {
     echo "ERROR: OpenFF not installed!"
     exit 1
 }

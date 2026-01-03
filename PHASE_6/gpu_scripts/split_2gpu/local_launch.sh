@@ -43,7 +43,7 @@ else
     echo "Create it with:"
     echo "  conda create -n nod2md python=3.10 -y"
     echo "  conda activate nod2md"
-    echo "  conda install -c conda-forge openmm openmmforcefields openff-toolkit -y"
+    echo "  conda install -c conda-forge openmm openmmforcefields openff-toolkit openff-forcefields -y"
     exit 1
 fi
 
@@ -61,9 +61,9 @@ python3 -c "import openmm; print(f'  OpenMM: {openmm.__version__}')" || {
 }
 
 # Check OpenFF (REQUIRED - not optional!)
-python3 -c "from openff.toolkit import Molecule; print('  OpenFF: OK')" || {
+python3 -c "from openff.toolkit.topology import Molecule; print('  OpenFF: OK')" || {
     echo "ERROR: OpenFF not installed! This is REQUIRED."
-    echo "Run: conda install -c conda-forge openff-toolkit openmmforcefields -y"
+    echo "Run: conda install -c conda-forge openff-toolkit openmmforcefields openff-forcefields -y"
     exit 1
 }
 
