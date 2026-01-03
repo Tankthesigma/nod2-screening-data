@@ -154,6 +154,15 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs, is_apo=False
     modeller.deleteWater()
     print("      Deleted existing water molecules")
 
+    # ADD LIGAND TO MODELLER (critical fix!)
+    if not is_apo and ligand_mol is not None:
+        print("      Adding ligand to system...")
+        # Convert OpenFF Molecule to OpenMM topology/positions
+        ligand_topology = ligand_mol.to_topology().to_openmm()
+        ligand_positions = ligand_mol.conformers[0].to_openmm()
+        modeller.add(ligand_topology, ligand_positions)
+        print(f"      Ligand added: {ligand_mol.n_atoms} atoms")
+
     if is_apo:
         print("      APO system - standard forcefield")
         forcefield = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
@@ -173,16 +182,16 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs, is_apo=False
     if OPENFF_AVAILABLE:
         try:
             print("      Trying OpenFF...")
-            # nonbondedMethod goes in forcefield_kwargs, not create_system()
-            ff_kwargs = forcefield_kwargs.copy()
-            ff_kwargs['nonbondedMethod'] = PME
-            ff_kwargs['nonbondedCutoff'] = 1.0*nanometers
-
+            # Use periodic_forcefield_kwargs for PME settings (new API)
             system_generator = SystemGenerator(
                 forcefields=['amber14-all.xml', 'amber14/tip3pfb.xml'],
                 small_molecule_forcefield='openff-2.1.0',
                 molecules=[ligand_mol],
-                forcefield_kwargs=ff_kwargs
+                forcefield_kwargs=forcefield_kwargs,
+                periodic_forcefield_kwargs={
+                    'nonbondedMethod': PME,
+                    'nonbondedCutoff': 1.0*nanometers
+                }
             )
             modeller.addSolvent(system_generator.forcefield, model='tip3p',
                               padding=1.0*nanometers, ionicStrength=0.15*molar)
@@ -195,8 +204,13 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs, is_apo=False
             return system, modeller
         except Exception as e:
             print(f"      OpenFF failed: {e}, trying GAFF...")
+            # Reset modeller and re-add ligand
             modeller = Modeller(pdb.topology, pdb.positions)
             modeller.deleteWater()
+            if ligand_mol is not None:
+                ligand_topology = ligand_mol.to_topology().to_openmm()
+                ligand_positions = ligand_mol.conformers[0].to_openmm()
+                modeller.add(ligand_topology, ligand_positions)
 
     print("      Using GAFF...")
     forcefield = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
@@ -297,27 +311,19 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
         return False
     print(f"      Final: {energy}")
 
-    # NVT with position restraints and GRADUAL HEATING
+    # NVT with GRADUAL HEATING (no restraints - CUDA bug workaround)
     print(f"\n[6/8] NVT EQUILIBRATION ({EQUILIBRATION_NVT_PS} ps) - GRADUAL HEATING")
+    print("      Note: Running without position restraints (CUDA compatibility)")
 
-    # Add restraints with LOWER force constant (100 instead of 1000)
-    minimized_positions = simulation.context.getState(getPositions=True).getPositions()
-    restraint_idx = add_position_restraints(system, modeller.topology, minimized_positions, k=100.0)
-    simulation.context.reinitialize(preserveState=True)
-
-    # Mini-minimize after adding restraints
-    print("      Re-minimizing with restraints...")
-    simulation.minimizeEnergy(maxIterations=1000)
-
-    ok, energy = check_energy(simulation, "post-restraint-minimization")
-    if not ok:
-        return False
-
-    # GRADUAL HEATING: 100K → 200K → 310K
+    # GRADUAL HEATING: 50K → 100K → 150K → 200K → 250K → 310K
+    # More gradual heating compensates for lack of restraints
     heating_stages = [
+        (50*kelvin, 5),     # 5ps at 50K
         (100*kelvin, 10),   # 10ps at 100K
-        (200*kelvin, 10),   # 10ps at 200K
-        (TEMPERATURE, 80),  # 80ps at 310K
+        (150*kelvin, 10),   # 10ps at 150K
+        (200*kelvin, 15),   # 15ps at 200K
+        (250*kelvin, 20),   # 20ps at 250K
+        (TEMPERATURE, 40),  # 40ps at 310K
     ]
 
     for temp, duration_ps in heating_stages:
@@ -335,11 +341,6 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
             return False
 
     print("      NVT complete")
-
-    # Remove restraints for NPT
-    print("      Removing position restraints...")
-    system.removeForce(restraint_idx)
-    simulation.context.reinitialize(preserveState=True)
 
     # NPT with check
     print(f"\n[7/8] NPT EQUILIBRATION ({EQUILIBRATION_NPT_PS} ps)")
