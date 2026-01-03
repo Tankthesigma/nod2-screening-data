@@ -72,6 +72,10 @@ REPORT_INTERVAL = 2500
 TRAJECTORY_INTERVAL = 2500
 CHECKPOINT_INTERVAL = 250000
 
+## GPU SPLIT: 5090 runs first 5, other GPU runs last 4
+## Uncomment the set you want to run:
+
+# === 5090 SET (5 sims) ===
 SIMULATIONS = [
     # ("febuxostat", 1, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),  # DONE on 4090
     ("febuxostat", 2, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),
@@ -79,11 +83,15 @@ SIMULATIONS = [
     ("ursodiol", 1, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
     ("ursodiol", 2, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
     ("ursodiol", 3, "NOD2_LRR_clean.pdb", "ursodiol_docked.sdf"),
-    ("budesonide", 1, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
-    ("budesonide", 2, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
-    ("budesonide", 3, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
-    ("natural_top", 1, "NOD2_LRR_clean.pdb", "natural_top_docked.sdf"),
 ]
+
+# === OTHER GPU SET (4 sims) - comment above, uncomment below ===
+# SIMULATIONS = [
+#     ("budesonide", 1, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
+#     ("budesonide", 2, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
+#     ("budesonide", 3, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
+#     ("natural_top", 1, "NOD2_LRR_clean.pdb", "natural_top_docked.sdf"),
+# ]
 
 # ============================================================
 # GIT SAVE FUNCTION (CRITICAL - NEVER LOSE DATA)
