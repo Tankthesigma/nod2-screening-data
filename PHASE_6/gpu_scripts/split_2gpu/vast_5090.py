@@ -320,9 +320,16 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
     integrator = LangevinMiddleIntegrator(TEMPERATURE, FRICTION, TIMESTEP)
     integrator.setRandomNumberSeed(random_seed)
     integrator.setConstraintTolerance(1e-6)  # Tighter tolerance for stability
-    platform = Platform.getPlatformByName('CUDA')
-    properties = {'Precision': 'mixed', 'DeviceIndex': str(GPU_ID)}
-    simulation = Simulation(modeller.topology, system, integrator, platform, properties)
+    # Try CUDA first, fall back to OpenCL if CUDA fails
+    try:
+        platform = Platform.getPlatformByName('CUDA')
+        properties = {'Precision': 'mixed', 'DeviceIndex': str(GPU_ID)}
+        simulation = Simulation(modeller.topology, system, integrator, platform, properties)
+    except Exception as e:
+        print(f"      CUDA failed: {e}, trying OpenCL...")
+        platform = Platform.getPlatformByName('OpenCL')
+        properties = {'Precision': 'mixed', 'DeviceIndex': str(GPU_ID)}
+        simulation = Simulation(modeller.topology, system, integrator, platform, properties)
     simulation.context.setPositions(modeller.positions)
 
     # Minimization with NaN check

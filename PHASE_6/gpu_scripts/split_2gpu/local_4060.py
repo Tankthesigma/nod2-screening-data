@@ -71,7 +71,7 @@ TRAJECTORY_INTERVAL = 2500
 CHECKPOINT_INTERVAL = 250000
 
 SIMULATIONS = [
-    ("natural_top", 2, "NOD2_LRR_clean.pdb", "natural_top_docked.sdf"),
+    # ("natural_top", 2, "NOD2_LRR_clean.pdb", "natural_top_docked.sdf"),  # DONE
     ("natural_top", 3, "NOD2_LRR_clean.pdb", "natural_top_docked.sdf"),
     ("apo", 1, "NOD2_LRR_clean.pdb", None),
     ("decoy", 1, "NOD2_LRR_clean.pdb", "decoy_docked.sdf"),
