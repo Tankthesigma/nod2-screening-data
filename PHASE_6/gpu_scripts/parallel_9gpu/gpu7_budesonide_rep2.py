@@ -3,10 +3,11 @@
 GPU 7: BUDESONIDE Replicate 2
 RTX 5090 + HMR (4fs timestep) - ~30 min per 20ns
 
-FULLY FIXED VERSION:
+FULLY FIXED VERSION v2:
 - OpenFF SystemGenerator with GAFF fallback
-- Proper output directories
-- Ligand-PDB sanity checks
+- Correct output directories (match bash script)
+- modeller.deleteWater() before solvation
+- Proper HMR (3.0 amu) for 4fs stability
 - Optimized I/O intervals
 """
 
@@ -36,9 +37,10 @@ REPLICATE = 2
 PDB_FILE = "../structures/complex_budesonide.pdb"
 SDF_FILE = "../structures/budesonide_docked.sdf"
 
-OUTPUT_DIR = "../trajectories"
-LOG_DIR = "../logs"
-CHECKPOINT_DIR = "../checkpoints"
+# Output directories - MUST match bash script (local, not ../)
+OUTPUT_DIR = "trajectories"
+LOG_DIR = "logs"
+CHECKPOINT_DIR = "checkpoints"
 
 RANDOM_SEED = 1000 * GPU_ID + REPLICATE
 
@@ -47,7 +49,7 @@ PRESSURE = 1.0 * atmospheres
 TIMESTEP = 4.0 * femtoseconds
 FRICTION = 1.0 / picoseconds
 USE_HMR = True
-HYDROGEN_MASS = 1.5 * amu
+HYDROGEN_MASS = 3.0 * amu  # 3.0 amu for stable 4fs (was 1.5 - too low!)
 
 MINIMIZATION_STEPS = 5000
 EQUILIBRATION_NVT_PS = 100
@@ -77,6 +79,10 @@ def setup_directories():
 def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
     modeller = Modeller(pdb.topology, pdb.positions)
 
+    # CRITICAL: Remove any existing water to prevent doubling
+    modeller.deleteWater()
+    print("      Deleted existing water molecules")
+
     if OPENFF_AVAILABLE:
         try:
             print("      Trying OpenFF...")
@@ -94,12 +100,14 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
             return system, modeller
         except Exception as e:
             print(f"      OpenFF failed: {e}, trying GAFF...")
+            # Reset modeller for GAFF attempt
+            modeller = Modeller(pdb.topology, pdb.positions)
+            modeller.deleteWater()
 
     try:
         forcefield = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
         gaff_generator = GAFFTemplateGenerator(molecules=[ligand_mol])
         forcefield.registerTemplateGenerator(gaff_generator.generator)
-        modeller = Modeller(pdb.topology, pdb.positions)
         modeller.addSolvent(forcefield, model='tip3p',
                           padding=1.0*nanometers, ionicStrength=0.15*molar)
         system = forcefield.createSystem(modeller.topology,

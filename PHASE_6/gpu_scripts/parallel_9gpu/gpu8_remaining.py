@@ -35,10 +35,10 @@ except ImportError:
 # ============================================================
 GPU_ID = 8
 
-# Output directories
-OUTPUT_DIR = "../trajectories"
-LOG_DIR = "../logs"
-CHECKPOINT_DIR = "../checkpoints"
+# Output directories - MUST match bash script (local, not ../)
+OUTPUT_DIR = "trajectories"
+LOG_DIR = "logs"
+CHECKPOINT_DIR = "checkpoints"
 
 # Physics
 TEMPERATURE = 310.15 * kelvin
@@ -46,7 +46,7 @@ PRESSURE = 1.0 * atmospheres
 TIMESTEP = 4.0 * femtoseconds
 FRICTION = 1.0 / picoseconds
 USE_HMR = True
-HYDROGEN_MASS = 1.5 * amu
+HYDROGEN_MASS = 3.0 * amu  # 3.0 amu for stable 4fs (was 1.5 - too low!)
 
 # Protocol
 MINIMIZATION_STEPS = 5000
@@ -81,6 +81,10 @@ def setup_directories():
 def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs, is_apo=False):
     """Create system with OpenFF, falling back to GAFF if needed."""
     modeller = Modeller(pdb.topology, pdb.positions)
+
+    # CRITICAL: Remove any existing water to prevent doubling
+    modeller.deleteWater()
+    print("      Deleted existing water molecules")
 
     if is_apo:
         # APO system - no ligand, use standard ForceField
@@ -119,6 +123,7 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs, is_apo=False
     gaff_generator = GAFFTemplateGenerator(molecules=[ligand_mol])
     forcefield.registerTemplateGenerator(gaff_generator.generator)
     modeller = Modeller(pdb.topology, pdb.positions)
+    modeller.deleteWater()  # Reset needs this too
     modeller.addSolvent(forcefield, model='tip3p',
                       padding=1.0*nanometers, ionicStrength=0.15*molar)
     system = forcefield.createSystem(
