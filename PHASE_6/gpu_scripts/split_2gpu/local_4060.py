@@ -29,7 +29,7 @@ import traceback
 
 try:
     from openmmforcefields.generators import SystemGenerator, GAFFTemplateGenerator
-    from openff.toolkit import Molecule
+    from openff.toolkit.topology import Molecule  # Explicit import path
     OPENFF_AVAILABLE = True
 except ImportError:
     print("FATAL: OpenFF/openmmforcefields not installed!")
@@ -277,12 +277,36 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
 # ============================================================
 # MAIN
 # ============================================================
+def preflight_check():
+    """Check ALL input files exist BEFORE starting any simulation."""
+    print("\n[PREFLIGHT] Checking input files...")
+    missing = []
+    for name, rep, pdb, sdf in SIMULATIONS:
+        pdb_path = f"{STRUCTURES_DIR}/{pdb}"
+        if not os.path.exists(pdb_path):
+            missing.append(pdb_path)
+        if sdf:  # APO has no SDF
+            sdf_path = f"{STRUCTURES_DIR}/{sdf}"
+            if not os.path.exists(sdf_path):
+                missing.append(sdf_path)
+
+    if missing:
+        print("\n!!! FATAL: Missing input files !!!")
+        for f in missing:
+            print(f"    - {f}")
+        sys.exit(1)
+
+    print(f"    All input files found.")
+
 def main():
     print("=" * 70)
     print("LOCAL RTX 4060 Ti - NOD2-SCOUT MD SIMULATIONS")
     print(f"Running {len(SIMULATIONS)} simulations ({len(SIMULATIONS) * PRODUCTION_NS}ns total)")
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 70)
+
+    # CHECK ALL FILES BEFORE STARTING
+    preflight_check()
 
     setup_directories()
 

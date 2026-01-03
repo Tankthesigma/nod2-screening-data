@@ -31,7 +31,7 @@ import traceback
 
 try:
     from openmmforcefields.generators import SystemGenerator, GAFFTemplateGenerator
-    from openff.toolkit import Molecule
+    from openff.toolkit.topology import Molecule  # Explicit import path
     OPENFF_AVAILABLE = True
 except ImportError:
     print("FATAL: OpenFF/openmmforcefields not installed!")
@@ -290,12 +290,36 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
 # ============================================================
 # MAIN
 # ============================================================
+def preflight_check():
+    """Check ALL input files exist BEFORE starting any simulation."""
+    print("\n[PREFLIGHT] Checking input files...")
+    missing = []
+    for name, rep, pdb, sdf in SIMULATIONS:
+        pdb_path = f"{STRUCTURES_DIR}/{pdb}"
+        sdf_path = f"{STRUCTURES_DIR}/{sdf}"
+        if not os.path.exists(pdb_path):
+            missing.append(pdb_path)
+        if not os.path.exists(sdf_path):
+            missing.append(sdf_path)
+
+    if missing:
+        print("\n!!! FATAL: Missing input files !!!")
+        for f in missing:
+            print(f"    - {f}")
+        print("\nAborting to avoid wasting GPU rental money.")
+        sys.exit(1)
+
+    print(f"    All {len(SIMULATIONS) * 2} input files found.")
+
 def main():
     print("=" * 70)
     print("VAST.AI RTX 5090 - NOD2-SCOUT MD SIMULATIONS")
     print(f"Running {len(SIMULATIONS)} simulations ({len(SIMULATIONS) * PRODUCTION_NS}ns total)")
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 70)
+
+    # CHECK ALL FILES BEFORE STARTING
+    preflight_check()
 
     setup_directories()
 
@@ -335,22 +359,17 @@ def main():
     # FINAL GIT SAVE
     save_to_git(f"ALL DONE: {success_count}/{len(results)} simulations complete")
 
-    # SHUTDOWN
-    print("\n" + "!" * 70)
-    print("ALL SIMULATIONS COMPLETE - SHUTTING DOWN IN 60 SECONDS")
-    print("!" * 70)
-
-    import time
-    time.sleep(60)
-
-    print("SHUTTING DOWN NOW...")
-    # Try passwordless shutdown first
-    result = subprocess.run(["sudo", "-n", "shutdown", "-h", "now"], capture_output=True)
-    if result.returncode != 0:
-        print("WARNING: Passwordless shutdown failed!")
-        print("Trying regular shutdown...")
-        os.system('sudo shutdown -h now')
-        # If that also fails, at least data is saved to git
+    # NO AUTO-SHUTDOWN - too risky without verified git auth
+    print("\n" + "=" * 70)
+    print("ALL SIMULATIONS COMPLETE!")
+    print("=" * 70)
+    print("\nDATA SAVED LOCALLY. To download:")
+    print("  scp -r user@instance:~/nod2-screening-data/PHASE_6/trajectories ./")
+    print("  scp -r user@instance:~/nod2-screening-data/PHASE_6/checkpoints ./")
+    print("\nThen manually shutdown:")
+    print("  sudo shutdown -h now")
+    print("\nOr stop the instance from Vast.ai dashboard.")
+    print("=" * 70)
 
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
