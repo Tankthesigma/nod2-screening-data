@@ -182,9 +182,16 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
             modeller.addSolvent(system_generator.forcefield, model='tip3p',
                               padding=1.0*nanometers, ionicStrength=0.15*molar)
             system = system_generator.create_system(
-                modeller.topology, nonbondedMethod=PME, nonbondedCutoff=1.0*nanometers
+                modeller.topology,
+                nonbondedMethod=PME,
+                nonbondedCutoff=1.0*nanometers,
+                hydrogenMass=HYDROGEN_MASS if USE_HMR else None  # CRITICAL: Apply HMR!
             )
-            print("      SUCCESS: OpenFF")
+            # Add dispersion correction for accurate NPT density
+            for force in system.getForces():
+                if isinstance(force, NonbondedForce):
+                    force.setUseDispersionCorrection(True)
+            print("      SUCCESS: OpenFF (with HMR + dispersion correction)")
             return system, modeller
         except Exception as e:
             print(f"      OpenFF failed: {e}, trying GAFF...")
@@ -199,9 +206,13 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
                       padding=1.0*nanometers, ionicStrength=0.15*molar)
     system = forcefield.createSystem(
         modeller.topology, nonbondedMethod=PME, nonbondedCutoff=1.0*nanometers,
-        constraints=AllBonds, hydrogenMass=HYDROGEN_MASS if USE_HMR else None
+        constraints=HBonds, hydrogenMass=HYDROGEN_MASS if USE_HMR else None
     )
-    print("      SUCCESS: GAFF")
+    # Add dispersion correction for accurate NPT density
+    for force in system.getForces():
+        if isinstance(force, NonbondedForce):
+            force.setUseDispersionCorrection(True)
+    print("      SUCCESS: GAFF (with HMR + dispersion correction)")
     return system, modeller
 
 # ============================================================
@@ -241,7 +252,7 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
     # Create system
     print("\n[3/8] Setting up force fields...")
     forcefield_kwargs = {
-        'constraints': AllBonds,
+        'constraints': HBonds,  # HBonds for HMR stability (not AllBonds!)
         'rigidWater': True,
         'removeCMMotion': True,
         'hydrogenMass': HYDROGEN_MASS if USE_HMR else None
@@ -277,9 +288,10 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
         return False
     print(f"      Final: {energy}")
 
-    # NVT with position restraints
+    # NVT with position restraints (use MINIMIZED positions, not original!)
     print(f"\n[6/8] NVT EQUILIBRATION ({EQUILIBRATION_NVT_PS} ps) - WITH RESTRAINTS")
-    restraint_idx = add_position_restraints(system, modeller.topology, modeller.positions, k=1000.0)
+    minimized_positions = simulation.context.getState(getPositions=True).getPositions()
+    restraint_idx = add_position_restraints(system, modeller.topology, minimized_positions, k=1000.0)
     simulation.context.reinitialize(preserveState=True)
     simulation.context.setVelocitiesToTemperature(TEMPERATURE, random_seed)
     nvt_steps = int(EQUILIBRATION_NVT_PS * 1000 / TIMESTEP.value_in_unit(femtoseconds))
@@ -296,7 +308,7 @@ def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
 
     # NPT with check
     print(f"\n[7/8] NPT EQUILIBRATION ({EQUILIBRATION_NPT_PS} ps)")
-    system.addForce(MonteCarloBarostat(PRESSURE, TEMPERATURE, 25))
+    system.addForce(MonteCarloBarostat(PRESSURE, TEMPERATURE, 100))  # 100 steps = 400fs between volume moves
     simulation.context.reinitialize(preserveState=True)
     npt_steps = int(EQUILIBRATION_NPT_PS * 1000 / TIMESTEP.value_in_unit(femtoseconds))
     simulation.step(npt_steps)

@@ -1,5 +1,5 @@
 # NOD2-SCOUT MD Simulation Dependencies
-# Install with: conda install -c conda-forge openmm openmmforcefields openff-toolkit
+# Install with: conda install -c conda-forge openmm openmmforcefields openff-toolkit openff-forcefields
 
 # Core MD engine
 openmm>=8.0
@@ -7,6 +7,7 @@ openmm>=8.0
 # Force field generators (for ligand parameterization)
 openmmforcefields>=0.12.0
 openff-toolkit>=0.14.0
+openff-forcefields>=2024.0.0  # Contains actual offxml files for openff-2.1.0
 
 # Analysis (optional, for Phase 7)
 mdtraj>=1.9.9

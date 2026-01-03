@@ -74,10 +74,10 @@ python3 -c "from openmm import Platform; p = Platform.getPlatformByName('CUDA');
     exit 1
 }
 
-# Check GPU
+# Check GPU (non-fatal if fails)
 echo ""
 echo "GPU Info:"
-nvidia-smi --query-gpu=name,memory.total --format=csv
+nvidia-smi --query-gpu=name,memory.total --format=csv || echo "  (nvidia-smi failed, continuing anyway)"
 
 #===============================================================================
 # CREATE OUTPUT DIRECTORIES

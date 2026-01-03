@@ -1,0 +1,19 @@
+# Large MD simulation files - DO NOT PUSH TO GITHUB
+# GitHub has 100MB file size limit, DCD files are 1-2GB each
+
+# Trajectory files
+trajectories/
+*.dcd
+
+# Checkpoint files
+checkpoints/
+*.chk
+*.xml
+
+# Keep logs (small, useful for debugging)
+# logs/ - NOT ignored
+
+# Temporary files
+*.pyc
+__pycache__/
+.ipynb_checkpoints/
