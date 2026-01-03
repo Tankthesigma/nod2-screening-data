@@ -80,6 +80,21 @@ SIMULATIONS = [
 # ============================================================
 # GIT SAVE FUNCTION (CRITICAL - NEVER LOSE DATA)
 # ============================================================
+def setup_git_auth():
+    """Configure git to use token authentication from environment."""
+    token = os.environ.get("GITHUB_TOKEN")
+    if not token:
+        print(">>> WARNING: GITHUB_TOKEN not set - git push may fail")
+        print(">>> Set it with: export GITHUB_TOKEN=ghp_your_token_here")
+        return False
+
+    remote_url = f"https://Tankthesigma:{token}@github.com/Tankthesigma/nod2-screening-data.git"
+    subprocess.run(["git", "remote", "set-url", "origin", remote_url], check=False, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "nod2scout@isef.local"], check=False, capture_output=True)
+    subprocess.run(["git", "config", "user.name", "NOD2-Scout"], check=False, capture_output=True)
+    print(">>> Git authentication configured")
+    return True
+
 def save_to_git(message="Auto-save simulation results"):
     """Push results to git. Called after each sim and on crash."""
     try:
@@ -92,11 +107,14 @@ def save_to_git(message="Auto-save simulation results"):
         result = subprocess.run(["git", "push"], check=False, capture_output=True)
         if result.returncode == 0:
             print(">>> GIT PUSH: SUCCESS")
+            return True
         else:
             print(f">>> GIT PUSH: FAILED (but local commit saved)")
             print(f"    Error: {result.stderr.decode()[:200]}")
+            return False
     except Exception as e:
         print(f">>> GIT SAVE ERROR: {e}")
+        return False
 
 # ============================================================
 # HELPER FUNCTIONS
@@ -369,6 +387,9 @@ def main():
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 70)
 
+    # SETUP GIT AUTHENTICATION
+    setup_git_auth()
+
     # CHECK ALL FILES BEFORE STARTING
     preflight_check()
 
@@ -408,18 +429,35 @@ def main():
     print("=" * 70)
 
     # FINAL GIT SAVE
-    save_to_git(f"ALL DONE: {success_count}/{len(results)} simulations complete")
+    push_success = save_to_git(f"ALL DONE: {success_count}/{len(results)} simulations complete")
 
-    # NO AUTO-SHUTDOWN - too risky without verified git auth
     print("\n" + "=" * 70)
     print("ALL SIMULATIONS COMPLETE!")
     print("=" * 70)
-    print("\nDATA SAVED LOCALLY. To download:")
-    print("  scp -r user@instance:~/nod2-screening-data/PHASE_6/trajectories ./")
-    print("  scp -r user@instance:~/nod2-screening-data/PHASE_6/checkpoints ./")
-    print("\nThen manually shutdown:")
-    print("  sudo shutdown -h now")
-    print("\nOr stop the instance from Vast.ai dashboard.")
+
+    if push_success:
+        # SAFE TO SHUTDOWN - data is on GitHub
+        print("\n>>> ALL DATA PUSHED TO GITHUB SUCCESSFULLY")
+        print(">>> SHUTTING DOWN IN 60 SECONDS...")
+        print(">>> (Stop instance from Vast.ai dashboard to cancel)")
+
+        import time
+        time.sleep(60)
+
+        print(">>> SHUTTING DOWN NOW...")
+        result = subprocess.run(["sudo", "-n", "shutdown", "-h", "now"], capture_output=True)
+        if result.returncode != 0:
+            os.system('sudo shutdown -h now')
+    else:
+        # NOT SAFE - keep running so user can manually retrieve data
+        print("\n!!! GIT PUSH FAILED - NOT SHUTTING DOWN !!!")
+        print("\nData saved locally. To download:")
+        print("  scp -r user@instance:~/nod2-screening-data/PHASE_6/trajectories ./")
+        print("  scp -r user@instance:~/nod2-screening-data/PHASE_6/checkpoints ./")
+        print("\nThen manually shutdown:")
+        print("  sudo shutdown -h now")
+        print("\nOr stop the instance from Vast.ai dashboard.")
+
     print("=" * 70)
 
 if __name__ == "__main__":

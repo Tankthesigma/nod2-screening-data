@@ -13,6 +13,27 @@ echo ""
 echo "Started: $(date)"
 echo ""
 
+#===============================================================================
+# GITHUB TOKEN FOR AUTO-SAVE (REQUIRED FOR AUTO-SHUTDOWN)
+#===============================================================================
+if [ -z "$GITHUB_TOKEN" ]; then
+    echo "!!! GITHUB_TOKEN not set !!!"
+    echo ""
+    echo "For auto-save and auto-shutdown, run:"
+    echo "  export GITHUB_TOKEN=ghp_your_token_here"
+    echo "  bash vast_launch.sh"
+    echo ""
+    echo "Or run without (data stays local, no auto-shutdown):"
+    read -p "Continue without GitHub token? [y/N] " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+else
+    echo ">>> GITHUB_TOKEN is set - auto-save enabled"
+fi
+echo ""
+
 # Get script directory and navigate to PHASE_6
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR/../.."
