@@ -6,7 +6,7 @@ PhD-level: Shows conformational stability landscape.
 
 FIXES APPLIED:
 - Proper backbone-aligned ligand RMSD using Kabsch algorithm
-- Protein Rg instead of ligand Rg (more meaningful for binding)
+- Ligand Rg (measures ligand compactness/conformational state)
 - Robust ligand selection
 """
 
