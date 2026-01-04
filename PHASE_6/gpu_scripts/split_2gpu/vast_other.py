@@ -72,8 +72,9 @@ REPORT_INTERVAL = 2500
 TRAJECTORY_INTERVAL = 2500
 CHECKPOINT_INTERVAL = 250000
 
-# === OTHER GPU SET (4 sims): budesonide x3 + natural_top_rep1 ===
+# === OTHER GPU SET (5 sims): budesonide x3 + natural_top_rep1 + feb_rep1 (re-run) ===
 SIMULATIONS = [
+    ("febuxostat", 1, "NOD2_LRR_clean.pdb", "febuxostat_docked.sdf"),  # RE-RUN (DCD lost)
     ("budesonide", 1, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
     ("budesonide", 2, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
     ("budesonide", 3, "NOD2_LRR_clean.pdb", "budesonide_docked.sdf"),
