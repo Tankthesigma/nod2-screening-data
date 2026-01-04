@@ -6,7 +6,7 @@ PhD-level: Individual replicates + ensemble average with 95% CI
 """
 
 import MDAnalysis as mda
-from MDAnalysis.analysis import rms
+from MDAnalysis.analysis import rms, align
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -14,13 +14,21 @@ import seaborn as sns
 from pathlib import Path
 import warnings
 import gc
+import os
 
 warnings.filterwarnings('ignore')
 
-# Paths
-BASE_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_6")
+# Paths - configurable via environment or relative to script
+SCRIPT_DIR = Path(__file__).parent.resolve()
+PROJECT_DIR = SCRIPT_DIR.parent.parent  # nod2-screening-data/
+
+if os.name == 'nt':  # Windows
+    BASE_DIR = Path(os.getenv('NOD2_BASE', r"C:\Users\vasud\nod2-screening-data\PHASE_6"))
+else:  # Linux/Mac
+    BASE_DIR = Path(os.getenv('NOD2_BASE', PROJECT_DIR / "PHASE_6"))
+
 TRAJ_DIR = BASE_DIR / "trajectories"
-OUTPUT_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_7_analysis\rmsd")
+OUTPUT_DIR = SCRIPT_DIR.parent / "rmsd"
 
 # Compound configuration: (name, type, num_reps, topology_to_use)
 COMPOUNDS = {
@@ -89,10 +97,17 @@ def compute_protein_rmsd(universe, stride=10):
 
 
 def compute_ligand_rmsd(universe, stride=10):
-    """Compute ligand RMSD after aligning protein backbone."""
-    protein = universe.select_atoms("protein and backbone")
+    """
+    Compute ligand RMSD after PROPERLY aligning protein backbone.
 
-    # Try different ligand selections
+    This is the correct approach:
+    1. Superimpose protein backbone onto reference (rotation + translation)
+    2. Apply same transformation to ligand
+    3. Measure ligand RMSD from reference pose
+
+    This tells us: "How much did the ligand move relative to the protein binding site?"
+    """
+    protein_bb = universe.select_atoms("protein and backbone")
     ligand = universe.select_atoms("not protein and not resname HOH WAT SOL NA CL")
 
     if len(ligand) == 0:
@@ -101,25 +116,41 @@ def compute_ligand_rmsd(universe, stride=10):
 
     print(f"  Ligand atoms: {len(ligand)}")
 
-    # Reference frame
+    # Create a reference universe (copy of first frame)
     universe.trajectory[0]
-    ref_protein = protein.positions.copy()
-    ref_ligand = ligand.positions.copy()
+    ref_positions = universe.atoms.positions.copy()
+    ref_ligand_pos = ligand.positions.copy()
 
     rmsd_values = []
     times = []
 
     for ts in universe.trajectory[::stride]:
-        # Align protein to reference
-        mobile_protein = protein.positions
+        # Compute optimal rotation+translation to align protein backbone to reference
+        # This uses the Kabsch algorithm internally
+        mobile_coords = protein_bb.positions
+        ref_coords = ref_positions[protein_bb.indices]
 
-        # Simple alignment (translate to COM)
-        ref_com = ref_protein.mean(axis=0)
-        mob_com = mobile_protein.mean(axis=0)
+        # Center both selections
+        mobile_center = mobile_coords.mean(axis=0)
+        ref_center = ref_coords.mean(axis=0)
 
-        # Get ligand positions and compute RMSD
-        lig_positions = ligand.positions - mob_com + ref_com
-        diff = lig_positions - ref_ligand
+        mobile_centered = mobile_coords - mobile_center
+        ref_centered = ref_coords - ref_center
+
+        # Compute rotation matrix using SVD (Kabsch algorithm)
+        correlation_matrix = np.dot(mobile_centered.T, ref_centered)
+        U, S, Vt = np.linalg.svd(correlation_matrix)
+
+        # Handle reflection case
+        d = np.sign(np.linalg.det(np.dot(Vt.T, U.T)))
+        rotation = np.dot(Vt.T, np.dot(np.diag([1, 1, d]), U.T))
+
+        # Apply transformation to ligand: translate, rotate, translate back
+        lig_pos = ligand.positions - mobile_center
+        lig_aligned = np.dot(lig_pos, rotation) + ref_center
+
+        # Compute RMSD to reference ligand position
+        diff = lig_aligned - ref_ligand_pos
         rmsd = np.sqrt((diff ** 2).sum() / len(diff))
 
         rmsd_values.append(rmsd)
