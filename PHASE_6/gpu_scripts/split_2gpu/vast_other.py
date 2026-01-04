@@ -99,6 +99,35 @@ def setup_git_auth():
     print(">>> Git authentication configured")
     return True
 
+def upload_dcd(dcd_path):
+    """Upload DCD file to transfer.sh (14 day storage, up to 10GB)."""
+    if not os.path.exists(dcd_path):
+        print(f">>> DCD not found: {dcd_path}")
+        return None
+
+    print(f"\n>>> UPLOADING DCD: {dcd_path}")
+    file_size = os.path.getsize(dcd_path) / (1024**3)  # GB
+    print(f"    Size: {file_size:.2f} GB")
+
+    try:
+        result = subprocess.run(
+            ["curl", "--upload-file", dcd_path, f"https://transfer.sh/{os.path.basename(dcd_path)}"],
+            capture_output=True, text=True, timeout=3600  # 1 hour timeout
+        )
+        if result.returncode == 0:
+            url = result.stdout.strip()
+            print(f">>> UPLOAD SUCCESS: {url}")
+            # Save URL to file for reference
+            with open("trajectories/DOWNLOAD_URLS.txt", "a") as f:
+                f.write(f"{os.path.basename(dcd_path)}: {url}\n")
+            return url
+        else:
+            print(f">>> UPLOAD FAILED: {result.stderr[:200]}")
+            return None
+    except Exception as e:
+        print(f">>> UPLOAD ERROR: {e}")
+        return None
+
 def save_to_git(message="Auto-save simulation results"):
     """Push results to git. Called after each sim and on crash."""
     try:
@@ -480,6 +509,11 @@ def main():
         try:
             success = run_simulation(name, rep, pdb, sdf, i, len(SIMULATIONS))
             results.append((f"{name}_rep{rep}", success))
+
+            # UPLOAD DCD TO TRANSFER.SH (backup before potential crash)
+            if success:
+                dcd_path = f"{OUTPUT_DIR}/{name}_rep{rep}.dcd"
+                upload_dcd(dcd_path)
 
             # SAVE TO GIT AFTER EACH SIMULATION (even if failed!)
             status = "SUCCESS" if success else "FAILED"
