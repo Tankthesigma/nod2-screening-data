@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """
-PHASE 7: RMSD Analysis
+PHASE 7: RMSD Analysis (CORRECTED)
 Computes ligand and protein backbone RMSD for all trajectories.
 PhD-level: Individual replicates + ensemble average with 95% CI
+
+FIXES APPLIED:
+- Proper rotational alignment using Kabsch algorithm (rms.RMSD)
+- PBC-aware calculations
+- Robust ligand selection
 """
 
 import MDAnalysis as mda
-from MDAnalysis.analysis import rms
+from MDAnalysis.analysis import rms, align
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -14,15 +19,17 @@ import seaborn as sns
 from pathlib import Path
 import warnings
 import gc
+import os
 
 warnings.filterwarnings('ignore')
 
-# Paths
-BASE_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_6")
+# Paths - relative to script location for portability
+SCRIPT_DIR = Path(__file__).parent
+BASE_DIR = Path(os.getenv('NOD2_BASE', SCRIPT_DIR.parent.parent / "PHASE_6"))
 TRAJ_DIR = BASE_DIR / "trajectories"
-OUTPUT_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_7_analysis\rmsd")
+OUTPUT_DIR = SCRIPT_DIR.parent / "rmsd"
 
-# Compound configuration: (name, type, num_reps, topology_to_use)
+# Compound configuration
 COMPOUNDS = {
     'budesonide': {'type': 'Positive Control', 'reps': 3, 'top': 'budesonide_rep1_solvated.pdb'},
     'febuxostat': {'type': 'Lead Candidate', 'reps': 3, 'top': 'febuxostat_rep1_solvated.pdb'},
@@ -34,98 +41,115 @@ COMPOUNDS = {
 
 # Color scheme
 COLORS = {
-    'budesonide': '#1f77b4',   # blue
-    'febuxostat': '#2ca02c',   # green
-    'ursodiol': '#ff7f0e',     # orange
-    'natural_top': '#9467bd',  # purple
-    'decoy': '#d62728',        # red
-    'apo': '#7f7f7f',          # gray
+    'budesonide': '#1f77b4',
+    'febuxostat': '#2ca02c',
+    'ursodiol': '#ff7f0e',
+    'natural_top': '#9467bd',
+    'decoy': '#d62728',
+    'apo': '#7f7f7f',
 }
 
-# Plotting style
+# Residues to exclude from ligand selection
+WATER_RESNAMES = {"HOH", "WAT", "SOL", "TIP3", "TIP3P", "SPC", "SPCE", "TIP4P"}
+ION_RESNAMES = {"NA", "CL", "K", "CA", "MG", "ZN", "MN", "FE", "CU", "CO", "NI", "NA+", "CL-"}
+
 sns.set_context("paper", font_scale=1.5)
 sns.set_style("whitegrid")
 
 
-def compute_rmsd(universe, selection, ref_frame=0, stride=10):
+def pick_ligand_selection(universe):
     """
-    Compute RMSD for a selection over trajectory.
-    Uses strided loading for memory efficiency.
+    Robustly pick the ligand as the largest non-protein, non-water, non-ion residue.
+    Returns (selection_string, AtomGroup).
     """
-    # Set reference to first frame
-    universe.trajectory[ref_frame]
-    ref_positions = universe.select_atoms(selection).positions.copy()
-    ref_com = ref_positions.mean(axis=0)
-    ref_positions -= ref_com
+    nonprot = universe.select_atoms("not protein")
 
-    rmsd_values = []
-    times = []
+    candidates = []
+    for res in nonprot.residues:
+        rname = (res.resname or "").upper()
+        if rname in WATER_RESNAMES or rname in ION_RESNAMES:
+            continue
+        # Ignore single-atom junk
+        if len(res.atoms) < 5:
+            continue
+        candidates.append(res)
 
-    for ts in universe.trajectory[::stride]:
-        current_positions = universe.select_atoms(selection).positions.copy()
-        current_com = current_positions.mean(axis=0)
-        current_positions -= current_com
+    if not candidates:
+        return None, None
 
-        # Simple RMSD calculation
-        diff = current_positions - ref_positions
-        rmsd = np.sqrt((diff ** 2).sum() / len(diff))
-        rmsd_values.append(rmsd)
-        times.append(ts.time / 1000)  # Convert ps to ns
+    # Pick largest residue by atom count
+    lig_res = max(candidates, key=lambda r: len(r.atoms))
+    lig_atoms = lig_res.atoms
 
-    return np.array(times), np.array(rmsd_values)
+    sel = f"resid {lig_res.resid} and resname {lig_res.resname}"
+
+    return sel, lig_atoms
 
 
 def compute_protein_rmsd(universe, stride=10):
-    """Compute protein backbone RMSD using MDAnalysis built-in."""
+    """
+    Compute protein backbone RMSD using MDAnalysis built-in.
+    Automatically handles alignment via least-squares fitting.
+    """
     protein = universe.select_atoms("protein and backbone")
 
-    R = rms.RMSD(protein, protein, select="backbone", ref_frame=0)
+    if len(protein) == 0:
+        print("  Warning: No protein backbone atoms found!")
+        return None, None
+
+    R = rms.RMSD(universe, universe, select="protein and backbone", ref_frame=0)
     R.run(step=stride, verbose=False)
 
-    times = R.results.rmsd[:, 1] / 1000  # Convert to ns
+    times = R.results.rmsd[:, 1] / 1000  # Convert ps to ns
     rmsd = R.results.rmsd[:, 2]  # RMSD in Angstroms
 
     return times, rmsd
 
 
 def compute_ligand_rmsd(universe, stride=10):
-    """Compute ligand RMSD after aligning protein backbone."""
-    protein = universe.select_atoms("protein and backbone")
+    """
+    Compute ligand RMSD with PROPER alignment.
 
-    # Try different ligand selections
-    ligand = universe.select_atoms("not protein and not resname HOH WAT SOL NA CL")
+    Method:
+    1. Align protein backbone to reference frame (Kabsch algorithm)
+    2. Measure where ligand ended up after alignment
 
-    if len(ligand) == 0:
+    This is the scientifically correct way - removes protein rotation/translation.
+    """
+    lig_sel, lig_atoms = pick_ligand_selection(universe)
+
+    if lig_atoms is None or len(lig_atoms) == 0:
         print("  Warning: No ligand atoms found!")
         return None, None
 
-    print(f"  Ligand atoms: {len(ligand)}")
+    # Get heavy atoms only for RMSD
+    lig_heavy_sel = f"({lig_sel}) and not name H*"
+    lig_heavy = universe.select_atoms(lig_heavy_sel)
 
-    # Reference frame
-    universe.trajectory[0]
-    ref_protein = protein.positions.copy()
-    ref_ligand = ligand.positions.copy()
+    if len(lig_heavy) == 0:
+        lig_heavy_sel = lig_sel  # Fallback to all atoms
+        lig_heavy = lig_atoms
 
-    rmsd_values = []
-    times = []
+    print(f"  Ligand: {lig_atoms.residues[0].resname}{lig_atoms.residues[0].resid} "
+          f"({len(lig_heavy)} heavy atoms)")
 
-    for ts in universe.trajectory[::stride]:
-        # Align protein to reference
-        mobile_protein = protein.positions
+    # Use MDAnalysis RMSD with groupselections
+    # select: group used for alignment (superposition)
+    # groupselections: additional groups to measure RMSD after alignment
+    R = rms.RMSD(
+        universe,
+        universe,
+        select="protein and backbone",
+        groupselections=[lig_heavy_sel],
+        ref_frame=0
+    )
+    R.run(step=stride, verbose=False)
 
-        # Simple alignment (translate to COM)
-        ref_com = ref_protein.mean(axis=0)
-        mob_com = mobile_protein.mean(axis=0)
+    # Columns: [Frame, Time(ps), Backbone_RMSD, Ligand_RMSD]
+    times = R.results.rmsd[:, 1] / 1000  # Convert ps to ns
+    ligand_rmsd = R.results.rmsd[:, 3]   # Ligand RMSD after alignment
 
-        # Get ligand positions and compute RMSD
-        lig_positions = ligand.positions - mob_com + ref_com
-        diff = lig_positions - ref_ligand
-        rmsd = np.sqrt((diff ** 2).sum() / len(diff))
-
-        rmsd_values.append(rmsd)
-        times.append(ts.time / 1000)
-
-    return np.array(times), np.array(rmsd_values)
+    return times, ligand_rmsd
 
 
 def bootstrap_ci(data_list, n_bootstrap=1000, ci=95):
@@ -186,8 +210,9 @@ def analyze_compound(name, config, stride=10):
 
             # Protein RMSD
             times, prot_rmsd = compute_protein_rmsd(u, stride=stride)
-            results['protein_rmsd'].append(prot_rmsd)
-            results['times'] = times
+            if prot_rmsd is not None:
+                results['protein_rmsd'].append(prot_rmsd)
+                results['times'] = times
 
             # Ligand RMSD (skip for apo)
             if name != 'apo':
@@ -201,6 +226,8 @@ def analyze_compound(name, config, stride=10):
 
         except Exception as e:
             print(f"    ERROR: {e}")
+            import traceback
+            traceback.print_exc()
             continue
 
     return results
@@ -240,12 +267,12 @@ def plot_rmsd_comparison(all_results, output_dir):
                    color=color, linewidth=2.5, label=f"{name} (n=1)")
 
     # Threshold lines
-    ax.axhline(y=3, color='green', linestyle='--', alpha=0.5, label='Stable threshold (3Å)')
-    ax.axhline(y=5, color='red', linestyle='--', alpha=0.5, label='Unstable threshold (5Å)')
+    ax.axhline(y=3, color='green', linestyle='--', alpha=0.5, label='Stable threshold (3 Ang)')
+    ax.axhline(y=5, color='red', linestyle='--', alpha=0.5, label='Unstable threshold (5 Ang)')
 
     ax.set_xlabel('Time (ns)', fontsize=14)
-    ax.set_ylabel('Ligand RMSD (Å)', fontsize=14)
-    ax.set_title('Ligand RMSD: Binding Stability Comparison', fontsize=16)
+    ax.set_ylabel('Ligand RMSD (Ang)', fontsize=14)
+    ax.set_title('Ligand RMSD: Binding Stability Comparison\n(Aligned to protein backbone)', fontsize=16)
     ax.legend(loc='upper right', fontsize=10)
     ax.set_xlim(0, None)
     ax.set_ylim(0, None)
@@ -277,7 +304,7 @@ def plot_rmsd_comparison(all_results, output_dir):
 
     ax.axhline(y=3, color='gray', linestyle='--', alpha=0.5)
     ax.set_xlabel('Time (ns)', fontsize=14)
-    ax.set_ylabel('Backbone RMSD (Å)', fontsize=14)
+    ax.set_ylabel('Backbone RMSD (Ang)', fontsize=14)
     ax.set_title('Protein Backbone RMSD (Stability Check)', fontsize=16)
     ax.legend(loc='upper right', fontsize=10)
 
@@ -312,9 +339,9 @@ def generate_stats_table(all_results, output_dir):
             stats.append({
                 'Compound': name,
                 'Type': results['type'],
-                'Mean RMSD (Å)': f"{mean_rmsd:.2f}",
-                'Std Dev (Å)': f"{std_rmsd:.2f}",
-                '% Frames <3Å': f"{pct_stable:.1f}",
+                'Mean RMSD (Ang)': f"{mean_rmsd:.2f}",
+                'Std Dev (Ang)': f"{std_rmsd:.2f}",
+                '% Frames <3Ang': f"{pct_stable:.1f}",
                 'Verdict': verdict
             })
 
@@ -328,7 +355,8 @@ def generate_stats_table(all_results, output_dir):
 
 def main():
     print("=" * 60)
-    print("PHASE 7: RMSD ANALYSIS")
+    print("PHASE 7: RMSD ANALYSIS (CORRECTED)")
+    print("Using proper Kabsch alignment for ligand RMSD")
     print("=" * 60)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

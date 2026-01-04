@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """
-PHASE 7: RMSF Analysis
+PHASE 7: RMSF Analysis (CORRECTED)
 Computes per-residue root mean square fluctuation.
 Shows which protein regions are flexible vs rigid.
+
+FIXES APPLIED:
+- Trajectory alignment to reference frame before RMSF calculation
+- Streaming computation to avoid memory issues
+- Proper use of MDAnalysis AlignTraj
 """
 
 import MDAnalysis as mda
-from MDAnalysis.analysis import rms
+from MDAnalysis.analysis import align, rms
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -14,13 +19,15 @@ import seaborn as sns
 from pathlib import Path
 import warnings
 import gc
+import os
 
 warnings.filterwarnings('ignore')
 
-# Paths
-BASE_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_6")
+# Paths - relative to script location for portability
+SCRIPT_DIR = Path(__file__).parent
+BASE_DIR = Path(os.getenv('NOD2_BASE', SCRIPT_DIR.parent.parent / "PHASE_6"))
 TRAJ_DIR = BASE_DIR / "trajectories"
-OUTPUT_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_7_analysis\rmsf")
+OUTPUT_DIR = SCRIPT_DIR.parent / "rmsf"
 
 # Compound configuration
 COMPOUNDS = {
@@ -46,31 +53,59 @@ sns.set_style("whitegrid")
 
 
 def compute_rmsf(universe, stride=10):
-    """Compute per-residue RMSF for CA atoms."""
+    """
+    Compute per-residue RMSF for CA atoms with PROPER alignment.
+
+    Method:
+    1. Create reference structure (first frame)
+    2. Align each frame to reference using backbone CA
+    3. Compute RMSF on aligned trajectory
+
+    Uses streaming (Welford's algorithm) to avoid memory issues.
+    """
     protein_ca = universe.select_atoms("protein and name CA")
+    protein_bb = universe.select_atoms("protein and backbone")
 
     if len(protein_ca) == 0:
         print("  Warning: No CA atoms found!")
         return None, None
 
-    # Collect positions
-    positions = []
+    # Create reference - use first frame
+    ref = universe.copy()
+    ref.trajectory[0]
+    ref_ca = ref.select_atoms("protein and name CA")
+
+    # Streaming RMSF calculation (Welford's online algorithm)
+    # This avoids storing all frames in memory
+    n = 0
+    mean = np.zeros((len(protein_ca), 3), dtype=np.float64)
+    M2 = np.zeros((len(protein_ca), 3), dtype=np.float64)
+
+    print(f"  Computing RMSF with alignment...")
+
     for ts in universe.trajectory[::stride]:
-        positions.append(protein_ca.positions.copy())
+        # Align current frame to reference (Kabsch algorithm)
+        # This modifies positions in place
+        align.alignto(universe, ref, select="protein and name CA")
 
-    positions = np.array(positions)
+        # Get aligned CA positions
+        x = protein_ca.positions.astype(np.float64)
 
-    # Compute mean position
-    mean_pos = positions.mean(axis=0)
+        # Welford's online algorithm for variance
+        n += 1
+        delta = x - mean
+        mean += delta / n
+        delta2 = x - mean
+        M2 += delta * delta2
 
-    # Compute RMSF
-    diff = positions - mean_pos
-    rmsf = np.sqrt((diff ** 2).sum(axis=2).mean(axis=0))
+    if n == 0:
+        return None, None
 
-    # Get residue IDs
-    resids = protein_ca.resids
+    # Population variance over frames, then RMSF
+    var = M2 / n
+    rmsf = np.sqrt(var.sum(axis=1))  # Sum over x,y,z then sqrt
 
-    return resids, rmsf
+    return protein_ca.resids, rmsf
 
 
 def analyze_compound(name, config, stride=10):
@@ -101,18 +136,22 @@ def analyze_compound(name, config, stride=10):
 
         try:
             u = mda.Universe(str(top_file), str(traj_file))
+            print(f"    Frames: {len(u.trajectory)}, CA atoms: {len(u.select_atoms('protein and name CA'))}")
 
             resids, rmsf = compute_rmsf(u, stride=stride)
 
             if rmsf is not None:
                 results['rmsf_values'].append(rmsf)
                 results['resids'] = resids
+                print(f"    Mean RMSF: {np.mean(rmsf):.2f} Ang")
 
             del u
             gc.collect()
 
         except Exception as e:
             print(f"    ERROR: {e}")
+            import traceback
+            traceback.print_exc()
             continue
 
     return results
@@ -142,8 +181,8 @@ def plot_rmsf_comparison(all_results, output_dir):
             ax.plot(resids, results['rmsf_values'][0], color=color, linewidth=2, label=name)
 
     ax.set_xlabel('Residue Number', fontsize=14)
-    ax.set_ylabel('RMSF (Å)', fontsize=14)
-    ax.set_title('Per-Residue Flexibility (RMSF)', fontsize=16)
+    ax.set_ylabel('RMSF (Ang)', fontsize=14)
+    ax.set_title('Per-Residue Flexibility (RMSF)\n(Aligned to first frame)', fontsize=16)
     ax.legend(loc='upper right', fontsize=10)
 
     plt.tight_layout()
@@ -176,7 +215,7 @@ def plot_rmsf_heatmap(all_results, output_dir):
 
     fig, ax = plt.subplots(figsize=(10, 8))
     sns.heatmap(df_sampled.T, cmap='YlOrRd', ax=ax,
-                xticklabels=20, cbar_kws={'label': 'RMSF (Å)'})
+                xticklabels=20, cbar_kws={'label': 'RMSF (Ang)'})
 
     ax.set_xlabel('Residue Number', fontsize=14)
     ax.set_ylabel('Compound', fontsize=14)
@@ -207,7 +246,8 @@ def save_rmsf_data(all_results, output_dir):
 
 def main():
     print("=" * 60)
-    print("PHASE 7: RMSF ANALYSIS")
+    print("PHASE 7: RMSF ANALYSIS (CORRECTED)")
+    print("Using trajectory alignment for accurate flexibility")
     print("=" * 60)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

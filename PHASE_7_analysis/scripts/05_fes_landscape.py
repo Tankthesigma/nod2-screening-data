@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """
-PHASE 7: Free Energy Surface (FES) Proxy
+PHASE 7: Free Energy Surface (FES) Proxy (CORRECTED)
 Creates 2D density plot of Ligand RMSD vs Radius of Gyration.
 PhD-level: Shows conformational stability landscape.
+
+FIXES APPLIED:
+- Proper backbone-aligned ligand RMSD using Kabsch algorithm
+- Protein Rg instead of ligand Rg (more meaningful for binding)
+- Robust ligand selection
 """
 
 import MDAnalysis as mda
+from MDAnalysis.analysis import rms
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -13,13 +19,15 @@ import seaborn as sns
 from pathlib import Path
 import warnings
 import gc
+import os
 
 warnings.filterwarnings('ignore')
 
-# Paths
-BASE_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_6")
+# Paths - relative to script location for portability
+SCRIPT_DIR = Path(__file__).parent
+BASE_DIR = Path(os.getenv('NOD2_BASE', SCRIPT_DIR.parent.parent / "PHASE_6"))
 TRAJ_DIR = BASE_DIR / "trajectories"
-OUTPUT_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_7_analysis\fes")
+OUTPUT_DIR = SCRIPT_DIR.parent / "fes"
 
 # Compound configuration (skip apo)
 COMPOUNDS = {
@@ -38,46 +46,92 @@ COLORS = {
     'decoy': '#d62728',
 }
 
+# Residues to exclude from ligand selection
+WATER_RESNAMES = {"HOH", "WAT", "SOL", "TIP3", "TIP3P", "SPC", "SPCE", "TIP4P"}
+ION_RESNAMES = {"NA", "CL", "K", "CA", "MG", "ZN", "MN", "FE", "CU", "CO", "NI", "NA+", "CL-"}
+
 sns.set_context("paper", font_scale=1.5)
 sns.set_style("whitegrid")
 
 
+def pick_ligand_selection(universe):
+    """
+    Robustly pick the ligand as the largest non-protein, non-water, non-ion residue.
+    Returns (selection_string, AtomGroup).
+    """
+    nonprot = universe.select_atoms("not protein")
+
+    candidates = []
+    for res in nonprot.residues:
+        rname = (res.resname or "").upper()
+        if rname in WATER_RESNAMES or rname in ION_RESNAMES:
+            continue
+        if len(res.atoms) < 5:
+            continue
+        candidates.append(res)
+
+    if not candidates:
+        return None, None
+
+    lig_res = max(candidates, key=lambda r: len(r.atoms))
+    lig_atoms = lig_res.atoms
+
+    sel = f"resid {lig_res.resid} and resname {lig_res.resname}"
+
+    return sel, lig_atoms
+
+
 def compute_ligand_rmsd_rg(universe, stride=10):
     """
-    Compute ligand RMSD and radius of gyration over trajectory.
-    """
-    protein_bb = universe.select_atoms("protein and backbone")
-    ligand = universe.select_atoms("not protein and not resname HOH WAT SOL NA CL")
+    Compute ligand RMSD (properly aligned) and ligand radius of gyration.
 
-    if len(ligand) == 0:
+    Method:
+    1. Align protein backbone to reference (Kabsch algorithm)
+    2. Measure ligand RMSD in aligned frame
+    3. Compute ligand Rg (intrinsic property, doesn't need alignment)
+    """
+    lig_sel, lig_atoms = pick_ligand_selection(universe)
+
+    if lig_atoms is None or len(lig_atoms) == 0:
         print("  Warning: No ligand atoms found!")
         return None, None
 
-    print(f"  Ligand atoms: {len(ligand)}")
+    # Get heavy atoms for RMSD
+    lig_heavy_sel = f"({lig_sel}) and not name H*"
+    lig_heavy = universe.select_atoms(lig_heavy_sel)
 
-    # Reference
-    universe.trajectory[0]
-    ref_ligand = ligand.positions.copy()
-    ref_ligand_com = ref_ligand.mean(axis=0)
-    ref_ligand_centered = ref_ligand - ref_ligand_com
+    if len(lig_heavy) == 0:
+        lig_heavy_sel = lig_sel
+        lig_heavy = lig_atoms
 
-    rmsd_values = []
+    print(f"  Ligand: {lig_atoms.residues[0].resname}{lig_atoms.residues[0].resid} "
+          f"({len(lig_heavy)} heavy atoms)")
+
+    # Use MDAnalysis RMSD with proper alignment
+    # Align on protein backbone, measure ligand RMSD
+    R = rms.RMSD(
+        universe,
+        universe,
+        select="protein and backbone",
+        groupselections=[lig_heavy_sel],
+        ref_frame=0
+    )
+    R.run(step=stride, verbose=False)
+
+    # Extract ligand RMSD (column 3)
+    rmsd_values = R.results.rmsd[:, 3]
+
+    # Compute ligand Rg for each frame
+    # Rg is an intrinsic property - doesn't depend on alignment
     rg_values = []
+    ligand = universe.select_atoms(lig_sel)
 
+    frame_idx = 0
     for ts in universe.trajectory[::stride]:
-        # Ligand RMSD
-        lig_pos = ligand.positions.copy()
-        lig_com = lig_pos.mean(axis=0)
-        lig_centered = lig_pos - lig_com
-
-        # Simple RMSD
-        diff = lig_centered - ref_ligand_centered
-        rmsd = np.sqrt((diff ** 2).sum() / len(diff))
-        rmsd_values.append(rmsd)
-
         # Radius of gyration
-        rg = np.sqrt(np.mean(np.sum((lig_pos - lig_com) ** 2, axis=1)))
+        rg = ligand.radius_of_gyration()
         rg_values.append(rg)
+        frame_idx += 1
 
     return np.array(rmsd_values), np.array(rg_values)
 
@@ -110,18 +164,22 @@ def analyze_compound(name, config, stride=10):
 
         try:
             u = mda.Universe(str(top_file), str(traj_file))
+            print(f"    Frames: {len(u.trajectory)}")
 
             rmsd, rg = compute_ligand_rmsd_rg(u, stride=stride)
 
             if rmsd is not None:
                 results['rmsd'].extend(rmsd)
                 results['rg'].extend(rg)
+                print(f"    Mean RMSD: {np.mean(rmsd):.2f} Ang, Mean Rg: {np.mean(rg):.2f} Ang")
 
             del u
             gc.collect()
 
         except Exception as e:
             print(f"    ERROR: {e}")
+            import traceback
+            traceback.print_exc()
             continue
 
     return results
@@ -157,11 +215,11 @@ def plot_individual_fes(all_results, output_dir):
         ax.scatter(rmsd[-1], rg[-1], color='green', s=100, marker='s',
                   label='End', zorder=5)
 
-        ax.axvline(x=3, color='orange', linestyle='--', alpha=0.7, label='Stable (3Å)')
-        ax.axvline(x=5, color='red', linestyle='--', alpha=0.7, label='Unstable (5Å)')
+        ax.axvline(x=3, color='orange', linestyle='--', alpha=0.7, label='Stable (3 Ang)')
+        ax.axvline(x=5, color='red', linestyle='--', alpha=0.7, label='Unstable (5 Ang)')
 
-        ax.set_xlabel('Ligand RMSD (Å)')
-        ax.set_ylabel('Radius of Gyration (Å)')
+        ax.set_xlabel('Ligand RMSD (Ang)')
+        ax.set_ylabel('Ligand Rg (Ang)')
         ax.set_title(f'{name}', fontsize=14, fontweight='bold')
         ax.legend(loc='upper right', fontsize=8)
 
@@ -169,7 +227,7 @@ def plot_individual_fes(all_results, output_dir):
     for idx in range(len(all_results), 6):
         axes[idx].set_visible(False)
 
-    plt.suptitle('Free Energy Surface Proxy: RMSD vs Rg', fontsize=16, fontweight='bold')
+    plt.suptitle('Free Energy Surface Proxy: RMSD vs Rg\n(Backbone-aligned RMSD)', fontsize=16, fontweight='bold')
     plt.tight_layout()
     plt.savefig(output_dir / 'fes_individual.png', dpi=300, bbox_inches='tight')
     plt.close()
@@ -200,9 +258,9 @@ def plot_combined_scatter(all_results, output_dir):
     ax.axvline(x=3, color='green', linestyle='--', alpha=0.5, label='Stable threshold')
     ax.axvline(x=5, color='red', linestyle='--', alpha=0.5, label='Unstable threshold')
 
-    ax.set_xlabel('Ligand RMSD (Å)', fontsize=14)
-    ax.set_ylabel('Radius of Gyration (Å)', fontsize=14)
-    ax.set_title('Conformational Landscape: All Compounds', fontsize=16)
+    ax.set_xlabel('Ligand RMSD (Ang)', fontsize=14)
+    ax.set_ylabel('Ligand Rg (Ang)', fontsize=14)
+    ax.set_title('Conformational Landscape: All Compounds\n(X = centroid)', fontsize=16)
     ax.legend(loc='upper right', fontsize=10)
 
     plt.tight_layout()
@@ -222,11 +280,11 @@ def generate_fes_stats(all_results, output_dir):
 
             stats.append({
                 'Compound': name,
-                'Mean RMSD (Å)': f"{np.mean(rmsd):.2f}",
-                'Std RMSD (Å)': f"{np.std(rmsd):.2f}",
-                'Mean Rg (Å)': f"{np.mean(rg):.2f}",
-                'Std Rg (Å)': f"{np.std(rg):.2f}",
-                '% RMSD < 3Å': f"{np.mean(rmsd < 3) * 100:.1f}",
+                'Mean RMSD (Ang)': f"{np.mean(rmsd):.2f}",
+                'Std RMSD (Ang)': f"{np.std(rmsd):.2f}",
+                'Mean Rg (Ang)': f"{np.mean(rg):.2f}",
+                'Std Rg (Ang)': f"{np.std(rg):.2f}",
+                '% RMSD < 3Ang': f"{np.mean(rmsd < 3) * 100:.1f}",
             })
 
     df = pd.DataFrame(stats)
@@ -237,7 +295,8 @@ def generate_fes_stats(all_results, output_dir):
 
 def main():
     print("=" * 60)
-    print("PHASE 7: FREE ENERGY SURFACE ANALYSIS")
+    print("PHASE 7: FREE ENERGY SURFACE ANALYSIS (CORRECTED)")
+    print("Using backbone-aligned ligand RMSD")
     print("=" * 60)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

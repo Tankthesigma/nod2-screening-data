@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """
-PHASE 7: Hydrogen Bond Analysis
+PHASE 7: Hydrogen Bond Analysis (CORRECTED)
 Computes protein-ligand H-bonds over time.
 PhD-level: Reports H-bond persistence (lifetime), not just counts.
+
+FIXES APPLIED:
+- Uses `between` parameter to ONLY count protein-ligand H-bonds
+- Excludes protein-protein and ligand-ligand bonds
+- Robust ligand selection
 """
 
 import MDAnalysis as mda
@@ -12,16 +17,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
-from collections import defaultdict
+from collections import defaultdict, Counter
 import warnings
 import gc
+import os
 
 warnings.filterwarnings('ignore')
 
-# Paths
-BASE_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_6")
+# Paths - relative to script location for portability
+SCRIPT_DIR = Path(__file__).parent
+BASE_DIR = Path(os.getenv('NOD2_BASE', SCRIPT_DIR.parent.parent / "PHASE_6"))
 TRAJ_DIR = BASE_DIR / "trajectories"
-OUTPUT_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_7_analysis\hbonds")
+OUTPUT_DIR = SCRIPT_DIR.parent / "hbonds"
 
 # Compound configuration (skip apo - no ligand)
 COMPOUNDS = {
@@ -40,123 +47,197 @@ COLORS = {
     'decoy': '#d62728',
 }
 
+# Residues to exclude from ligand selection
+WATER_RESNAMES = {"HOH", "WAT", "SOL", "TIP3", "TIP3P", "SPC", "SPCE", "TIP4P"}
+ION_RESNAMES = {"NA", "CL", "K", "CA", "MG", "ZN", "MN", "FE", "CU", "CO", "NI", "NA+", "CL-"}
+
 sns.set_context("paper", font_scale=1.5)
 sns.set_style("whitegrid")
 
 
-def compute_hbonds_simple(universe, stride=10):
+def pick_ligand_selection(universe):
     """
-    Simple H-bond counting between protein and ligand.
-    Uses distance-based criterion (3.5A heavy atom distance, 150 degree angle).
+    Robustly pick the ligand as the largest non-protein, non-water, non-ion residue.
+    Returns (selection_string, AtomGroup).
     """
-    protein = universe.select_atoms("protein")
-    ligand = universe.select_atoms("not protein and not resname HOH WAT SOL NA CL")
+    nonprot = universe.select_atoms("not protein")
 
-    if len(ligand) == 0:
+    candidates = []
+    for res in nonprot.residues:
+        rname = (res.resname or "").upper()
+        if rname in WATER_RESNAMES or rname in ION_RESNAMES:
+            continue
+        if len(res.atoms) < 5:
+            continue
+        candidates.append(res)
+
+    if not candidates:
+        return None, None
+
+    lig_res = max(candidates, key=lambda r: len(r.atoms))
+    lig_atoms = lig_res.atoms
+
+    sel = f"resid {lig_res.resid} and resname {lig_res.resname}"
+
+    return sel, lig_atoms
+
+
+def compute_hbonds(universe, stride=10):
+    """
+    Compute PROTEIN-LIGAND hydrogen bonds ONLY.
+
+    Uses the `between` parameter to ensure we only count:
+    - Protein donor -> Ligand acceptor
+    - Ligand donor -> Protein acceptor
+
+    Does NOT count:
+    - Protein-protein H-bonds (structural)
+    - Ligand-ligand H-bonds (intramolecular)
+    - Water H-bonds
+    """
+    protein_sel = "protein"
+    lig_sel, lig_atoms = pick_ligand_selection(universe)
+
+    if lig_atoms is None or len(lig_atoms) == 0:
         print("  Warning: No ligand atoms found!")
         return None, None, None
 
-    print(f"  Ligand atoms: {len(ligand)}")
+    print(f"  Ligand: {lig_atoms.residues[0].resname}{lig_atoms.residues[0].resid} "
+          f"({len(lig_atoms)} atoms)")
+    print("  Running H-bond analysis (protein-ligand ONLY)...")
 
-    # Track H-bonds per frame
-    hbond_counts = []
-    times = []
-
-    # Get potential donors and acceptors
-    protein_donors = protein.select_atoms("name N NH NH1 NH2 NE NE1 NE2 NZ ND1 ND2 OG OG1 OH NE1")
-    protein_acceptors = protein.select_atoms("name O OD1 OD2 OE1 OE2 OG OG1 OH ND1 NE2 SD")
-
-    ligand_heavy = ligand.select_atoms("not name H*")
-
-    for ts in universe.trajectory[::stride]:
-        # Simple distance-based H-bond detection
-        count = 0
-
-        # Check distances between protein polar atoms and ligand
-        for p_atom in protein_donors:
-            for l_atom in ligand_heavy:
-                dist = np.linalg.norm(p_atom.position - l_atom.position)
-                if dist < 3.5:  # H-bond distance criterion
-                    count += 1
-
-        for p_atom in protein_acceptors:
-            for l_atom in ligand_heavy:
-                dist = np.linalg.norm(p_atom.position - l_atom.position)
-                if dist < 3.5:
-                    count += 1
-
-        hbond_counts.append(count)
-        times.append(ts.time / 1000)
-
-    return np.array(times), np.array(hbond_counts), None
-
-
-def compute_hbonds_mda(universe, stride=10):
-    """
-    Use MDAnalysis HydrogenBondAnalysis for proper H-bond detection.
-    """
+    # Use the `between` parameter - this is the KEY FIX
+    # between=[sel1, sel2] finds H-bonds where one partner is in sel1 and other in sel2
     try:
-        # Define selections
-        protein_sel = "protein"
-        ligand_sel = "not protein and not resname HOH WAT SOL NA CL"
-
-        # Check if ligand exists
-        ligand = universe.select_atoms(ligand_sel)
-        if len(ligand) == 0:
-            print("  Warning: No ligand atoms found!")
-            return None, None, None
-
-        print(f"  Ligand atoms: {len(ligand)}")
-        print(f"  Running H-bond analysis...")
-
-        # Run H-bond analysis
         hbonds = HydrogenBondAnalysis(
             universe,
-            donors_sel=f"({protein_sel}) or ({ligand_sel})",
-            acceptors_sel=f"({protein_sel}) or ({ligand_sel})",
+            between=[protein_sel, lig_sel],
             d_a_cutoff=3.5,
             d_h_a_angle_cutoff=150,
+            update_selections=True
         )
         hbonds.run(step=stride, verbose=False)
+    except TypeError:
+        # Older MDAnalysis versions may not support `between`
+        # Fall back to manual filtering
+        print("  Note: Using fallback H-bond detection (older MDAnalysis)")
+        return compute_hbonds_fallback(universe, lig_sel, stride)
 
-        # Filter for protein-ligand H-bonds only
-        results = hbonds.results.hbonds
+    results = hbonds.results.hbonds
 
-        if len(results) == 0:
-            print("  No H-bonds detected!")
-            return None, None, None
+    # Build time axis
+    times = np.array([ts.time / 1000.0 for ts in universe.trajectory[::stride]])
+    n_frames = len(times)
 
-        # Count H-bonds per frame
-        n_frames = len(universe.trajectory[::stride])
-        hbond_counts = np.zeros(n_frames)
-        times = np.array([ts.time / 1000 for ts in universe.trajectory[::stride]])
+    if results is None or len(results) == 0:
+        print("  No H-bonds detected!")
+        return times, np.zeros(n_frames, dtype=int), {}
 
-        # Get residue info for persistence analysis
-        hbond_pairs = defaultdict(int)
+    # Map frame indices
+    sampled_frames = np.arange(0, len(universe.trajectory), stride, dtype=int)
+    frame_to_idx = {f: i for i, f in enumerate(sampled_frames)}
 
-        for hb in results:
-            frame_idx = int(hb[0] / stride)
-            if frame_idx < n_frames:
-                hbond_counts[frame_idx] += 1
+    # Count H-bonds per frame
+    counts = np.zeros(n_frames, dtype=int)
+    pair_frames = defaultdict(set)
 
-            # Track donor-acceptor pairs
-            donor_idx = int(hb[1])
-            acceptor_idx = int(hb[3])
-            donor_atom = universe.atoms[donor_idx]
-            acceptor_atom = universe.atoms[acceptor_idx]
+    for row in results:
+        frame = int(row[0])
+        if frame not in frame_to_idx:
+            continue
 
-            pair_key = f"{donor_atom.resname}{donor_atom.resid}-{acceptor_atom.resname}{acceptor_atom.resid}"
-            hbond_pairs[pair_key] += 1
+        idx = frame_to_idx[frame]
+        counts[idx] += 1
 
-        # Calculate persistence
-        persistence = {k: v / n_frames * 100 for k, v in hbond_pairs.items()}
+        # Track donor-acceptor pairs for persistence
+        donor_idx = int(row[1])
+        acceptor_idx = int(row[3])
 
-        return times, hbond_counts, persistence
+        d = universe.atoms[donor_idx]
+        a = universe.atoms[acceptor_idx]
 
-    except Exception as e:
-        print(f"  MDAnalysis H-bond failed: {e}")
-        print("  Falling back to simple method...")
-        return compute_hbonds_simple(universe, stride)
+        pair_key = f"{d.resname}{d.resid}:{d.name}->{a.resname}{a.resid}:{a.name}"
+        pair_frames[pair_key].add(idx)
+
+    # Calculate persistence (% of frames each H-bond exists)
+    persistence = {k: len(v) / n_frames * 100.0 for k, v in pair_frames.items()}
+
+    print(f"  Found {len(persistence)} unique H-bond pairs")
+    print(f"  Mean H-bonds per frame: {np.mean(counts):.1f}")
+
+    return times, counts, persistence
+
+
+def compute_hbonds_fallback(universe, lig_sel, stride=10):
+    """
+    Fallback H-bond detection for older MDAnalysis versions.
+    Manually filters for protein-ligand bonds.
+    """
+    protein = universe.select_atoms("protein")
+    ligand = universe.select_atoms(lig_sel)
+
+    # Run H-bond analysis on combined selection
+    combined_sel = f"protein or ({lig_sel})"
+
+    hbonds = HydrogenBondAnalysis(
+        universe,
+        donors_sel=combined_sel,
+        acceptors_sel=combined_sel,
+        d_a_cutoff=3.5,
+        d_h_a_angle_cutoff=150,
+    )
+    hbonds.run(step=stride, verbose=False)
+
+    results = hbonds.results.hbonds
+    times = np.array([ts.time / 1000.0 for ts in universe.trajectory[::stride]])
+    n_frames = len(times)
+
+    if results is None or len(results) == 0:
+        return times, np.zeros(n_frames, dtype=int), {}
+
+    sampled_frames = np.arange(0, len(universe.trajectory), stride, dtype=int)
+    frame_to_idx = {f: i for i, f in enumerate(sampled_frames)}
+
+    counts = np.zeros(n_frames, dtype=int)
+    pair_frames = defaultdict(set)
+
+    # Get atom indices for filtering
+    protein_indices = set(protein.indices)
+    ligand_indices = set(ligand.indices)
+
+    for row in results:
+        frame = int(row[0])
+        donor_idx = int(row[1])
+        acceptor_idx = int(row[3])
+
+        if frame not in frame_to_idx:
+            continue
+
+        # FILTER: One must be protein, other must be ligand (XOR logic)
+        donor_is_protein = donor_idx in protein_indices
+        donor_is_ligand = donor_idx in ligand_indices
+        acceptor_is_protein = acceptor_idx in protein_indices
+        acceptor_is_ligand = acceptor_idx in ligand_indices
+
+        is_protein_ligand = (
+            (donor_is_protein and acceptor_is_ligand) or
+            (donor_is_ligand and acceptor_is_protein)
+        )
+
+        if not is_protein_ligand:
+            continue  # Skip protein-protein or ligand-ligand bonds
+
+        idx = frame_to_idx[frame]
+        counts[idx] += 1
+
+        d = universe.atoms[donor_idx]
+        a = universe.atoms[acceptor_idx]
+        pair_key = f"{d.resname}{d.resid}:{d.name}->{a.resname}{a.resid}:{a.name}"
+        pair_frames[pair_key].add(idx)
+
+    persistence = {k: len(v) / n_frames * 100.0 for k, v in pair_frames.items()}
+
+    return times, counts, persistence
 
 
 def analyze_compound(name, config, stride=10):
@@ -188,8 +269,9 @@ def analyze_compound(name, config, stride=10):
 
         try:
             u = mda.Universe(str(top_file), str(traj_file))
+            print(f"    Frames: {len(u.trajectory)}")
 
-            times, hbond_counts, persistence = compute_hbonds_mda(u, stride=stride)
+            times, hbond_counts, persistence = compute_hbonds(u, stride=stride)
 
             if hbond_counts is not None:
                 results['hbond_counts'].append(hbond_counts)
@@ -204,6 +286,8 @@ def analyze_compound(name, config, stride=10):
 
         except Exception as e:
             print(f"    ERROR: {e}")
+            import traceback
+            traceback.print_exc()
             continue
 
     return results
@@ -222,7 +306,6 @@ def plot_hbond_timeseries(all_results, output_dir):
 
         # Ensemble average
         if len(results['hbond_counts']) > 1:
-            # Pad arrays to same length
             max_len = max(len(hb) for hb in results['hbond_counts'])
             padded = [np.pad(hb, (0, max_len - len(hb)), constant_values=np.nan)
                      for hb in results['hbond_counts']]
@@ -242,8 +325,8 @@ def plot_hbond_timeseries(all_results, output_dir):
             ax.plot(times[:min_len], hb[:min_len], color=color, linewidth=2, label=name)
 
     ax.set_xlabel('Time (ns)', fontsize=14)
-    ax.set_ylabel('H-bond Count', fontsize=14)
-    ax.set_title('Protein-Ligand Hydrogen Bonds Over Time', fontsize=16)
+    ax.set_ylabel('Protein-Ligand H-bond Count', fontsize=14)
+    ax.set_title('Protein-Ligand Hydrogen Bonds Over Time\n(Excludes protein-protein bonds)', fontsize=16)
     ax.legend(loc='upper right', fontsize=10)
 
     plt.tight_layout()
@@ -277,7 +360,7 @@ def plot_hbond_summary(all_results, output_dir):
                   color=colors, capsize=5, edgecolor='black')
 
     ax.set_xlabel('Compound', fontsize=14)
-    ax.set_ylabel('Average H-bonds', fontsize=14)
+    ax.set_ylabel('Average Protein-Ligand H-bonds', fontsize=14)
     ax.set_title('Average Protein-Ligand Hydrogen Bonds', fontsize=16)
 
     plt.tight_layout()
@@ -292,7 +375,8 @@ def plot_hbond_summary(all_results, output_dir):
 
 def main():
     print("=" * 60)
-    print("PHASE 7: HYDROGEN BOND ANALYSIS")
+    print("PHASE 7: HYDROGEN BOND ANALYSIS (CORRECTED)")
+    print("Counting ONLY protein-ligand H-bonds")
     print("=" * 60)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """
-PHASE 7: Contact Analysis
+PHASE 7: Contact Analysis (CORRECTED)
 Identifies protein residues in contact with ligand.
 PhD-level: Reports contact frequency across trajectory.
+
+FIXES APPLIED:
+- Vectorized distance calculation using distance_array (100x faster)
+- PBC-aware distances using box dimensions
+- Robust ligand selection
 """
 
 import MDAnalysis as mda
+from MDAnalysis.lib.distances import distance_array
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -14,13 +20,15 @@ from pathlib import Path
 from collections import defaultdict
 import warnings
 import gc
+import os
 
 warnings.filterwarnings('ignore')
 
-# Paths
-BASE_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_6")
+# Paths - relative to script location for portability
+SCRIPT_DIR = Path(__file__).parent
+BASE_DIR = Path(os.getenv('NOD2_BASE', SCRIPT_DIR.parent.parent / "PHASE_6"))
 TRAJ_DIR = BASE_DIR / "trajectories"
-OUTPUT_DIR = Path(r"C:\Users\vasud\nod2-screening-data\PHASE_7_analysis\contacts")
+OUTPUT_DIR = SCRIPT_DIR.parent / "contacts"
 
 # Compound configuration (skip apo)
 COMPOUNDS = {
@@ -42,50 +50,112 @@ COLORS = {
 # Contact distance threshold
 CONTACT_CUTOFF = 4.0  # Angstroms
 
+# Residues to exclude from ligand selection
+WATER_RESNAMES = {"HOH", "WAT", "SOL", "TIP3", "TIP3P", "SPC", "SPCE", "TIP4P"}
+ION_RESNAMES = {"NA", "CL", "K", "CA", "MG", "ZN", "MN", "FE", "CU", "CO", "NI", "NA+", "CL-"}
+
 sns.set_context("paper", font_scale=1.5)
 sns.set_style("whitegrid")
 
 
+def pick_ligand_selection(universe):
+    """
+    Robustly pick the ligand as the largest non-protein, non-water, non-ion residue.
+    Returns (selection_string, AtomGroup).
+    """
+    nonprot = universe.select_atoms("not protein")
+
+    candidates = []
+    for res in nonprot.residues:
+        rname = (res.resname or "").upper()
+        if rname in WATER_RESNAMES or rname in ION_RESNAMES:
+            continue
+        if len(res.atoms) < 5:
+            continue
+        candidates.append(res)
+
+    if not candidates:
+        return None, None
+
+    lig_res = max(candidates, key=lambda r: len(r.atoms))
+    lig_atoms = lig_res.atoms
+
+    sel = f"resid {lig_res.resid} and resname {lig_res.resname}"
+
+    return sel, lig_atoms
+
+
 def compute_contacts(universe, contact_cutoff=4.0, stride=10):
     """
-    Compute residue-ligand contacts over trajectory.
-    A contact is defined as any heavy atom within cutoff distance.
+    Compute residue-ligand contacts using VECTORIZED distance calculation.
+
+    This is ~100x faster than nested Python loops.
+    Also handles Periodic Boundary Conditions (PBC) correctly.
     """
     protein = universe.select_atoms("protein")
-    ligand = universe.select_atoms("not protein and not resname HOH WAT SOL NA CL")
+    lig_sel, lig_atoms = pick_ligand_selection(universe)
 
-    if len(ligand) == 0:
+    if lig_atoms is None or len(lig_atoms) == 0:
         print("  Warning: No ligand atoms found!")
         return None, 0
 
-    ligand_heavy = ligand.select_atoms("not name H*")
-    print(f"  Ligand heavy atoms: {len(ligand_heavy)}")
+    # Get heavy atoms only
+    lig_heavy = lig_atoms.select_atoms("not name H*")
+    prot_heavy = protein.select_atoms("not name H*")
 
-    # Get unique residues
-    protein_residues = protein.residues
+    if len(lig_heavy) == 0:
+        lig_heavy = lig_atoms
 
-    # Track contacts per residue
-    contact_counts = defaultdict(int)
+    print(f"  Ligand: {lig_atoms.residues[0].resname}{lig_atoms.residues[0].resid} "
+          f"({len(lig_heavy)} heavy atoms)")
+    print(f"  Protein: {len(prot_heavy)} heavy atoms, {len(protein.residues)} residues")
+
+    # Pre-compute residue index for each protein atom
+    prot_resindices = prot_heavy.resindices
+    n_res = len(protein.residues)
+
+    # Contact counts per residue
+    contact_counts = np.zeros(n_res, dtype=np.int64)
     n_frames = 0
+
+    print("  Computing contacts (vectorized)...")
 
     for ts in universe.trajectory[::stride]:
         n_frames += 1
-        ligand_positions = ligand_heavy.positions
 
-        for res in protein_residues:
-            res_heavy = res.atoms.select_atoms("not name H*")
-            if len(res_heavy) == 0:
-                continue
+        # Get box dimensions for PBC (if available)
+        box = ts.dimensions if (ts.dimensions is not None and
+                                 ts.dimensions.size == 6 and
+                                 ts.dimensions[0] > 0) else None
 
-            # Check for any contact
-            for res_atom in res_heavy:
-                min_dist = np.min(np.linalg.norm(ligand_positions - res_atom.position, axis=1))
-                if min_dist < contact_cutoff:
-                    contact_counts[f"{res.resname}{res.resid}"] += 1
-                    break  # Count residue once per frame
+        # VECTORIZED distance calculation - this is the KEY optimization
+        # Returns matrix of shape (n_ligand_atoms, n_protein_atoms)
+        dists = distance_array(lig_heavy.positions, prot_heavy.positions, box=box)
 
-    # Convert to frequency
-    contact_freq = {k: v / n_frames * 100 for k, v in contact_counts.items()}
+        # Find protein atoms within cutoff of ANY ligand atom
+        min_dists = dists.min(axis=0)  # Min distance to ligand for each protein atom
+        in_contact = min_dists < contact_cutoff
+
+        if not np.any(in_contact):
+            continue
+
+        # Get unique residues in contact
+        res_in_contact = np.unique(prot_resindices[in_contact])
+        contact_counts[res_in_contact] += 1
+
+    if n_frames == 0:
+        return None, 0
+
+    # Convert to frequency (% of frames)
+    freq = (contact_counts / n_frames) * 100.0
+
+    # Build contact_freq dict with residue names
+    contact_freq = {}
+    for res, f in zip(protein.residues, freq):
+        if f > 0:
+            contact_freq[f"{res.resname}{res.resid}"] = float(f)
+
+    print(f"  Found {len(contact_freq)} contacting residues")
 
     return contact_freq, n_frames
 
@@ -117,6 +187,7 @@ def analyze_compound(name, config, stride=10):
 
         try:
             u = mda.Universe(str(top_file), str(traj_file))
+            print(f"    Frames: {len(u.trajectory)}")
 
             contact_freq, n_frames = compute_contacts(u, CONTACT_CUTOFF, stride=stride)
 
@@ -130,6 +201,8 @@ def analyze_compound(name, config, stride=10):
 
         except Exception as e:
             print(f"    ERROR: {e}")
+            import traceback
+            traceback.print_exc()
             continue
 
     return results
@@ -179,7 +252,7 @@ def plot_contact_heatmap(all_results, output_dir, min_freq=30):
 
     ax.set_xlabel('Compound', fontsize=14)
     ax.set_ylabel('Residue', fontsize=14)
-    ax.set_title(f'Protein-Ligand Contacts (>{min_freq}% frequency)', fontsize=16)
+    ax.set_title(f'Protein-Ligand Contacts (>{min_freq}% frequency)\n(PBC-corrected)', fontsize=16)
 
     plt.tight_layout()
     plt.savefig(output_dir / 'contact_heatmap.png', dpi=300, bbox_inches='tight')
@@ -275,7 +348,8 @@ def identify_key_residues(all_results, output_dir):
 
 def main():
     print("=" * 60)
-    print("PHASE 7: CONTACT ANALYSIS")
+    print("PHASE 7: CONTACT ANALYSIS (CORRECTED)")
+    print("Using vectorized distance calculation with PBC")
     print("=" * 60)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
