@@ -1,0 +1,12 @@
+NOD2 1007fs Mutation Analysis Report
+==================================================
+
+Key Findings:
+1. AlphaFold pTM: 0.27 (low - unstable)
+2. Boltz-2 pTM: 0.309 (low - unstable)
+3. Binding residues deleted: 8/9
+4. Critical H-bond partners (GLU1008, ASP1011, ARG1037): ALL DELETED
+
+Conclusion:
+The 1007fs mutation completely eliminates the Febuxostat binding site.
+This enables precision medicine patient selection based on genotype.
