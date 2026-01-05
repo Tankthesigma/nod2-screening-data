@@ -1,0 +1,11 @@
+ligand,mutation,position,wt_residue,distance,impact,in_lrr
+febuxostat,R702W,702,R,79.41576649020818,FAR - No impact on binding,True
+febuxostat,G908R,908,G,33.997197660582664,FAR - No impact on binding,True
+febuxostat,N852S,852,N,40.529049860450826,FAR - No impact on binding,True
+febuxostat,M863V,863,M,42.17172092388237,FAR - No impact on binding,True
+febuxostat,L1007fs,1007,L,,LRR pocket deleted - binding to validated pocket not possible,True
+natural_top,R702W,702,R,79.15960134275035,FAR - No impact on binding,True
+natural_top,G908R,908,G,34.01850986952783,FAR - No impact on binding,True
+natural_top,N852S,852,N,40.42062995702161,FAR - No impact on binding,True
+natural_top,M863V,863,M,43.189742908493706,FAR - No impact on binding,True
+natural_top,L1007fs,1007,L,,LRR pocket deleted - binding to validated pocket not possible,True
