@@ -11,7 +11,7 @@ FIXES APPLIED:
 """
 
 import MDAnalysis as mda
-from MDAnalysis.analysis import rms
+from MDAnalysis.analysis import rms, align
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -81,14 +81,32 @@ def pick_ligand_selection(universe):
     return sel, lig_atoms
 
 
+def wrap_ligand_to_protein(lig_pos, prot_com, box):
+    """
+    Apply minimum image convention to move ligand near protein.
+    """
+    lig_com = lig_pos.mean(axis=0)
+    delta = lig_com - prot_com
+
+    shift = np.zeros(3)
+    for i in range(3):
+        if delta[i] > box[i] / 2:
+            shift[i] = -box[i]
+        elif delta[i] < -box[i] / 2:
+            shift[i] = box[i]
+
+    return lig_pos + shift
+
+
 def compute_ligand_rmsd_rg(universe, stride=10):
     """
-    Compute ligand RMSD (properly aligned) and ligand radius of gyration.
+    Compute ligand RMSD (with PBC correction) and ligand radius of gyration.
 
     Method:
-    1. Align protein backbone to reference (Kabsch algorithm)
-    2. Measure ligand RMSD in aligned frame
-    3. Compute ligand Rg (intrinsic property, doesn't need alignment)
+    1. Wrap ligand to be near protein (minimum image convention)
+    2. Align protein backbone to reference (Kabsch algorithm)
+    3. Apply same transformation to ligand
+    4. Measure ligand RMSD and Rg
     """
     lig_sel, lig_atoms = pick_ligand_selection(universe)
 
@@ -107,31 +125,51 @@ def compute_ligand_rmsd_rg(universe, stride=10):
     print(f"  Ligand: {lig_atoms.residues[0].resname}{lig_atoms.residues[0].resid} "
           f"({len(lig_heavy)} heavy atoms)")
 
-    # Use MDAnalysis RMSD with proper alignment
-    # Align on protein backbone, measure ligand RMSD
-    R = rms.RMSD(
-        universe,
-        universe,
-        select="protein and backbone",
-        groupselections=[lig_heavy_sel],
-        ref_frame=0
-    )
-    R.run(step=stride, verbose=False)
+    protein_bb = universe.select_atoms("protein and backbone")
 
-    # Extract ligand RMSD (column 3)
-    rmsd_values = R.results.rmsd[:, 3]
+    # Get reference positions from frame 0
+    universe.trajectory[0]
+    box = universe.dimensions[:3] if universe.dimensions is not None else np.array([100, 100, 100])
+    ref_prot_pos = protein_bb.positions.copy()
+    ref_prot_com = ref_prot_pos.mean(axis=0)
+    ref_lig_pos_raw = lig_heavy.positions.copy()
+    ref_lig_pos = wrap_ligand_to_protein(ref_lig_pos_raw, ref_prot_com, box)
 
-    # Compute ligand Rg for each frame
-    # Rg is an intrinsic property - doesn't depend on alignment
+    rmsd_values = []
     rg_values = []
-    ligand = universe.select_atoms(lig_sel)
 
-    frame_idx = 0
     for ts in universe.trajectory[::stride]:
-        # Radius of gyration
-        rg = ligand.radius_of_gyration()
+        box = ts.dimensions[:3] if ts.dimensions is not None else np.array([100, 100, 100])
+
+        # Get current positions
+        cur_prot_pos = protein_bb.positions.copy()
+        cur_prot_com = cur_prot_pos.mean(axis=0)
+
+        # Wrap ligand to be near protein
+        cur_lig_pos_raw = lig_heavy.positions.copy()
+        cur_lig_pos = wrap_ligand_to_protein(cur_lig_pos_raw, cur_prot_com, box)
+
+        # Center both protein structures
+        cur_prot_centered = cur_prot_pos - cur_prot_com
+        ref_prot_centered = ref_prot_pos - ref_prot_com
+
+        # Get rotation matrix (Kabsch)
+        R, _ = align.rotation_matrix(cur_prot_centered, ref_prot_centered)
+
+        # Apply transformation to ligand
+        lig_centered = cur_lig_pos - cur_prot_com
+        lig_rotated = np.dot(lig_centered, R.T)
+        lig_aligned = lig_rotated + ref_prot_com
+
+        # Calculate RMSD
+        diff = lig_aligned - ref_lig_pos
+        rmsd = np.sqrt((diff ** 2).sum() / len(lig_heavy))
+        rmsd_values.append(rmsd)
+
+        # Calculate Rg (doesn't need alignment - intrinsic property)
+        lig_com = cur_lig_pos.mean(axis=0)
+        rg = np.sqrt(((cur_lig_pos - lig_com) ** 2).sum() / len(lig_heavy))
         rg_values.append(rg)
-        frame_idx += 1
 
     return np.array(rmsd_values), np.array(rg_values)
 

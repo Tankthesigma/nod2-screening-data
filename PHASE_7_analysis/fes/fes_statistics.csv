@@ -1,0 +1,6 @@
+Compound,Mean RMSD (Ang),Std RMSD (Ang),Mean Rg (Ang),Std Rg (Ang),% RMSD < 3Ang
+budesonide,10.61,5.07,4.10,0.07,2.7
+febuxostat,24.23,35.77,4.28,0.08,17.3
+ursodiol,10.53,13.49,4.35,0.10,10.1
+natural_top,12.31,22.91,4.05,0.06,7.0
+decoy,54.38,22.88,1.44,0.07,3.0

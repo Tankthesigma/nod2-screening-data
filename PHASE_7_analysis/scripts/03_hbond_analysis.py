@@ -84,18 +84,16 @@ def pick_ligand_selection(universe):
 
 def compute_hbonds(universe, stride=10):
     """
-    Compute PROTEIN-LIGAND hydrogen bonds ONLY.
+    Compute PROTEIN-LIGAND hydrogen bonds using distance-based detection.
 
-    Uses the `between` parameter to ensure we only count:
-    - Protein donor -> Ligand acceptor
-    - Ligand donor -> Protein acceptor
+    Uses simple geometric criteria:
+    - Donor (N,O) to Acceptor (N,O) distance < 3.5 Angstrom
+    - One partner must be protein, other must be ligand
 
-    Does NOT count:
-    - Protein-protein H-bonds (structural)
-    - Ligand-ligand H-bonds (intramolecular)
-    - Water H-bonds
+    This approach works without charge/bond information from PDB.
     """
-    protein_sel = "protein"
+    from MDAnalysis.lib.distances import distance_array
+
     lig_sel, lig_atoms = pick_ligand_selection(universe)
 
     if lig_atoms is None or len(lig_atoms) == 0:
@@ -104,140 +102,52 @@ def compute_hbonds(universe, stride=10):
 
     print(f"  Ligand: {lig_atoms.residues[0].resname}{lig_atoms.residues[0].resid} "
           f"({len(lig_atoms)} atoms)")
-    print("  Running H-bond analysis (protein-ligand ONLY)...")
+    print("  Running H-bond analysis (distance-based)...")
 
-    # Use the `between` parameter - this is the KEY FIX
-    # between=[sel1, sel2] finds H-bonds where one partner is in sel1 and other in sel2
-    try:
-        hbonds = HydrogenBondAnalysis(
-            universe,
-            between=[protein_sel, lig_sel],
-            d_a_cutoff=3.5,
-            d_h_a_angle_cutoff=150,
-            update_selections=True
-        )
-        hbonds.run(step=stride, verbose=False)
-    except TypeError:
-        # Older MDAnalysis versions may not support `between`
-        # Fall back to manual filtering
-        print("  Note: Using fallback H-bond detection (older MDAnalysis)")
-        return compute_hbonds_fallback(universe, lig_sel, stride)
+    # Select potential H-bond donors/acceptors (N and O atoms)
+    protein_polar = universe.select_atoms("protein and (name N* O*)")
+    ligand_polar = universe.select_atoms(f"({lig_sel}) and (name N* O*)")
 
-    results = hbonds.results.hbonds
+    if len(protein_polar) == 0 or len(ligand_polar) == 0:
+        print(f"  Warning: No polar atoms found (protein: {len(protein_polar)}, ligand: {len(ligand_polar)})")
+        times = np.array([ts.time / 1000.0 for ts in universe.trajectory[::stride]])
+        return times, np.zeros(len(times), dtype=int), {}
 
-    # Build time axis
-    times = np.array([ts.time / 1000.0 for ts in universe.trajectory[::stride]])
-    n_frames = len(times)
+    # H-bond distance cutoff
+    cutoff = 3.5  # Angstroms
 
-    if results is None or len(results) == 0:
-        print("  No H-bonds detected!")
-        return times, np.zeros(n_frames, dtype=int), {}
-
-    # Map frame indices
-    sampled_frames = np.arange(0, len(universe.trajectory), stride, dtype=int)
-    frame_to_idx = {f: i for i, f in enumerate(sampled_frames)}
-
-    # Count H-bonds per frame
-    counts = np.zeros(n_frames, dtype=int)
+    times = []
+    hbond_counts = []
     pair_frames = defaultdict(set)
 
-    for row in results:
-        frame = int(row[0])
-        if frame not in frame_to_idx:
-            continue
+    for frame_idx, ts in enumerate(universe.trajectory[::stride]):
+        # Calculate all protein-ligand distances
+        dists = distance_array(protein_polar.positions, ligand_polar.positions,
+                               box=ts.dimensions)
 
-        idx = frame_to_idx[frame]
-        counts[idx] += 1
+        # Find pairs within cutoff
+        contacts = np.where(dists < cutoff)
+        n_hbonds = len(contacts[0])
 
-        # Track donor-acceptor pairs for persistence
-        donor_idx = int(row[1])
-        acceptor_idx = int(row[3])
+        times.append(ts.time / 1000.0)  # ps to ns
+        hbond_counts.append(n_hbonds)
 
-        d = universe.atoms[donor_idx]
-        a = universe.atoms[acceptor_idx]
+        # Track which pairs form H-bonds for persistence calculation
+        for prot_idx, lig_idx in zip(contacts[0], contacts[1]):
+            prot_atom = protein_polar[prot_idx]
+            lig_atom = ligand_polar[lig_idx]
+            pair_key = (prot_atom.resname, prot_atom.resid, prot_atom.name,
+                       lig_atom.name)
+            pair_frames[pair_key].add(frame_idx)
 
-        pair_key = f"{d.resname}{d.resid}:{d.name}->{a.resname}{a.resid}:{a.name}"
-        pair_frames[pair_key].add(idx)
-
-    # Calculate persistence (% of frames each H-bond exists)
-    persistence = {k: len(v) / n_frames * 100.0 for k, v in pair_frames.items()}
+    # Calculate persistence (fraction of frames each pair exists)
+    n_frames = len(times)
+    persistence = {pair: len(frames) / n_frames for pair, frames in pair_frames.items()}
 
     print(f"  Found {len(persistence)} unique H-bond pairs")
-    print(f"  Mean H-bonds per frame: {np.mean(counts):.1f}")
+    print(f"  Mean H-bonds per frame: {np.mean(hbond_counts):.1f}")
 
-    return times, counts, persistence
-
-
-def compute_hbonds_fallback(universe, lig_sel, stride=10):
-    """
-    Fallback H-bond detection for older MDAnalysis versions.
-    Manually filters for protein-ligand bonds.
-    """
-    protein = universe.select_atoms("protein")
-    ligand = universe.select_atoms(lig_sel)
-
-    # Run H-bond analysis on combined selection
-    combined_sel = f"protein or ({lig_sel})"
-
-    hbonds = HydrogenBondAnalysis(
-        universe,
-        donors_sel=combined_sel,
-        acceptors_sel=combined_sel,
-        d_a_cutoff=3.5,
-        d_h_a_angle_cutoff=150,
-    )
-    hbonds.run(step=stride, verbose=False)
-
-    results = hbonds.results.hbonds
-    times = np.array([ts.time / 1000.0 for ts in universe.trajectory[::stride]])
-    n_frames = len(times)
-
-    if results is None or len(results) == 0:
-        return times, np.zeros(n_frames, dtype=int), {}
-
-    sampled_frames = np.arange(0, len(universe.trajectory), stride, dtype=int)
-    frame_to_idx = {f: i for i, f in enumerate(sampled_frames)}
-
-    counts = np.zeros(n_frames, dtype=int)
-    pair_frames = defaultdict(set)
-
-    # Get atom indices for filtering
-    protein_indices = set(protein.indices)
-    ligand_indices = set(ligand.indices)
-
-    for row in results:
-        frame = int(row[0])
-        donor_idx = int(row[1])
-        acceptor_idx = int(row[3])
-
-        if frame not in frame_to_idx:
-            continue
-
-        # FILTER: One must be protein, other must be ligand (XOR logic)
-        donor_is_protein = donor_idx in protein_indices
-        donor_is_ligand = donor_idx in ligand_indices
-        acceptor_is_protein = acceptor_idx in protein_indices
-        acceptor_is_ligand = acceptor_idx in ligand_indices
-
-        is_protein_ligand = (
-            (donor_is_protein and acceptor_is_ligand) or
-            (donor_is_ligand and acceptor_is_protein)
-        )
-
-        if not is_protein_ligand:
-            continue  # Skip protein-protein or ligand-ligand bonds
-
-        idx = frame_to_idx[frame]
-        counts[idx] += 1
-
-        d = universe.atoms[donor_idx]
-        a = universe.atoms[acceptor_idx]
-        pair_key = f"{d.resname}{d.resid}:{d.name}->{a.resname}{a.resid}:{a.name}"
-        pair_frames[pair_key].add(idx)
-
-    persistence = {k: len(v) / n_frames * 100.0 for k, v in pair_frames.items()}
-
-    return times, counts, persistence
+    return np.array(times), np.array(hbond_counts), persistence
 
 
 def analyze_compound(name, config, stride=10):
@@ -307,7 +217,8 @@ def plot_hbond_timeseries(all_results, output_dir):
         # Ensemble average
         if len(results['hbond_counts']) > 1:
             max_len = max(len(hb) for hb in results['hbond_counts'])
-            padded = [np.pad(hb, (0, max_len - len(hb)), constant_values=np.nan)
+            # Convert to float for nan padding
+            padded = [np.pad(hb.astype(float), (0, max_len - len(hb)), constant_values=np.nan)
                      for hb in results['hbond_counts']]
             hb_array = np.array(padded)
             mean_hb = np.nanmean(hb_array, axis=0)

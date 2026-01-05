@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-PHASE 7: RMSD Analysis (CORRECTED)
+PHASE 7: RMSD Analysis (CORRECTED v2)
 Computes ligand and protein backbone RMSD for all trajectories.
 PhD-level: Individual replicates + ensemble average with 95% CI
 
 FIXES APPLIED:
 - Proper rotational alignment using Kabsch algorithm (rms.RMSD)
-- PBC-aware calculations
+- PBC unwrapping via MDAnalysis transformations (fixes boundary-crossing artifacts)
 - Robust ligand selection
 """
 
 import MDAnalysis as mda
 from MDAnalysis.analysis import rms, align
+from MDAnalysis import transformations
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -106,15 +107,34 @@ def compute_protein_rmsd(universe, stride=10):
     return times, rmsd
 
 
+def wrap_ligand_to_protein(lig_pos, prot_com, box):
+    """
+    Apply minimum image convention to move ligand near protein.
+    Shifts all ligand atoms by the same vector to preserve internal geometry.
+    """
+    lig_com = lig_pos.mean(axis=0)
+    delta = lig_com - prot_com
+
+    # Calculate shift needed for minimum image
+    shift = np.zeros(3)
+    for i in range(3):
+        if delta[i] > box[i] / 2:
+            shift[i] = -box[i]
+        elif delta[i] < -box[i] / 2:
+            shift[i] = box[i]
+
+    return lig_pos + shift
+
+
 def compute_ligand_rmsd(universe, stride=10):
     """
-    Compute ligand RMSD with PROPER alignment.
+    Compute ligand RMSD with PROPER alignment and PBC handling.
 
     Method:
-    1. Align protein backbone to reference frame (Kabsch algorithm)
-    2. Measure where ligand ended up after alignment
-
-    This is the scientifically correct way - removes protein rotation/translation.
+    1. For each frame, wrap ligand to be near protein (minimum image)
+    2. Align protein backbone to reference using Kabsch
+    3. Apply same transformation to (wrapped) ligand
+    4. Calculate RMSD to reference ligand position
     """
     lig_sel, lig_atoms = pick_ligand_selection(universe)
 
@@ -133,23 +153,56 @@ def compute_ligand_rmsd(universe, stride=10):
     print(f"  Ligand: {lig_atoms.residues[0].resname}{lig_atoms.residues[0].resid} "
           f"({len(lig_heavy)} heavy atoms)")
 
-    # Use MDAnalysis RMSD with groupselections
-    # select: group used for alignment (superposition)
-    # groupselections: additional groups to measure RMSD after alignment
-    R = rms.RMSD(
-        universe,
-        universe,
-        select="protein and backbone",
-        groupselections=[lig_heavy_sel],
-        ref_frame=0
-    )
-    R.run(step=stride, verbose=False)
+    protein_bb = universe.select_atoms("protein and backbone")
 
-    # Columns: [Frame, Time(ps), Backbone_RMSD, Ligand_RMSD]
-    times = R.results.rmsd[:, 1] / 1000  # Convert ps to ns
-    ligand_rmsd = R.results.rmsd[:, 3]   # Ligand RMSD after alignment
+    # Get reference positions from frame 0
+    universe.trajectory[0]
+    box = universe.dimensions[:3] if universe.dimensions is not None else np.array([100, 100, 100])
+    ref_prot_pos = protein_bb.positions.copy()
+    ref_prot_com = ref_prot_pos.mean(axis=0)
 
-    return times, ligand_rmsd
+    # Wrap reference ligand to be near protein
+    ref_lig_pos_raw = lig_heavy.positions.copy()
+    ref_lig_pos = wrap_ligand_to_protein(ref_lig_pos_raw, ref_prot_com, box)
+
+    times = []
+    ligand_rmsd = []
+
+    for ts in universe.trajectory[::stride]:
+        # Get box for this frame
+        box = ts.dimensions[:3] if ts.dimensions is not None else np.array([100, 100, 100])
+
+        # Get current positions
+        cur_prot_pos = protein_bb.positions.copy()
+        cur_prot_com = cur_prot_pos.mean(axis=0)
+
+        # Wrap ligand to be near protein (PBC correction)
+        cur_lig_pos_raw = lig_heavy.positions.copy()
+        cur_lig_pos = wrap_ligand_to_protein(cur_lig_pos_raw, cur_prot_com, box)
+
+        # Center both protein structures
+        cur_prot_centered = cur_prot_pos - cur_prot_com
+        ref_prot_centered = ref_prot_pos - ref_prot_com
+
+        # Get rotation matrix (Kabsch)
+        R, _ = align.rotation_matrix(cur_prot_centered, ref_prot_centered)
+
+        # Apply transformation to ligand:
+        # 1. Translate to protein COM
+        # 2. Rotate
+        # 3. Translate to reference protein COM
+        lig_centered = cur_lig_pos - cur_prot_com
+        lig_rotated = np.dot(lig_centered, R.T)
+        lig_aligned = lig_rotated + ref_prot_com
+
+        # Calculate RMSD
+        diff = lig_aligned - ref_lig_pos
+        rmsd = np.sqrt((diff ** 2).sum() / len(lig_heavy))
+
+        times.append(ts.time / 1000)  # ps to ns
+        ligand_rmsd.append(rmsd)
+
+    return np.array(times), np.array(ligand_rmsd)
 
 
 def bootstrap_ci(data_list, n_bootstrap=1000, ci=95):

@@ -1,0 +1,359 @@
+Running job v8foz
+
+/home/ubuntu/exportVars.sh: line 3: export: `Display-Created=2026-01-05 08:03:05': not a valid identifier
+[[36m2026-01-05 08:04:07,487[0m][[34mflowdock.utils.utils[0m][[32mINFO[0m] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>[0m
+[[36m2026-01-05 08:04:07,491[0m][[34mflowdock.utils.utils[0m][[32mINFO[0m] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>[0m
+[[36m2026-01-05 08:04:07,491[0m][[34mflowdock.utils.rich_utils[0m][[33mWARNING[0m] - [rank: 0] Field 'callbacks' not found in config. Skipping 'callbacks' config printing...[0m
+[[36m2026-01-05 08:04:07,491[0m][[34mflowdock.utils.rich_utils[0m][[33mWARNING[0m] - [rank: 0] Field 'logger' not found in config. Skipping 'logger' config printing...[0m
+CONFIG
+├── data
+│   └── _target_: flowdock.data.combined_datamodule.CombinedDataModule          
+│       data_dir: /home/ubuntu/FlowDock/data/                                   
+│       train_datasets:                                                         
+│       - pdbbind                                                               
+│       - moad                                                                  
+│       test_datasets:                                                          
+│       - pdbbind                                                               
+│       - moad                                                                  
+│       batch_size: 16                                                          
+│       num_workers: 4                                                          
+│       pin_memory: true                                                        
+│       overfitting_example_name: null                                          
+│       n_protein_patches: 96                                                   
+│       n_lig_patches: 32                                                       
+│       epoch_frac: 1.0                                                         
+│       edge_crop_size: 400000                                                  
+│       split_train: /home/ubuntu/FlowDock/data//splits/timesplit_no_lig_overlap
+│       split_val: /home/ubuntu/FlowDock/data//splits/timesplit_no_lig_overlap_v
+│       split_test: /home/ubuntu/FlowDock/data//splits/timesplit_test           
+│       split_time: /home/ubuntu/FlowDock/data//splits/pdbids_2019              
+│       double_val: false                                                       
+│       cache_path: /home/ubuntu/FlowDock/data//cache                           
+│       limit_complexes: 0                                                      
+│       all_atoms: false                                                        
+│       max_lig_size: null                                                      
+│       min_multi_lig_distance: 0.5                                             
+│       remove_hs: true                                                         
+│       esm_embeddings_model: null                                              
+│       include_miscellaneous_atoms: false                                      
+│       train_multiplicity: 1                                                   
+│       val_multiplicity: 1                                                     
+│       max_receptor_size: null                                                 
+│       remove_promiscuous_targets: null                                        
+│       min_ligand_size: 0                                                      
+│       unroll_clusters: false                                                  
+│       enforce_timesplit: true                                                 
+│       merge_clusters: 1                                                       
+│       crop_beyond: 20                                                         
+│       protein_file: protein_processed                                         
+│       ligand_file: ligand                                                     
+│       min_protein_length: 50                                                  
+│       max_protein_length: 750                                                 
+│       pdbbind_dir: /home/ubuntu/FlowDock/data//pdbbind/PDBBind_processed      
+│       pdbbind_esm_embeddings_path: /home/ubuntu/FlowDock/data//pdbbind/embeddi
+│       pdbbind_apo_protein_structure_dir: /home/ubuntu/FlowDock/data//pdbbind/p
+│       pdbbind_split_train: /home/ubuntu/FlowDock/data//splits/timesplit_no_lig
+│       pdbbind_split_val: /home/ubuntu/FlowDock/data//splits/timesplit_no_lig_o
+│       pdbbind_a2h_assessment_csv_filepath: /home/ubuntu/FlowDock/data//pdbbind
+│       pdbbind_filter_using_a2h_assessment: true                               
+│       pdbbind_a2h_min_tmscore: 0.7                                            
+│       pdbbind_a2h_max_rmsd: 5.0                                               
+│       pdbbind_a2h_min_protein_length: 50                                      
+│       pdbbind_a2h_max_protein_length: 750                                     
+│       pdbbind_a2h_min_ligand_length: 1                                        
+│       pdbbind_a2h_max_ligand_length: 300                                      
+│       pdbbind_binding_affinity_values_path: /home/ubuntu/FlowDock/data//pdbbin
+│       moad_dir: /home/ubuntu/FlowDock/data//moad/BindingMOAD_2020_processed   
+│       moad_dockgen_dir: /home/ubuntu/FlowDock/data//DockGen/processed_files   
+│       moad_esm_embeddings_path: /home/ubuntu/FlowDock/data//moad/embeddings_ou
+│       moad_dockgen_esm_embeddings_path: /home/ubuntu/FlowDock/data//DockGen/em
+│       moad_esm_embeddings_sequences_path: /home/ubuntu/FlowDock/data//moad/moa
+│       moad_dockgen_esm_embeddings_sequences_path: /home/ubuntu/FlowDock/data//
+│       moad_apo_protein_structure_dir: /home/ubuntu/FlowDock/data//moad/moad_ho
+│       moad_dockgen_apo_protein_structure_dir: /home/ubuntu/FlowDock/data//Dock
+│       moad_clusters_filepath: /home/ubuntu/FlowDock/data//splits/MOAD_generali
+│       moad_a2h_assessment_csv_filepath: /home/ubuntu/FlowDock/data//moad/moad_
+│       moad_dockgen_a2h_assessment_csv_filepath: /home/ubuntu/FlowDock/data//Do
+│       moad_filter_using_a2h_assessment: true                                  
+│       moad_a2h_min_tmscore: 0.7                                               
+│       moad_a2h_max_rmsd: 5.0                                                  
+│       moad_a2h_min_protein_length: 50                                         
+│       moad_a2h_max_protein_length: 750                                        
+│       moad_a2h_min_ligand_length: 1                                           
+│       moad_a2h_max_ligand_length: 300                                         
+│       remove_pdbbind: false                                                   
+│       moad_binding_affinity_values_path: /home/ubuntu/FlowDock/data//moad/moad
+│       moad_map_binding_affinities_to_superligands: false                      
+│       pdbsidechain_dir: /home/ubuntu/FlowDock/data//pdbsidechain/pdb_2021aug02
+│       pdbsidechain_esm_embeddings_path: /home/ubuntu/FlowDock/data//pdbsidecha
+│       pdbsidechain_esm_embeddings_sequences_path: /home/ubuntu/FlowDock/data//
+│       pdbsidechain_apo_protein_structure_dir: /home/ubuntu/FlowDock/data//pdbs
+│       pdbsidechain_metadata_dir: /home/ubuntu/FlowDock/data//pdbsidechain     
+│       pdbsidechain_a2h_assessment_csv_filepath: /home/ubuntu/FlowDock/data//pd
+│       pdbsidechain_filter_using_a2h_assessment: true                          
+│       pdbsidechain_a2h_min_tmscore: 0.8                                       
+│       pdbsidechain_a2h_max_rmsd: 4.0                                          
+│       pdbsidechain_a2h_min_protein_length: 50                                 
+│       pdbsidechain_a2h_max_protein_length: 750                                
+│       pdbsidechain_postprocess_min_protein_length: 100                        
+│       pdbsidechain_postprocess_max_protein_length: 400                        
+│       vandermers_max_dist: 5.0                                                
+│       vandermers_buffer_residue_num: 7                                        
+│       vandermers_min_contacts: 5                                              
+│       vandermers_max_surrogate_binding_affinity: 15.0                         
+│       vandermers_second_ligand_max_closeness: 10.0                            
+│       vandermers_extract_second_ligand: false                                 
+│       vandermers_use_prob_as_surrogate_binding_affinity: false                
+│                                                                               
+├── model
+│   └── _target_: flowdock.models.flowdock_fm_module.FlowDockFMLitModule        
+│       net:                                                                    
+│         _target_: flowdock.models.components.flowdock.FlowDock                
+│         _partial_: true                                                       
+│       optimizer:                                                              
+│         _target_: torch.optim.Adam                                            
+│         _partial_: true                                                       
+│         lr: 0.0002                                                            
+│         weight_decay: 0.0                                                     
+│       scheduler:                                                              
+│         _target_: torch.optim.lr_scheduler.CosineAnnealingWarmRestarts        
+│         _partial_: true                                                       
+│         T_0: 0                                                                
+│         T_mult: 2                                                             
+│         eta_min: 1.0e-08                                                      
+│         verbose: true                                                         
+│       compile: false                                                          
+│       cfg:                                                                    
+│         mol_encoder:                                                          
+│           node_channels: 512                                                  
+│           pair_channels: 64                                                   
+│           n_atom_encodings: 23                                                
+│           n_bond_encodings: 4                                                 
+│           n_atom_pos_encodings: 6                                             
+│           n_stereo_encodings: 14                                              
+│           n_attention_heads: 8                                                
+│           attention_head_dim: 8                                               
+│           hidden_dim: 2048                                                    
+│           max_path_integral_length: 6                                         
+│           n_transformer_stacks: 8                                             
+│           n_heads: 8                                                          
+│           n_patches: 32                                                       
+│           checkpoint_file: /home/ubuntu/FlowDock/checkpoints/neuralplexermodel
+│           megamolbart: null                                                   
+│           from_pretrained: false                                              
+│         protein_encoder:                                                      
+│           use_esm_embedding: true                                             
+│           esm_version: esm2_t33_650M_UR50D                                    
+│           esm_repr_layer: 33                                                  
+│           residue_dim: 512                                                    
+│           plm_embed_dim: 1280                                                 
+│           n_aa_types: 21                                                      
+│           atom_padding_dim: 37                                                
+│           n_atom_types: 4                                                     
+│           n_patches: 96                                                       
+│           n_attention_heads: 8                                                
+│           scalar_dim: 16                                                      
+│           point_dim: 4                                                        
+│           pair_dim: 64                                                        
+│           n_heads: 8                                                          
+│           head_dim: 8                                                         
+│           max_residue_degree: 32                                              
+│           n_encoder_stacks: 2                                                 
+│           from_pretrained: false                                              
+│         relational_reasoning:                                                 
+│           from_pretrained: false                                              
+│         contact_predictor:                                                    
+│           n_stacks: 4                                                         
+│           dropout: 0.01                                                       
+│           from_pretrained: false                                              
+│         score_head:                                                           
+│           fiber_dim: 64                                                       
+│           hidden_dim: 512                                                     
+│           n_stacks: 4                                                         
+│           max_atom_degree: 8                                                  
+│           from_pretrained: false                                              
+│         confidence:                                                           
+│           enabled: true                                                       
+│           fiber_dim: 64                                                       
+│           hidden_dim: 512                                                     
+│           n_stacks: 4                                                         
+│           from_pretrained: false                                              
+│         affinity:                                                             
+│           enabled: true                                                       
+│           fiber_dim: 64                                                       
+│           hidden_dim: 512                                                     
+│           n_stacks: 4                                                         
+│           ligand_pooling: sum                                                 
+│           dropout: 0.01                                                       
+│           from_pretrained: false                                              
+│         latent_model: default                                                 
+│         prior_type: esmfold                                                   
+│         task:                                                                 
+│           pretrained: null                                                    
+│           ligands: true                                                       
+│           epoch_frac: 1.0                                                     
+│           label_name: null                                                    
+│           sequence_crop_size: 1600                                            
+│           edge_crop_size: 400000                                              
+│           max_masking_rate: 0.0                                               
+│           n_modes: 8                                                          
+│           dropout: 0.01                                                       
+│           freeze_mol_encoder: true                                            
+│           freeze_protein_encoder: false                                       
+│           freeze_relational_reasoning: false                                  
+│           freeze_contact_predictor: false                                     
+│           freeze_score_head: false                                            
+│           freeze_confidence: true                                             
+│           freeze_affinity: false                                              
+│           use_template: true                                                  
+│           use_plddt: false                                                    
+│           block_contact_decoding_scheme: beam                                 
+│           frozen_ligand_backbone: false                                       
+│           frozen_protein_backbone: false                                      
+│           single_protein_batch: true                                          
+│           contact_loss_weight: 0.2                                            
+│           global_score_loss_weight: 0.2                                       
+│           ligand_score_loss_weight: 0.1                                       
+│           clash_loss_weight: 10.0                                             
+│           local_distgeom_loss_weight: 10.0                                    
+│           drmsd_loss_weight: 2.0                                              
+│           distogram_loss_weight: 0.05                                         
+│           plddt_loss_weight: 1.0                                              
+│           affinity_loss_weight: 0.1                                           
+│           aux_batch_freq: 10                                                  
+│           global_max_sigma: 5.0                                               
+│           internal_max_sigma: 2.0                                             
+│           detect_covalent: true                                               
+│           float32_matmul_precision: highest                                   
+│           constrained_inpainting: false                                       
+│           visualize_generated_samples: true                                   
+│           loss_mode: auxiliary_estimation                                     
+│           num_steps: 20                                                       
+│           sampler: VDODE                                                      
+│           sampler_eta: 1.0                                                    
+│           start_time: 1.0                                                     
+│           eval_structure_prediction: false                                    
+│           overfitting_example_name: null                                      
+│                                                                               
+├── trainer
+│   └── _target_: lightning.pytorch.trainer.Trainer                             
+│       default_root_dir: /home/ubuntu/FlowDock/logs/sample/runs/2026-01-05_08-0
+│       min_epochs: 1                                                           
+│       max_epochs: 10                                                          
+│       accelerator: gpu                                                        
+│       devices: 1                                                              
+│       check_val_every_n_epoch: 1                                              
+│       deterministic: false                                                    
+│       reload_dataloaders_every_n_epochs: 1                                    
+│       gradient_clip_algorithm: norm                                           
+│       gradient_clip_val: 1.0                                                  
+│       num_sanity_val_steps: 0                                                 
+│                                                                               
+├── paths
+│   └── root_dir: /home/ubuntu/FlowDock                                         
+│       data_dir: /home/ubuntu/FlowDock/data/                                   
+│       log_dir: /home/ubuntu/FlowDock/logs/                                    
+│       output_dir: /home/ubuntu/FlowDock/logs/sample/runs/2026-01-05_08-04-07  
+│       work_dir: /home/ubuntu/FlowDock                                         
+│       ckpt_dir: /home/ubuntu/FlowDock/checkpoints/                            
+│                                                                               
+├── extras
+│   └── ignore_warnings: false                                                  
+│       enforce_tags: true                                                      
+│       print_config: true                                                      
+│                                                                               
+├── strategy
+│   └── {}                                                                      
+│                                                                               
+├── environment
+│   └── {}                                                                      
+│                                                                               
+├── task_name
+│   └── sample                                                                  
+├── tags
+│   └── ['sample', 'combined', 'flowdock_fm']                                   
+├── ckpt_path
+│   └── checkpoints/esmfold_prior_paper_weights_EMA.ckpt                        
+├── sampling_task
+│   └── batched_structure_sampling                                              
+├── sample_id
+│   └──                                                                         
+├── input_receptor
+│   └── MGEEGGSASHDEEERSSVLLGHSPGCEMCSQEAFQAQRSQLVELLVSGSLEGRFESVLDWLLSWEVLSWEDY
+├── input_ligand
+│   └── CC1=C(C=C(C=C1)C2=NC3=C(C=CC(=C3)O)C(=N2)O)C#N                          
+├── input_template
+│   └── /home/ubuntu/input.pdb                                                  
+├── out_path
+│   └── /home/ubuntu/out                                                        
+├── n_samples
+│   └── 5                                                                       
+├── chunk_size
+│   └── 5                                                                       
+├── num_steps
+│   └── 40                                                                      
+├── latent_model
+│   └── None                                                                    
+├── sampler
+│   └── VDODE                                                                   
+├── sampler_eta
+│   └── 1.0                                                                     
+├── start_time
+│   └── 1.0                                                                     
+├── max_chain_encoding_k
+│   └── -1                                                                      
+├── exact_prior
+│   └── False                                                                   
+├── prior_type
+│   └── esmfold                                                                 
+├── discard_ligand
+│   └── False                                                                   
+├── discard_sdf_coords
+│   └── True                                                                    
+├── detect_covalent
+│   └── False                                                                   
+├── use_template
+│   └── True                                                                    
+├── separate_pdb
+│   └── True                                                                    
+├── rank_outputs_by_confidence
+│   └── True                                                                    
+├── plddt_ranking_type
+│   └── ligand                                                                  
+├── visualize_sample_trajectories
+│   └── True                                                                    
+├── auxiliary_estimation_only
+│   └── False                                                                   
+├── csv_path
+│   └── None                                                                    
+└── esmfold_chunk_size
+    └── None                                                                    
+[[36m2026-01-05 08:04:07,631[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Setting `float32_matmul_precision` to highest.[0m
+[[36m2026-01-05 08:04:07,633[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Converting sampling inputs into a <SamplingDataset>[0m
+[[36m2026-01-05 08:04:07,633[0m][[34m__main__[0m][[33mWARNING[0m] - [rank: 0] Assuming the provided receptor input is a protein sequence. Creating a dummy PDB file.[0m
+[[36m2026-01-05 08:04:07,636[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating model <flowdock.models.flowdock_fm_module.FlowDockFMLitModule>[0m
+[[36m2026-01-05 08:04:09,571[0m][[34mflowdock.models.components.flowdock[0m][[32mINFO[0m] - [rank: 0] Freezing ligand encoder parameters.[0m
+[[36m2026-01-05 08:04:09,573[0m][[34mflowdock.models.components.flowdock[0m][[32mINFO[0m] - [rank: 0] Freezing confidence prediction module parameters.[0m
+[[36m2026-01-05 08:04:09,587[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating loggers...[0m
+[[36m2026-01-05 08:04:09,587[0m][[34mflowdock.utils.instantiators[0m][[33mWARNING[0m] - [rank: 0] No logger configs found! Skipping...[0m
+[[36m2026-01-05 08:04:09,588[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>[0m
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+You are using a CUDA device ('NVIDIA L40S') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+Restoring states from the checkpoint path at checkpoints/esmfold_prior_paper_weights_EMA.ckpt
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loaded model weights from the checkpoint at checkpoints/esmfold_prior_paper_weights_EMA.ckpt
+/root/miniforge3/envs/FlowDock/lib/python3.9/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:441: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=3` in the `DataLoader` to improve performance.
+
+Predicting: |          | 0/? [00:00<?, ?it/s][[36m2026-01-05 08:04:13,758[0m][[34mflowdock.models.flowdock_fm_module[0m][[32mINFO[0m] - [rank: 0] Loading pretrained ESM model...[0m
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s][[36m2026-01-05 08:04:42,022[0m][[34mflowdock.models.flowdock_fm_module[0m][[31mERROR[0m] - [rank: 0] Provided template protein structure /home/ubuntu/input.pdb does not match the input protein sequence within /home/ubuntu/out/input.pdb. Skipping example  at batch index 0 of dataloader 0.[0m
+/root/miniforge3/envs/FlowDock/lib/python3.9/site-packages/lightning/pytorch/loops/prediction_loop.py:255: predict returned None if it was on purpose, ignore this warning...
+
+Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.35it/s]
+Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.35it/s]
+[[36m2026-01-05 08:04:42,094[0m][[34mflowdock.utils.utils[0m][[32mINFO[0m] - [rank: 0] Output dir: /home/ubuntu/FlowDock/logs/sample/runs/2026-01-05_08-04-07[0m
+rm: cannot remove '/home/ubuntu/out/predict_epoch_outputs': No such file or directory

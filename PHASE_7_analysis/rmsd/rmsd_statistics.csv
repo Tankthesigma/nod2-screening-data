@@ -1,0 +1,6 @@
+Compound,Type,Mean RMSD (Ang),Std Dev (Ang),% Frames <3Ang,Verdict
+budesonide,Positive Control,10.61,5.07,2.7,UNSTABLE
+febuxostat,Lead Candidate,24.23,35.77,17.3,UNSTABLE
+ursodiol,Secondary Candidate,10.53,13.49,10.1,UNSTABLE
+natural_top,Natural Product,12.31,22.91,7.0,UNSTABLE
+decoy,Negative Control,54.38,22.88,3.0,UNSTABLE

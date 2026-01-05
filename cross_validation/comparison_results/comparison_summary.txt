@@ -1,0 +1,20 @@
+CROSS-VALIDATION SUMMARY
+==================================================
+
+Methods: GNINA, DiffDock-L, Chai-1
+FlowDock: FAILED
+
+COM Distance Matrix (Angstrom):
+  GNINA vs GNINA: 0.00A
+  GNINA vs DiffDock: 82.11A
+  GNINA vs Chai-1: 53.40A
+  DiffDock vs GNINA: 82.11A
+  DiffDock vs DiffDock: 0.00A
+  DiffDock vs Chai-1: 32.97A
+  Chai-1 vs GNINA: 53.40A
+  Chai-1 vs DiffDock: 32.97A
+  Chai-1 vs Chai-1: 0.00A
+
+Max COM distance: 82.11A
+All methods in same pocket: False
+Key residue contacts: {'GNINA': 3, 'DiffDock': 0, 'Chai-1': 0}
