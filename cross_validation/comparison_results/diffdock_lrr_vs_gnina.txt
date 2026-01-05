@@ -1,0 +1,11 @@
+CROSS-VALIDATION: DiffDock-LRR vs GNINA
+==================================================
+
+DiffDock rank1 distance to pocket: 77.20 A
+GNINA pose1 distance to pocket: 4.64 A
+Distance between centroids: 81.13 A
+
+DiffDock key residues: 0/5
+GNINA key residues: 3/5
+
+Agreement: NO
