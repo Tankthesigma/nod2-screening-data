@@ -182,7 +182,8 @@ def create_system_with_fallback(pdb, ligand_mol, forcefield_kwargs):
 # ============================================================
 def run_simulation(name, replicate, pdb_file, sdf_file, sim_num, total_sims):
     """Run a single MD simulation with full error checking."""
-    random_seed = sim_num * 1000 + replicate + 500
+    # Seeds: 100000 base for local script, well separated from Vast scripts
+    random_seed = 100000 + sim_num * 1000 + replicate
     output_prefix = f"{name}_rep{replicate}"
 
     pdb_path = f"{STRUCTURES_DIR}/{pdb_file}"
