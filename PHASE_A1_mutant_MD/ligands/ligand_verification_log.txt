@@ -1,0 +1,29 @@
+============================================================
+PHASE A1: Ligand Pose Verification Log
+============================================================
+
+BINDING POCKET REFERENCE
+----------------------------------------
+Pocket residues: [1008, 1011, 1037]
+Pocket centroid: (-39.12, -14.55, 22.30)
+
+LIGAND VERIFICATION
+----------------------------------------
+
+Febuxostat:
+  File: ligand_febuxostat.pdb
+  Atoms: 22
+  Centroid: (-42.14, -18.12, 23.18)
+  Distance to pocket: 4.77 A
+  Status: PASS
+
+20a-Dihydrocortisol:
+  File: ligand_natural_cid10592.pdb
+  Atoms: 32
+  Centroid: (-41.11, -20.53, 22.24)
+  Distance to pocket: 6.31 A
+  Status: PASS
+
+============================================================
+OVERALL: PASSED
+============================================================

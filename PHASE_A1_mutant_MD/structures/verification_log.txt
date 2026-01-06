@@ -1,0 +1,47 @@
+============================================================
+PHASE A1: Mutant Structure Verification Log
+============================================================
+
+WILD-TYPE STRUCTURE VERIFICATION
+----------------------------------------
+PDB file: C:\Users\vasud\nod2-screening-data\PHASE_6\structures\NOD2_LRR_clean.pdb
+Chain ID used: A
+Total residues: 1040
+
+Mutation Site Verification:
+  Original residue 702: ARG (expected ARG) [OK]
+  Original residue 908: GLY (expected GLY) [OK]
+
+Binding Pocket Residues (for reference):
+  Residue 1008: GLU (GLU in WT)
+  Residue 1011: ASP (ASP in WT)
+  Residue 1037: ARG (ARG in WT)
+
+Insertion codes: None
+
+Overall verification: PASSED
+
+============================================================
+MUTATIONS CREATED
+============================================================
+
+R702W:
+  Output file: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\structures\NOD2_R702W.pdb
+  Change: ARG (R) -> TRP (W) at position 702
+  Notes: R702W is a Crohn's-associated variant (~10% of patients)
+  Distance from pocket: 79.4 Å (distal, should not affect binding)
+
+G908R:
+  Output file: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\structures\NOD2_G908R.pdb
+  Change: GLY (G) -> ARG (R) at position 908
+  Notes: G908R is a Crohn's-associated variant (~4.6% of patients)
+  Distance from pocket: 34.0 Å (distal, should not affect binding)
+
+============================================================
+TECHNICAL NOTES
+============================================================
+
+1. Backbone atoms (N, CA, C, O) preserved from wild-type
+2. Sidechain atoms removed (will be rebuilt during MD setup)
+3. OpenMM/PDBFixer will add missing atoms during system preparation
+4. Ligand pose from Phase 6 WT simulations will be transferred
