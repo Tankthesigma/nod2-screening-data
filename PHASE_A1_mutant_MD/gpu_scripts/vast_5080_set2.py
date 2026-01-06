@@ -73,6 +73,9 @@ REPORT_INTERVAL = 2500
 TRAJECTORY_INTERVAL = 2500
 CHECKPOINT_INTERVAL = 250000
 
+# Git branch for this instance (avoids conflicts with other Vast instance)
+BRANCH_NAME = "vast2-results"
+
 # VAST 5080 SET #2: R702W+Natural rep3 + G908R+Natural rep1,2,3
 SIMULATIONS = [
     ("R702W_natural", 3, "NOD2_R702W.pdb", "natural_top_docked.sdf"),
@@ -128,17 +131,18 @@ def upload_dcd(dcd_path):
         return None
 
 def save_to_git(message="Auto-save simulation results"):
-    """Push results to git. Called after each sim and on crash."""
+    """Push results to git on separate branch. Called after each sim and on crash."""
     try:
-        print(f"\n>>> SAVING TO GIT: {message}")
+        print(f"\n>>> SAVING TO GIT (branch: {BRANCH_NAME}): {message}")
+        # Checkout/create dedicated branch for this instance
+        subprocess.run(["git", "checkout", "-B", BRANCH_NAME], check=False, capture_output=True)
         subprocess.run(["git", "add", "-A"], check=False, capture_output=True)
         subprocess.run(
             ["git", "commit", "-m", f"{message} - {datetime.now().strftime('%Y-%m-%d %H:%M')}"],
             check=False, capture_output=True
         )
-        # Pull with rebase to avoid conflicts with other vast instance
-        subprocess.run(["git", "pull", "--rebase", "origin", "main"], check=False, capture_output=True)
-        result = subprocess.run(["git", "push"], check=False, capture_output=True)
+        # Force push to dedicated branch (no conflicts possible)
+        result = subprocess.run(["git", "push", "-u", "origin", BRANCH_NAME, "--force"], check=False, capture_output=True)
         if result.returncode == 0:
             print(">>> GIT PUSH: SUCCESS")
             return True
