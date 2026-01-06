@@ -1,0 +1,44 @@
+============================================================
+PHASE 12B: Monte Carlo Clinical Trial Simulation Results
+============================================================
+
+REPRODUCIBILITY
+----------------------------------------
+Random seed: 42
+Number of trials: 1000
+Patients per trial: 210
+Bootstrap resamples: 2000
+
+ASSUMED RESPONSE RATES
+----------------------------------------
+Placebo:        25%
+Febuxostat 40mg: 40%
+Febuxostat 80mg: 50%
+
+KEY RESULTS
+----------------------------------------
+Empirical Power (p < 0.05): 88.1%
+Strong Evidence (p < 0.01): 69.4%
+Model Convergence Rate:     100.0%
+
+MEAN RESPONSE RATES (95% CI)
+----------------------------------------
+Placebo:        26.0% (15.7-37.1%)
+Febuxostat 40mg: 41.0% (30.0-52.9%)
+Febuxostat 80mg: 51.4% (40.0-62.9%)
+
+EFFECT SIZE (RISK DIFFERENCE: 80mg - Placebo)
+----------------------------------------
+Mean: 25.4 percentage points
+95% CI: 10.0 to 41.4 percentage points
+
+ODDS RATIO (80mg vs Placebo)
+----------------------------------------
+Mean: 3.42
+95% CI: 1.52 to 7.05
+
+INTERPRETATION
+----------------------------------------
+Based on 1000 simulated trials, a Phase II trial of 210 patients
+has approximately 88% probability of detecting a
+statistically significant benefit for Febuxostat 80mg over placebo.

@@ -1,0 +1,19 @@
+PHASE 12: Sample Size Calculation Results
+==================================================
+
+Assumptions:
+  Alpha (two-sided): 0.05
+  Power: 80%
+  Placebo response: 25%
+  Febuxostat 80mg response: 50%
+  Dropout rate: 15%
+
+Results:
+  Raw N per arm: 59
+  Dropout-adjusted N per arm: 70
+  Total N (3-arm trial): 210
+
+Trial Arms:
+  Arm 1: Placebo (n=70)
+  Arm 2: Febuxostat 40mg (n=70) [exploratory]
+  Arm 3: Febuxostat 80mg (n=70) [primary]
