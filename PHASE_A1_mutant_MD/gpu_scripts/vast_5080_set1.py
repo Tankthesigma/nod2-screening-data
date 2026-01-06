@@ -136,6 +136,8 @@ def save_to_git(message="Auto-save simulation results"):
             ["git", "commit", "-m", f"{message} - {datetime.now().strftime('%Y-%m-%d %H:%M')}"],
             check=False, capture_output=True
         )
+        # Pull with rebase to avoid conflicts with other vast instance
+        subprocess.run(["git", "pull", "--rebase", "origin", "main"], check=False, capture_output=True)
         result = subprocess.run(["git", "push"], check=False, capture_output=True)
         if result.returncode == 0:
             print(">>> GIT PUSH: SUCCESS")
