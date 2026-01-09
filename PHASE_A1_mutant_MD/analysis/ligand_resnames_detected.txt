@@ -1,0 +1,7 @@
+LIGAND RESNAMES DETECTED IN PHASE A1 TOPOLOGIES
+==================================================
+
+G908R_febuxostat: UNK
+G908R_natural: UNK
+R702W_febuxostat: UNK
+R702W_natural: UNK

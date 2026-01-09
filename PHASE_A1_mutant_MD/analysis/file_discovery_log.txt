@@ -1,0 +1,75 @@
+PHASE A1 FILE DISCOVERY LOG
+================================================================================
+
+ID   Mutant   Ligand       Rep  DCD (GB)   PDB (MB)   Atoms Match     Frames  
+--------------------------------------------------------------------------------
+1    G908R    febuxostat   1    4.86       16.8       YES             2000    
+2    G908R    febuxostat   2    4.86       16.8       YES             2000    
+3    G908R    febuxostat   3    4.86       16.8       YES             2000    
+4    G908R    natural      1    4.82       16.7       YES             2000    
+5    G908R    natural      2    4.82       16.7       YES             2000    
+6    G908R    natural      3    4.82       16.7       YES             2000    
+7    R702W    febuxostat   1    4.86       16.8       YES             2000    
+8    R702W    febuxostat   2    4.86       16.8       YES             2000    
+9    R702W    febuxostat   3    4.87       16.8       YES             2000    
+10   R702W    natural      1    4.82       16.7       YES             2000    
+11   R702W    natural      2    4.82       16.7       YES             1945    
+12   R702W    natural      3    4.82       16.7       YES             2000    
+
+
+LIGAND RESNAMES:
+  G908R_febuxostat: UNK
+  G908R_natural: UNK
+  R702W_febuxostat: UNK
+  R702W_natural: UNK
+
+
+FULL PATHS:
+
+1. G908R_febuxostat_rep1:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\trajectories\G908R_febuxostat_rep1.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\trajectories\G908R_febuxostat_rep1_solvated.pdb
+
+2. G908R_febuxostat_rep2:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5080\G908R_febuxostat_rep2.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5080\G908R_febuxostat_rep2_solvated.pdb
+
+3. G908R_febuxostat_rep3:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5080\G908R_febuxostat_rep3.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5080\G908R_febuxostat_rep3_solvated.pdb
+
+4. G908R_natural_rep1:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5090\G908R_natural_rep1.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5090\G908R_natural_rep1_solvated.pdb
+
+5. G908R_natural_rep2:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\new_5090\G908R_natural_rep2.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\new_5090\G908R_natural_rep2_solvated.pdb
+
+6. G908R_natural_rep3:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\new_5090\G908R_natural_rep3.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\new_5090\G908R_natural_rep3_solvated.pdb
+
+7. R702W_febuxostat_rep1:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\trajectories\R702W_febuxostat_rep1.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\trajectories\R702W_febuxostat_rep1_solvated.pdb
+
+8. R702W_febuxostat_rep2:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\trajectories\R702W_febuxostat_rep2.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\trajectories\R702W_febuxostat_rep2_solvated.pdb
+
+9. R702W_febuxostat_rep3:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\trajectories\R702W_febuxostat_rep3.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\trajectories\R702W_febuxostat_rep3_solvated.pdb
+
+10. R702W_natural_rep1:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5080\R702W_natural_rep1.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5080\R702W_natural_rep1_solvated.pdb
+
+11. R702W_natural_rep2:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5080\R702W_natural_rep2.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\5080\R702W_natural_rep2_solvated.pdb
+
+12. R702W_natural_rep3:
+   DCD: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\new_5090\R702W_natural_rep3.dcd
+   PDB: C:\Users\vasud\nod2-screening-data\PHASE_A1_mutant_MD\vast_downloads\new_5090\R702W_natural_rep3_solvated.pdb

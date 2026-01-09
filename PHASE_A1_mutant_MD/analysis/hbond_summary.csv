@@ -1,0 +1,13 @@
+mutant,ligand,rep,total_hbonds,unique_pairs,persistent,frames,status
+G908R,febuxostat,1,0,0,0,200,OK
+G908R,febuxostat,2,0,0,0,200,OK
+G908R,febuxostat,3,0,0,0,200,OK
+G908R,natural,1,0,0,0,200,OK
+G908R,natural,2,0,0,0,200,OK
+G908R,natural,3,0,0,0,200,OK
+R702W,febuxostat,1,0,0,0,200,OK
+R702W,febuxostat,2,0,0,0,200,OK
+R702W,febuxostat,3,0,0,0,200,OK
+R702W,natural,1,0,0,0,200,OK
+R702W,natural,2,0,0,0,200,OK
+R702W,natural,3,0,0,0,200,OK
