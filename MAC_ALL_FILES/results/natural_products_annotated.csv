@@ -1,0 +1,21 @@
+rank,cid,common_name,cnn_affinity,nod2_scout_score,qed,all_names
+1,3915,Cabastine,6.3975997,0.8376411,0.7645771813481718,Cabastine; Cabastina; 1-[4-cyano-4-(4-fluorophenyl)cyclohexyl]-3-methyl-4-phenylpiperidine-4-carboxylic acid; SCHEMBL728714; SCHEMBL728716
+2,2464,RefChem:1072412,6.60823202,0.8374857,0.7571997201055188,"5-(3,14-dihydroxy-10,13-dimethyl-1,2,3,4,5,6,7,8,9,11,12,15,16,17-tetradecahydrocyclopenta[a]phenanthren-17-yl)pyran-2-one; 5-(3,14-Dihydroxy-10,13-dimethyl-1,2,3,4,5,6,7,8,9,11,12,15,16,17-tetradecahydrocyclopenta(a)phenanthren-17-yl)pyran-2-one; RefChem:1072412; Bufa-20,22-dienolide, 3,14-dihydroxy-, (3.beta.,5.beta.)-; SCHEMBL12756993"
+3,10062,C19643,6.57420015,0.8306968,0.7133781183535943,"CHEMBL355996; SCHEMBL12038750; C19643; 3beta,14-Dihydroxy-14beta-bufa-4,20,22-trienolide"
+4,11014,RefChem:1057513,6.15911818,0.8267062,0.7635110974587134,"545-51-7; DTXSID00969683; 14-Hydroxybufa-3,5,20,22-tetraenolide; RefChem:1057513; DTXCID101397233"
+5,2476,RefChem:1057603,6.4269309,0.825216,0.686738022566705,"DTXSID60860647; 17-(cyclopropylmethyl)-18-(2-hydroxy-3,3-dimethylbutan-2-yl)-6-methoxy-18,19-dihydro-4,5-epoxy-6,14-ethenomorphinan-3-ol; RefChem:1057603; DTXCID30197311; RX 6029M"
+6,20182,I.S. 3231,6.3024025,0.8250834,0.728916467782487,"I.S. 3231; BRN 0769980; 3,7-Diazabicyclo(3.3.1)nonan-9-one, 3,7-bis(1,1-dimethyl-2-hydroxyethyl)-1,5-diphenyl-; 4208-25-7; DTXSID70194920"
+7,100290,CID_100290,6.66394615,0.82169676,0.5867428154307659,
+8,100758,NSC362450,6.63462973,0.82095784,0.7409196323373736,"75660-48-9; 4-Pyridazinecarbonitrile, 5,6-bis(2-chlorophenyl)-2,3-dihydro-2-(2-hydroxyethyl)-3-oxo-; NSC362450; 4-PYRIDAZINECARBONITRILE,5,6-BIS(2-CHLOROPHENYL)-2,3-DIHYDRO-2-(2-HYDROXYETHYL)-3-OXO-; CHEMBL31705"
+9,2705,CID_2705,6.67316389,0.81825393,0.6224275306903821,
+10,101789,"(3beta,5alpha)-3-hydroxypregnane-11,20-dione",6.18049812,0.81818575,0.7949586169339063,"600-59-9; 3-beta-Hydroxy-5-alpha-pregnane-11,20-dione; DTXSID101287240; (3beta,5alpha)-3-hydroxypregnane-11,20-dione; RefChem:1050183"
+11,10120,CID_10120,6.75614023,0.8181015,0.6700610881705871,
+12,2854,"[8-[2-(4-hydroxy-6-oxooxan-2-yl)ethyl]-7-methyl-1,2,3,7,8,8a-hexahydronaphthalen-1-yl] 2-methylbutanoate",6.44188452,0.8164314,0.6953899983409009,"[8-[2-(4-hydroxy-6-oxooxan-2-yl)ethyl]-7-methyl-1,2,3,7,8,8a-hexahydronaphthalen-1-yl] 2-methylbutanoate; ML-236B; (8-(2-(4-hydroxy-6-oxooxan-2-yl)ethyl)-7-methyl-1,2,3,7,8,8a-hexahydronaphthalen-1-yl) 2-methylbutanoate; RefChem:925984; ML 236B"
+13,101773,NSC 52759,6.26370096,0.81610245,0.7683828059012026,"570-52-5; 3alpha,17alpha-Dihydroxy-5beta-pregnan-20-one; 17alpha-Hydroxypregnanolone; 17-alpha-Hydroxypregnanolone; NSC 52759"
+14,100494,DS-511,6.34752893,0.81501055,0.6942459073118474,"39632-88-7; DS-511; 1,4-Dimorpholino-7-phenylpyrido(3,4-d)pyridazine; 1,4-Di-4-morpholinyl-7-phenylpyrido(3,4-d)pyridazine; R0KB07W762"
+15,3962,RefChem:1074614,6.45099497,0.81328195,0.671999391844661,"79952-43-5; 8-[2-(4-hydroxy-6-oxooxan-2-yl)ethyl]-3,7-dimethyl-1,2,3,7,8,8a-hexahydronaphthalen-1-yl 2-methylbutanoate; DTXSID50860979; 8-(2-(4-Hydroxy-6-oxooxan-2-yl)ethyl)-3,7-dimethyl-1,2,3,7,8,8a-hexahydronaphthalen-1-yl 2-methylbutanoate; RefChem:1074614"
+16,3932,Linopirdine,6.48609924,0.81034833,0.4871624324764735,"Linopirdine; 105431-72-9; Dup 996; 1-phenyl-3,3-bis(pyridin-4-ylmethyl)indol-2-one; DuP-996"
+17,2662,celecoxib,6.36811304,0.8088706,0.7541053298167572,celecoxib; 169590-42-5; Celebrex; Celebra; Onsenal
+18,2987,"Cholan-24-oic acid, 3,12-dihydroxy-, (3.alpha.,5.beta.,12.alpha.)-",6.35324717,0.8076402,0.659162096020487,"30635-00-8; 4-(3,12-dihydroxy-10,13-dimethyl-2,3,4,5,6,7,8,9,11,12,14,15,16,17-tetradecahydro-1H-cyclopenta[a]phenanthren-17-yl)pentanoic acid; Cholan-24-oic acid, 3,12-dihydroxy-, (3.alpha.,5.beta.,12.alpha.)-; DTXSID30274393; Cholan-24-oic acid, 3,12-dihydroxy-, (3alpha,5beta,12alpha)-"
+19,100105,NSC 334293,6.28781652,0.8075028,0.6639930146317803,EINECS 252-661-1; NSC 334293; N-((9H-Fluoren-9-ylmethoxy)carbonyl)-3-phenyl-L-alanine; N-[(9H-fluoren-9-ylmethoxy)carbonyl]-3-phenyl-L-alanine; RefChem:823138
+20,100668,NSC341931,6.39904833,0.7987251,0.744711402546455,"NSC341931; 82585-97-5; Carbamic acid, (5-amino-3-(2,4-dichlorophenyl)-1,2-dihydropyrido(3,4-b)pyrazin-7-yl)-, ethyl ester; CHEMBL9699; SCHEMBL11006975"

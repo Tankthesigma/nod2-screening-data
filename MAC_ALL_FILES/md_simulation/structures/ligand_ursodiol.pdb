@@ -1,0 +1,54 @@
+HETATM    1  C 1 URS L   1     -41.511 -19.797  26.135  1.00  0.00           C  
+HETATM    2  C 2 URS L   1     -40.902 -19.959  24.741  1.00  0.00           C  
+HETATM    3  C 3 URS L   1     -42.026 -20.227  23.705  1.00  0.00           C  
+HETATM    4  C 4 URS L   1     -40.067 -21.235  24.689  1.00  0.00           C  
+HETATM    5  C 5 URS L   1     -40.204 -18.676  24.334  1.00  0.00           C  
+HETATM    6  C 6 URS L   1     -43.094 -19.172  23.926  1.00  0.00           C  
+HETATM    7  C 7 URS L   1     -42.427 -21.666  24.046  1.00  0.00           C  
+HETATM    8  C 8 URS L   1     -41.060 -22.358  24.295  1.00  0.00           C  
+HETATM    9  C 9 URS L   1     -41.233 -17.539  24.453  1.00  0.00           C  
+HETATM   10  C10 URS L   1     -42.463 -17.811  23.595  1.00  0.00           C  
+HETATM   11  C11 URS L   1     -44.284 -19.415  22.997  1.00  0.00           C  
+HETATM   12  C12 URS L   1     -43.502 -16.709  23.805  1.00  0.00           C  
+HETATM   13  C13 URS L   1     -45.322 -18.309  23.200  1.00  0.00           C  
+HETATM   14  C14 URS L   1     -43.977 -16.724  25.260  1.00  0.00           C  
+HETATM   15  C15 URS L   1     -44.695 -16.952  22.876  1.00  0.00           C  
+HETATM   16  C16 URS L   1     -42.875 -15.350  23.486  1.00  0.00           C  
+HETATM   17  C17 URS L   1     -44.215 -16.947  21.423  1.00  0.00           C  
+HETATM   18  C18 URS L   1     -42.391 -15.341  22.035  1.00  0.00           C  
+HETATM   19  C19 URS L   1     -43.585 -15.592  21.097  1.00  0.00           C  
+HETATM   20  C20 URS L   1     -39.455 -21.525  26.060  1.00  0.00           C  
+HETATM   21  C21 URS L   1     -38.004 -21.042  26.084  1.00  0.00           C  
+HETATM   22  C22 URS L   1     -39.497 -23.031  26.329  1.00  0.00           C  
+HETATM   23  C23 URS L   1     -40.290 -23.298  27.610  1.00  0.00           C  
+HETATM   24  C24 URS L   1     -39.336 -23.459  28.767  1.00  0.00           C  
+HETATM   25  O25 URS L   1     -38.926 -24.683  29.133  1.00  0.00           O  
+HETATM   26  O26 URS L   1     -38.941 -22.485  29.363  1.00  0.00           O  
+HETATM   27  O27 URS L   1     -44.872 -20.682  23.297  1.00  0.00           O  
+HETATM   28  H28 URS L   1     -45.616 -20.795  22.689  1.00  0.00           H  
+HETATM   29  O29 URS L   1     -43.135 -15.590  19.741  1.00  0.00           O  
+HETATM   30  H30 URS L   1     -42.746 -14.719  19.577  1.00  0.00           H  
+CONECT    1    2
+CONECT    2    3    4    5
+CONECT    3    6    7
+CONECT    4    8   20
+CONECT    5    9
+CONECT    6   10   11
+CONECT    7    8
+CONECT    9   10
+CONECT   10   12
+CONECT   11   13   27
+CONECT   12   14   15   16
+CONECT   13   15
+CONECT   15   17
+CONECT   16   18
+CONECT   17   19
+CONECT   18   19
+CONECT   19   29
+CONECT   20   21   22
+CONECT   22   23
+CONECT   23   24
+CONECT   24   25   25   26
+CONECT   27   28
+CONECT   29   30
+END
