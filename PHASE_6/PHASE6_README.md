@@ -13,12 +13,14 @@ Phase 6 validates that your drug candidates actually **bind stably** to the NOD2
 
 ## YOUR DRUG CANDIDATES
 
+> **COMPOUND IDENTITY CORRECTION (2026-01-16):** The natural product was previously mislabeled as "CID_10592 / Dihydrocortisol". The correct identity is **CID_10120, a Bufadienolide** (cardiac glycoside).
+
 | Compound | Type | Why It's Here |
 |----------|------|---------------|
 | **Febuxostat** | FDA Drug | #1 ranked - XO inhibitor, novel NOD2 binder |
 | **Ursodiol** | FDA Drug | Bile acid, gut-targeting properties |
 | **Budesonide** | FDA Drug | POSITIVE CONTROL - Known Crohn's treatment |
-| **CID_10592** | Natural Product | #1 natural compound - steroid structure |
+| **CID_10120** | Natural Product (Bufadienolide) | #1 natural compound - cardiac glycoside structure |
 | **Decoy** | Low-ranked | NEGATIVE CONTROL - should show weak binding |
 | **Apo** | No drug | BASELINE - protein alone |
 

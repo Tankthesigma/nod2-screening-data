@@ -3,11 +3,13 @@
 **Project:** NOD2-CROHN Drug Discovery (ISEF 2026)
 **Generated:** Auto-generated
 
+> **COMPOUND IDENTITY CORRECTION (2026-01-16):** The natural product previously labeled "CID_10120 Bufadienolide / CID_10592" is actually **CID_10120, a Bufadienolide** (cardiac glycoside). All references below have been corrected.
+
 ---
 
 ## Executive Summary
 
-This analysis predicts whether NOD2-targeting drugs (Febuxostat, 20a-Dihydrocortisol) can bind
+This analysis predicts whether NOD2-targeting drugs (Febuxostat, CID_10120 Bufadienolide) can bind
 to NOD2 variants carrying common Crohn's disease-associated mutations.
 
 **Key Finding:** Point mutations distant from the LRR binding pocket should NOT affect drug binding.
@@ -46,7 +48,7 @@ Distance from ligand center-of-mass to mutation site Calpha atom.
 | M863V | 863 | 42.17 | FAR - No impact on binding |
 | L1007fs | 1007 | N/A | LRR pocket deleted - binding to validated pocket not possible |
 
-### 20a-Dihydrocortisol (Natural Product) Distances
+### CID_10120 Bufadienolide (Natural Product) Distances
 
 | Mutation | Position | Distance (A) | Predicted Impact |
 |----------|----------|--------------|------------------|
@@ -60,7 +62,7 @@ Distance from ligand center-of-mass to mutation site Calpha atom.
 
 ## Patient Stratification Summary
 
-| Mutation | Febuxostat | 20a-Dihydrocortisol | Clinical Recommendation |
+| Mutation | Febuxostat | CID_10120 Bufadienolide | Clinical Recommendation |
 |----------|------------|---------------------|-------------------------|
 | WT | BINDS | BINDS | Standard candidate |
 | R702W | BINDS | BINDS | Standard candidate |
@@ -117,7 +119,7 @@ Distance from ligand center-of-mass to mutation site Calpha atom.
 
 ```
 IF patient_genotype == "WT" or patient_genotype in ["R702W", "G908R", "N852S", "M863V"]:
-    -> ELIGIBLE for Febuxostat / 20a-Dihydrocortisol therapy
+    -> ELIGIBLE for Febuxostat / CID_10120 Bufadienolide therapy
 
 ELIF patient_genotype == "L1007fs" (homozygous or compound heterozygous):
     -> NOT ELIGIBLE - binding pocket deleted
@@ -142,7 +144,7 @@ ELIF patient_genotype == "L1007fs/other" (heterozygous):
 ## Conclusion
 
 **80-90% of Crohn's patients with NOD2 mutations retain an intact LRR binding pocket** and are
-predicted to respond to pocket-targeting drugs like Febuxostat and 20a-Dihydrocortisol.
+predicted to respond to pocket-targeting drugs like Febuxostat and CID_10120 Bufadienolide.
 
 **10-15% of patients (L1007fs carriers)** have a deleted binding pocket and require alternative
 therapeutic strategies.

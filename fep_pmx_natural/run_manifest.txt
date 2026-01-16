@@ -1,0 +1,122 @@
+======================================================================
+NOD2-CROHN NATURAL PRODUCT FEP RUN MANIFEST
+======================================================================
+
+LIGAND: CID_10120 (Bufadienolide)
+MUTATION: R702W
+
+LAMBDA SCHEDULE (K=20):
+----------------------------------------
+Window  Elec    Sterics  Restraints
+----------------------------------------
+ 0      1.0000  1.0000   0.0000
+ 1      0.8889  1.0000   0.1111
+ 2      0.7778  1.0000   0.2222
+ 3      0.6667  1.0000   0.3333
+ 4      0.5556  1.0000   0.4444
+ 5      0.4444  1.0000   0.5556
+ 6      0.3333  1.0000   0.6667
+ 7      0.2222  1.0000   0.7778
+ 8      0.1111  1.0000   0.8889
+ 9      0.0000  1.0000   1.0000
+10      0.0000  0.9000   1.0000
+11      0.0000  0.8000   1.0000
+12      0.0000  0.7000   1.0000
+13      0.0000  0.6000   1.0000
+14      0.0000  0.5000   1.0000
+15      0.0000  0.4000   1.0000
+16      0.0000  0.3000   1.0000
+17      0.0000  0.2000   1.0000
+18      0.0000  0.1000   1.0000
+19      0.0000  0.0000   1.0000
+
+SIMULATION PARAMETERS:
+----------------------------------------
+  temperature_K: 310.0
+  pressure_bar: 1.0
+  friction_per_ps: 1.0
+  timestep_fs: 2.0
+  equil_steps: 50000
+  prod_steps: 500000
+  energy_interval: 500
+  barostat_freq: 25
+
+SOFTCORE PARAMETERS:
+----------------------------------------
+  softcore_alpha: 0.5
+  softcore_beta: 0.0
+  softcore_a: 1
+  softcore_b: 1
+  softcore_c: 6
+  softcore_d: 1
+  softcore_e: 1
+  softcore_f: 2
+
+BORESCH RESTRAINT FORCE CONSTANTS:
+----------------------------------------
+  k_distance: 4184.0
+  k_angle: 41.84
+  k_dihedral: 41.84
+
+WINDOW FOLDERS:
+----------------------------------------
+  wt_complex/window_00
+  wt_complex/window_01
+  wt_complex/window_02
+  wt_complex/window_03
+  wt_complex/window_04
+  wt_complex/window_05
+  wt_complex/window_06
+  wt_complex/window_07
+  wt_complex/window_08
+  wt_complex/window_09
+  wt_complex/window_10
+  wt_complex/window_11
+  wt_complex/window_12
+  wt_complex/window_13
+  wt_complex/window_14
+  wt_complex/window_15
+  wt_complex/window_16
+  wt_complex/window_17
+  wt_complex/window_18
+  wt_complex/window_19
+  mut_complex/window_00
+  mut_complex/window_01
+  mut_complex/window_02
+  mut_complex/window_03
+  mut_complex/window_04
+  mut_complex/window_05
+  mut_complex/window_06
+  mut_complex/window_07
+  mut_complex/window_08
+  mut_complex/window_09
+  mut_complex/window_10
+  mut_complex/window_11
+  mut_complex/window_12
+  mut_complex/window_13
+  mut_complex/window_14
+  mut_complex/window_15
+  mut_complex/window_16
+  mut_complex/window_17
+  mut_complex/window_18
+  mut_complex/window_19
+  solvent/window_00
+  solvent/window_01
+  solvent/window_02
+  solvent/window_03
+  solvent/window_04
+  solvent/window_05
+  solvent/window_06
+  solvent/window_07
+  solvent/window_08
+  solvent/window_09
+  solvent/window_10
+  solvent/window_11
+  solvent/window_12
+  solvent/window_13
+  solvent/window_14
+  solvent/window_15
+  solvent/window_16
+  solvent/window_17
+  solvent/window_18
+  solvent/window_19

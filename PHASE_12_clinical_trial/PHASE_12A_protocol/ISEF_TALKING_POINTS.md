@@ -86,8 +86,8 @@ A: Drug development has inherent uncertainty. We estimate 40-50% probability of 
 **Q: How is this different from existing research?**
 A: To our knowledge, no one has proposed a genotype-stratified, NOD2-targeted small molecule therapy for Crohn's disease. We combined computational screening, MD validation, and clinical trial design into a complete translational pipeline.
 
-**Q: What about the natural compound (20α-Dihydrocortisol)?**
-A: Our virtual screening also identified 20α-Dihydrocortisol (an endogenous cortisol metabolite) as a strong binder with similar MD pocket occupancy. However, unlike Febuxostat, this is a novel therapeutic candidate with no prior human safety data. It would require a full preclinical development program (2-3 years) followed by Phase I safety trials before any efficacy testing. We prioritize Febuxostat because its FDA-approved status enables a direct Phase II trial.
+**Q: What about the natural compound (CID_10120 Bufadienolide)?**
+A: Our virtual screening also identified CID_10120, a bufadienolide (cardiac glycoside class), as a strong binder. **NOTE:** This compound was previously mislabeled as "CID_10592 / Dihydrocortisol" - the correct identity is CID_10120. Bufadienolides are known NF-κB inhibitors, and since NOD2 signals through NF-κB, this suggests a dual mechanism. However, unlike Febuxostat, this is a novel therapeutic candidate requiring full preclinical development. We prioritize Febuxostat because its FDA-approved status enables a direct Phase II trial.
 
 ---
 

@@ -1,23 +1,25 @@
-# Preclinical Development Plan: 20α-Dihydrocortisol
+# Preclinical Development Plan: CID_10120 Bufadienolide
 
 > **DISCLAIMER:** This is a computationally designed preclinical plan for research/educational purposes and is not medical advice.
+
+> **COMPOUND IDENTITY CORRECTION (2026-01-16):** This compound was previously mislabeled as "CID_10592 / CID_10120 Bufadienolide". The correct identity is CID_10120, a bufadienolide (cardiac glycoside). All compound information below has been corrected.
 
 ---
 
 ## Compound Information
 
-*Verified from PHASE_10_mutation_analysis/generate_mutants_and_analyze.py*
-
 | Property | Value |
 |----------|-------|
-| **Name** | 20α-Dihydrocortisol |
+| **Name** | 3β,5,14-Trihydroxy-5β-bufa-20,22-dienolide |
+| **Common Name** | Bufadienolide |
 | **Alias** | natural_top (internal project name) |
-| **PubChem CID** | 10592 |
-| **SMILES** | `CC12CCC(=O)CC1CCC3C2C(CC4(C3CC[C@@]4(C(=O)CO)O)C)O` |
-| **Formula** | C21H32O5 |
-| **Molecular Weight** | 364.48 g/mol |
-| **Source** | Endogenous cortisol metabolite |
+| **PubChem CID** | **10120** (previously mislabeled as 10592) |
+| **SMILES** | `C[C@]12CCC3C([C@]1(CC[C@@H]2C4=COC(=O)C=C4)O)CC[C@]5([C@@]3(CC[C@@H](C5)O)C)O` |
+| **Formula** | **C24H34O5** |
+| **Molecular Weight** | **402.53 g/mol** |
+| **Source** | Cardiac glycoside (bufadienolide class, found in toads/plants) |
 | **Status** | Novel therapeutic candidate, NOT FDA-approved |
+| **Note** | Known NF-κB inhibitor; NOD2 signals through NF-κB pathway |
 
 ---
 
@@ -156,7 +158,7 @@ Month 28+:   Phase I clinical trial (if approved)
 
 ## Comparison to Febuxostat Path
 
-| Factor | Febuxostat | 20α-Dihydrocortisol |
+| Factor | Febuxostat | CID_10120 Bufadienolide |
 |--------|------------|-------------------------|
 | Regulatory status | FDA-approved (gout) | Novel compound |
 | Path to Crohn's trial | Phase II (repurposing) | Phase I (new IND) |
@@ -164,7 +166,7 @@ Month 28+:   Phase I clinical trial (if approved)
 | Cost | $5-10M | $50-100M+ |
 | Risk | Lower | Higher |
 
-**Recommendation:** Prioritize Febuxostat Phase II trial while developing 20α-Dihydrocortisol as backup/next-generation candidate.
+**Recommendation:** Prioritize Febuxostat Phase II trial while developing CID_10120 Bufadienolide as backup/next-generation candidate.
 
 ---
 

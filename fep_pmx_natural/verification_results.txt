@@ -1,0 +1,134 @@
+================================================================================
+NATURAL PRODUCT CID_10120 (BUFADIENOLIDE) FEP VERIFICATION
+================================================================================
+Base directory: /mnt/c/Users/vasud/nod2-screening-data/fep_pmx_natural
+Output file: /mnt/c/Users/vasud/nod2-screening-data/fep_pmx_natural/verification_results.txt
+
+A. DISTANCE CHECK
+--------------------------------------------------
+  wt_complex:
+    Residue 702: ARG
+    R702 CA to ligand: 73.7 A
+    Closest ligand atom: O5x (UNK)
+    Protein dimensions: 89.9 x 104.6 x 86.2 A
+  mut_complex:
+    Residue 702: ARG
+    R702 CA to ligand: 73.7 A
+    Closest ligand atom: O5x (UNK)
+    Protein dimensions: 89.9 x 104.6 x 86.2 A
+
+B. PROTEIN MOVEMENT
+--------------------------------------------------
+  wt_complex (using 1040 CA atoms):
+    Window 0: RMSD = 4.37 A [OK]
+    Window 10: RMSD = 3.68 A [OK]
+    Window 19: RMSD = 3.95 A [OK]
+  mut_complex (using 1040 CA atoms):
+    Window 0: RMSD = 3.53 A [OK]
+    Window 10: RMSD = 3.74 A [OK]
+    Window 19: RMSD = 3.32 A [OK]
+
+C. PER-PHASE dG BREAKDOWN (kcal/mol)
+--------------------------------------------------
+  wt_complex: ERROR - Warning: Should have \sum_n W_nk = 1. Actual column sum for state 0 was 9.999911. 10 other columns have similar problems. 
+This generally indicates the free energies are not converged.
+  mut_complex: ERROR - Warning: Should have \sum_n W_nk = 1. Actual column sum for state 0 was 9.999912. 10 other columns have similar problems. 
+This generally indicates the free energies are not converged.
+
+D. WINDOW CONSISTENCY
+--------------------------------------------------
+  wt_complex:
+    Windows 0-14:  +46.25 +/- 0.12 kcal/mol
+    Windows 15-19: -5.16 +/- 0.12 kcal/mol
+    Full (0-19):   +40.33 +/- 0.17 kcal/mol
+  mut_complex:
+    Windows 0-14:  +46.32 +/- 0.12 kcal/mol
+    Windows 15-19: -4.36 +/- 0.12 kcal/mol
+    Full (0-19):   +40.77 +/- 0.18 kcal/mol
+
+E. BOOTSTRAP ANALYSIS
+--------------------------------------------------
+  Running 50 bootstrap iterations...
+  wt_complex:
+    MBAR dG:       +40.33 +/- 0.17 kcal/mol
+    Bootstrap:     +40.28 +/- 0.18 kcal/mol
+    95% CI:        [39.93, 40.63]
+    Ratio (boot/MBAR): 1.05 [OK]
+  mut_complex:
+    MBAR dG:       +40.77 +/- 0.18 kcal/mol
+    Bootstrap:     +40.75 +/- 0.17 kcal/mol
+    95% CI:        [40.46, 41.02]
+    Ratio (boot/MBAR): 0.92 [OK]
+
+  ddG Analysis:
+    MBAR ddG:      +0.44 +/- 0.25 kcal/mol
+    Bootstrap std: +/- 0.25 kcal/mol
+
+F. VALUE CAPPING IMPACT
+--------------------------------------------------
+  wt_complex:
+    Overflow counts (at cap=1e6):
+      Window 13: 10 values capped
+      Window 14: 210 values capped
+      Window 15: 1170 values capped
+      Window 16: 3330 values capped
+      Window 17: 8680 values capped
+      Window 18: 10000 values capped
+      Window 19: 10000 values capped
+      Total: 33400
+    Sensitivity test:
+      Cap 1e+05: dG = +40.33 kcal/mol
+      Cap 1e+06: dG = +40.33 kcal/mol
+      Cap 1e+07: dG = +40.33 kcal/mol
+      Excluding win19: dG = +41.29 kcal/mol
+  mut_complex:
+    Overflow counts (at cap=1e6):
+      Window 13: 10 values capped
+      Window 14: 220 values capped
+      Window 15: 1000 values capped
+      Window 16: 3400 values capped
+      Window 17: 8710 values capped
+      Window 18: 9980 values capped
+      Window 19: 10000 values capped
+      Total: 33320
+    Sensitivity test:
+      Cap 1e+05: dG = +40.77 kcal/mol
+      Cap 1e+06: dG = +40.77 kcal/mol
+      Cap 1e+07: dG = +40.77 kcal/mol
+      Excluding win19: dG = +41.59 kcal/mol
+
+  ddG sensitivity:
+    Cap 1e+05: ddG = +0.44 kcal/mol
+    Cap 1e+06: ddG = +0.44 kcal/mol
+    Cap 1e+07: ddG = +0.44 kcal/mol
+    No win19: ddG = +0.30 kcal/mol
+
+G. OVERLAP MATRIX
+--------------------------------------------------
+  wt_complex:
+    Min adjacent overlap: 0.0540 at windows 17-18
+    All adjacent overlaps > 3%: OK
+    Adjacent overlaps:
+      0.30 0.24 0.23 0.23 0.22 0.21 0.21 0.21 0.28 0.05 0.12 0.16 0.16 0.19 0.21 0.16 0.09 0.05 0.32 
+  mut_complex:
+    Min adjacent overlap: 0.0396 at windows 17-18
+    All adjacent overlaps > 3%: OK
+    Adjacent overlaps:
+      0.30 0.23 0.23 0.23 0.22 0.21 0.20 0.21 0.28 0.05 0.14 0.14 0.16 0.18 0.20 0.17 0.10 0.04 0.35 
+
+================================================================================
+VERIFICATION SUMMARY
+================================================================================
+[X] A. Distance confirmed >50 A (allosteric)
+[X] B. Protein RMSD > 1 A (not frozen)
+[ ] C. Phase breakdown failed
+[X] D. Window consistency computed
+[X] E. Bootstrap agrees with MBAR error
+[X] F. Capping sensitivity analyzed
+[X] G. All overlaps > 3%
+
+Passed: 6/7
+
+OVERALL ASSESSMENT: MARGINAL
+
+================================================================================

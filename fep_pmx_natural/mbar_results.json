@@ -1,0 +1,12 @@
+{
+  "ligand": "CID_10120 (Bufadienolide)",
+  "temperature_K": 310.0,
+  "wt_dG_kcal": 40.32683400958312,
+  "wt_dG_err_kcal": 0.17464042975753222,
+  "mut_dG_kcal": 40.76620746552082,
+  "mut_dG_err_kcal": 0.18065146870389803,
+  "ddG_kcal": 0.43937345593769805,
+  "ddG_err_kcal": 0.2512652639159878,
+  "wt_min_overlap": 0.05399767227658038,
+  "mut_min_overlap": 0.039649555998078484
+}
