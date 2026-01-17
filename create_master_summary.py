@@ -95,7 +95,7 @@ MMGBSA_FEP_COMPARISON = [
 PROJECT_PHASES = [
     {"phase": "0", "name": "Foundation", "status": "Complete", "description": "Literature review, gap analysis", "output": "Research plan"},
     {"phase": "1", "name": "Structure Prep", "status": "Complete", "description": "NOD2 LRR domain preparation", "output": "human_NOD2_LRR.pdbqt"},
-    {"phase": "2", "name": "Library Curation", "status": "Complete", "description": "8,957 natural + 609 FDA compounds", "output": "9,566 total"},
+    {"phase": "2", "name": "Library Curation", "status": "Complete", "description": "7,414 natural + 2,152 FDA compounds", "output": "9,566 total"},
     {"phase": "3", "name": "Virtual Screening", "status": "Complete", "description": "GNINA GPU-accelerated docking", "output": "Top 500 hits"},
     {"phase": "4", "name": "NOD2-Scout ML", "status": "Complete", "description": "Random Forest ranking model", "output": "0.90 AUC-ROC"},
     {"phase": "5", "name": "ADMET Filtering", "status": "Complete", "description": "Toxicity, drug-likeness", "output": "12 final candidates"},
@@ -105,7 +105,7 @@ PROJECT_PHASES = [
     {"phase": "9", "name": "Mutation Analysis", "status": "Complete", "description": "Distance calculations for all mutations", "output": "R702W = 79.4 A from pocket"},
     {"phase": "10", "name": "MD Simulations (Mutant)", "status": "Complete", "description": "R702W + G908R, 240ns total", "output": "Trajectory data"},
     {"phase": "11", "name": "Clinical Trial Design", "status": "Complete", "description": "Phase II protocol", "output": "88% power, 210 patients"},
-    {"phase": "12", "name": "FEP Validation", "status": "Complete", "description": "100 complex windows (60 Feb + 40 Buf)", "output": "DDG with error bars"},
+    {"phase": "12", "name": "FEP Validation", "status": "Complete", "description": "80 complex windows (40 Feb + 40 Buf)", "output": "DDG with error bars"},
     {"phase": "13", "name": "Absolute dG", "status": "Complete", "description": "Solvent legs, thermodynamic cycle", "output": "Final binding affinities"},
 ]
 
@@ -114,14 +114,15 @@ PROJECT_PHASES = [
 # ============================================================================
 STATISTICS = {
     "total_compounds_screened": "9,566",
+    "library_breakdown": "7,414 natural products + 2,152 FDA drugs",
     "ml_model_auc_roc": "0.90",
     "md_simulations_wt": "14 trajectories, 280 ns",
     "md_simulations_mutant": "12 trajectories, 240 ns",
     "total_simulation_time": "520 ns",
-    "fep_windows_febuxostat": "60 complex (30 WT + 30 MUT) + 20 solvent",
-    "fep_windows_bufadienolide": "40 complex (20 WT + 20 MUT) + 20 solvent",
+    "fep_windows_febuxostat": "40 complex (20 WT + 20 MUT) + 20 solvent = 60",
+    "fep_windows_bufadienolide": "40 complex (20 WT + 20 MUT) + 20 solvent = 60",
     "solvent_windows": "40 total (20 per compound)",
-    "total_fep_windows": "140 (100 complex + 40 solvent)",
+    "total_fep_windows": "120 (80 complex + 40 solvent)",
 }
 
 # ============================================================================
@@ -426,6 +427,7 @@ nod2-screening-data/
     headers = ["Metric", "Value"]
     rows = [
         ["Total compounds screened", STATISTICS["total_compounds_screened"]],
+        ["Library breakdown", STATISTICS["library_breakdown"]],
         ["ML Model AUC-ROC", STATISTICS["ml_model_auc_roc"]],
         ["MD Simulations (WT)", STATISTICS["md_simulations_wt"]],
         ["MD Simulations (Mutant)", STATISTICS["md_simulations_mutant"]],
