@@ -76,7 +76,7 @@ FEP_RESULTS = {
         "ddG": "-0.44",
         "Kd_wt": "~5 pM",
         "Kd_mut": "~3 pM",
-        "mutation_effect": "NO EFFECT (mutation-resistant)",
+        "mutation_effect": "PREDICTED mutation-resistant (requires validation)",
         "significance": "1.8 sigma (not significant)",
     }
 }
@@ -255,7 +255,7 @@ def create_document():
     results.add_run(" (FDA-approved gout drug): Binds NOD2 but 50x weaker in R702W mutant\n")
     results.add_run("  2. ").bold = True
     results.add_run("CID_10120 Bufadienolide").bold = True
-    results.add_run(" (natural product): Binds orders of magnitude stronger than febuxostat (predicted) AND mutation-resistant in silico\n")
+    results.add_run(" (natural product): Binds stronger than febuxostat (predicted) AND shows mutation-resistant TREND (requires experimental validation)\n")
 
     doc.add_heading("Novel Discovery", 2)
     novel = doc.add_paragraph()
@@ -307,7 +307,7 @@ def create_document():
     doc.add_heading("Key Interpretation", 2)
     interp = doc.add_paragraph()
     interp.add_run("- Bufadienolide predicted to bind much stronger than Febuxostat (requires experimental validation)\n").bold = True
-    interp.add_run("- Bufadienolide shows mutation-resistant TREND in silico\n").bold = True
+    interp.add_run("- Bufadienolide shows mutation-resistant TREND (not statistically significant)\n").bold = True
     interp.add_run("- Febuxostat binding reduced ~50-fold in R702W (statistically significant: 8 sigma)\n")
     interp.add_run("- Bufadienolides are known NF-kB inhibitors - NOD2 signals through NF-kB\n")
 
