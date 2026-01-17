@@ -98,7 +98,7 @@ PROJECT_PHASES = [
     {"phase": "2", "name": "Library Curation", "status": "Complete", "description": "7,414 natural + 2,152 FDA compounds", "output": "9,566 total"},
     {"phase": "3", "name": "Virtual Screening", "status": "Complete", "description": "GNINA GPU-accelerated docking", "output": "Top 500 hits"},
     {"phase": "4", "name": "NOD2-Scout ML", "status": "Complete", "description": "Random Forest ranking model", "output": "0.90 AUC-ROC"},
-    {"phase": "5", "name": "ADMET Filtering", "status": "Complete", "description": "Toxicity, drug-likeness", "output": "12 final candidates"},
+    {"phase": "5", "name": "ADMET Filtering", "status": "Complete", "description": "Toxicity, drug-likeness", "output": "8 Tier-1 candidates"},
     {"phase": "6", "name": "MD Simulations (WT)", "status": "Complete", "description": "20ns x 14 trajectories", "output": "Pocket occupancy data"},
     {"phase": "7", "name": "MM-GBSA", "status": "Complete", "description": "Binding energy estimation", "output": "DDG estimates"},
     {"phase": "8", "name": "Cross-Validation", "status": "Complete", "description": "Chai-1, DiffDock, FlowDock", "output": "Confirmed binding site"},
@@ -451,7 +451,7 @@ nod2-screening-data/
     vs.add_run("- Software: GNINA v1.0 (GPU-accelerated)\n")
     vs.add_run("- Scoring: CNN affinity + CNN pose\n")
     vs.add_run("- Exhaustiveness: 32\n")
-    vs.add_run("- Target: NOD2 LRR domain (AlphaFold, validated at 0.64 A RMSD)\n")
+    vs.add_run("- Target: NOD2 LRR domain (AlphaFold-predicted structure, UniProt Q9HC29)\n")
 
     doc.add_heading("8.2 Machine Learning (NOD2-Scout)", 2)
     ml = doc.add_paragraph()

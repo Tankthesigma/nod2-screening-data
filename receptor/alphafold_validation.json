@@ -1,0 +1,10 @@
+{
+  "alphafold_structure": "C:\\Users\\vasud\\nod2-screening-data\\cross_validation\\human_NOD2_LRR.pdb",
+  "experimental_structure": "PDB 5IRM chain A",
+  "alphafold_total_residues": 1040,
+  "experimental_total_residues": 767,
+  "aligned_residues": 767,
+  "backbone_ca_rmsd_angstrom": 17.96,
+  "quality": "POOR - Significant structural deviation",
+  "notes": "Best alignment window (300 res) RMSD: 12.17 A"
+}
