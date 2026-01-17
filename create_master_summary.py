@@ -97,7 +97,7 @@ PROJECT_PHASES = [
     {"phase": "1", "name": "Structure Prep", "status": "Complete", "description": "NOD2 LRR domain preparation", "output": "human_NOD2_LRR.pdbqt"},
     {"phase": "2", "name": "Library Curation", "status": "Complete", "description": "7,414 natural + 2,152 FDA compounds", "output": "9,566 total"},
     {"phase": "3", "name": "Virtual Screening", "status": "Complete", "description": "GNINA GPU-accelerated docking", "output": "Top 500 hits"},
-    {"phase": "4", "name": "NOD2-Scout ML", "status": "Complete", "description": "Random Forest ranking model", "output": "0.90 AUC-ROC"},
+    {"phase": "4", "name": "NOD2-Scout ML", "status": "Complete", "description": "XGBoost ranking model", "output": "0.85-0.93 AUC-ROC (5-fold CV)"},
     {"phase": "5", "name": "ADMET Filtering", "status": "Complete", "description": "Toxicity, drug-likeness", "output": "8 Tier-1 candidates"},
     {"phase": "6", "name": "MD Simulations (WT)", "status": "Complete", "description": "20ns x 14 trajectories", "output": "Pocket occupancy data"},
     {"phase": "7", "name": "MM-GBSA", "status": "Complete", "description": "Binding energy estimation", "output": "DDG estimates"},
@@ -115,7 +115,7 @@ PROJECT_PHASES = [
 STATISTICS = {
     "total_compounds_screened": "9,566",
     "library_breakdown": "7,414 natural products + 2,152 FDA drugs",
-    "ml_model_auc_roc": "0.90",
+    "ml_model_auc_roc": "0.85-0.93 (5-fold CV)",
     "md_simulations_wt": "14 trajectories, 280 ns",
     "md_simulations_mutant": "12 trajectories, 240 ns",
     "total_simulation_time": "520 ns",
@@ -224,6 +224,7 @@ def create_document():
     toc.add_run("8. Methods Detail\n")
     toc.add_run("9. Novel Contributions\n")
     toc.add_run("10. Future Directions\n")
+    toc.add_run("11. Limitations\n")
 
     doc.add_page_break()
 
@@ -247,7 +248,7 @@ def create_document():
     doc.add_heading("Key Results", 2)
     results = doc.add_paragraph()
     results.add_run("- Screened 9,566 compounds\n")
-    results.add_run("- Built NOD2-Scout ML model (AUC-ROC = 0.90)\n")
+    results.add_run("- Built NOD2-Scout ML model (AUC-ROC = 0.85-0.93, 5-fold CV with scaffold split)\n")
     results.add_run("- Validated 2 compounds with FEP:\n")
     results.add_run("  1. ").bold = True
     results.add_run("Febuxostat").bold = True
@@ -306,9 +307,17 @@ def create_document():
     doc.add_heading("Key Interpretation", 2)
     interp = doc.add_paragraph()
     interp.add_run("- Bufadienolide predicted to bind much stronger than Febuxostat (requires experimental validation)\n").bold = True
-    interp.add_run("- Bufadienolide shows mutation-resistant binding in silico\n").bold = True
-    interp.add_run("- Febuxostat binding reduced ~50-fold in R702W (may reduce efficacy, requires experimental validation)\n")
+    interp.add_run("- Bufadienolide shows mutation-resistant TREND in silico\n").bold = True
+    interp.add_run("- Febuxostat binding reduced ~50-fold in R702W (statistically significant: 8 sigma)\n")
     interp.add_run("- Bufadienolides are known NF-kB inhibitors - NOD2 signals through NF-kB\n")
+
+    doc.add_heading("Statistical Note on Bufadienolide", 2)
+    stat_note = doc.add_paragraph()
+    stat_note.add_run("IMPORTANT: ").bold = True
+    stat_note.add_run("Bufadienolide ddG = -0.44 +/- 0.37 kcal/mol. ")
+    stat_note.add_run("The 95% confidence interval [-1.16, +0.28] includes zero, ")
+    stat_note.add_run("meaning the mutation-resistance claim does NOT reach statistical significance. ")
+    stat_note.add_run("The trend suggests mutation-resistance, but experimental validation is required to confirm.")
 
     doc.add_page_break()
 
@@ -455,7 +464,7 @@ nod2-screening-data/
 
     doc.add_heading("8.2 Machine Learning (NOD2-Scout)", 2)
     ml = doc.add_paragraph()
-    ml.add_run("- Algorithm: Random Forest Classifier\n")
+    ml.add_run("- Algorithm: XGBoost Classifier\n")
     ml.add_run("- Features: 2048-bit Morgan fingerprints + 15 physicochemical descriptors\n")
     ml.add_run("- Training: Top 10% (positive) vs bottom 10% (negative) by docking score\n")
     ml.add_run("- Validation: 5-fold cross-validation with scaffold split\n")
@@ -523,6 +532,42 @@ nod2-screening-data/
 
     future.add_run("4. Clinical translation").bold = True
     future.add_run(" - Febuxostat could enter clinical trials immediately (FDA-approved)\n")
+
+    doc.add_page_break()
+
+    # ========================================================================
+    # SECTION 11: LIMITATIONS
+    # ========================================================================
+    doc.add_heading("11. Limitations", 1)
+
+    doc.add_heading("11.1 FEP Convergence", 2)
+    lim1 = doc.add_paragraph()
+    lim1.add_run("The MBAR analysis reported weight normalization warnings, indicating the free energy ")
+    lim1.add_run("calculations did not fully converge. Some lambda windows showed poor overlap (<0.30). ")
+    lim1.add_run("While relative rankings may be valid, absolute binding affinities should be interpreted cautiously.")
+
+    doc.add_heading("11.2 No Experimental Validation", 2)
+    lim2 = doc.add_paragraph()
+    lim2.add_run("All results are purely computational. ").bold = True
+    lim2.add_run("No ITC, SPR, or biochemical assays were performed. Predicted binding affinities, ")
+    lim2.add_run("especially the extremely tight Kd (~5 pM) for Bufadienolide, require experimental confirmation.")
+
+    doc.add_heading("11.3 Pseudo-Label ML Training", 2)
+    lim3 = doc.add_paragraph()
+    lim3.add_run("NOD2-Scout was trained on pseudo-labels derived from docking scores, not experimental binding data. ")
+    lim3.add_run("The model essentially learns to replicate docking score rankings, not independent biological activity. ")
+    lim3.add_run("This limits the ML model's predictive power for truly novel compounds.")
+
+    doc.add_heading("11.4 Missing Controls", 2)
+    lim4 = doc.add_paragraph()
+    lim4.add_run("No positive control compound (with known binding affinity) was included to validate FEP accuracy. ")
+    lim4.add_run("No negative control compound was tested to verify binding site specificity.")
+
+    doc.add_heading("11.5 Statistical Significance", 2)
+    lim5 = doc.add_paragraph()
+    lim5.add_run("Bufadienolide ddG 95% CI includes zero: ").bold = True
+    lim5.add_run("The mutation-resistance claim does not reach statistical significance (p > 0.05). ")
+    lim5.add_run("Febuxostat ddG is highly significant (8 sigma, p < 0.001).")
 
     # ========================================================================
     # SAVE DOCUMENT
