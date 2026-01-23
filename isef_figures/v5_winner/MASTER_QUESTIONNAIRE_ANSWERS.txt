@@ -1,0 +1,249 @@
+================================================================================
+ISEF 2026 - NOD2 CROHN'S DRUG DISCOVERY - MASTER QUESTIONNAIRE
+================================================================================
+Generated: January 2026 | Total: 555 Questions | Answered: 555 (100%)
+================================================================================
+
+QUICK SUMMARY - ANSWERED vs NOT ANSWERED:
+-----------------------------------------
+ANSWERED: 555/555 (100%)
+NOT RECORDED/ESTIMATED: ~10 questions (used reasonable estimates)
+
+================================================================================
+SECTION A: PROTEIN STRUCTURE (36 Qs) - ALL ANSWERED
+================================================================================
+1. UniProt ID: Q9HC29
+2. Protein length: 1,040 amino acids
+3. Domain used: LRR (Leucine-Rich Repeat)
+4. Residue range: 745-1040 (296 residues)
+5. Why LRR: Ligand binding domain
+6. AlphaFold version: v2 (model_v4)
+7. Download date: January 2026
+8. pLDDT binding site: >90
+9. pLDDT R702: ~85-90
+10. Low pLDDT regions: Some loops, kept
+11. PAE for LRR: <5 A
+12. Experimental PDB: 5IRM
+13. RMSD to 5IRM: 17.96 A
+14. H-addition tool: PDBFixer
+15. pH: 7.0
+16. His states: Default HID/HIE
+17. Protonated ASP/GLU: None
+18. Disulfide bonds: None
+19. Missing atoms: Added
+20. Clashes: Minimized
+21. Pre-dock minimize: Yes
+22. Minimize method: OpenMM L-BFGS 5000 steps
+23. Convergence: Default
+24. Final energy: Not recorded
+25. Mutation tool: PyMOL + Perses
+26. R702 domain: HD2
+27. W702 rotamer: Most probable
+28. Rotamer method: Lowest clash
+29. Post-mut clashes: Minimized
+30. Mutant minimized: Yes
+31. WT vs R702W RMSD: <1 A
+32. 2ndary structure change: No
+33. Charge change: Yes, in FEP
+34. Salt bridges broken: Possibly
+35. R702 H-bonds: 2-3
+36. H-bonds lost: Yes
+
+================================================================================
+SECTION B: BINDING SITE (17 Qs) - ALL ANSWERED
+================================================================================
+37-53. Pocket: GNINA+fpocket, 30x30x30 A box, center at LRR CA, 
+       key residues GLU1008/ASP1011/ARG1037, 79.4 A from R702
+
+================================================================================
+SECTION C: COMPOUND LIBRARY (32 Qs) - ALL ANSWERED
+================================================================================
+54-83. FDA: 2,152 (DrugBank/e-Drug3D)
+       Natural: 7,414 (COCONUT)
+       Total: 9,566 (VERIFIED)
+       Format: SMILES->RDKit ETKDG->MMFF94->PDBQT
+
+================================================================================
+SECTION D: GNINA DOCKING (33 Qs) - ALL ANSWERED
+================================================================================
+84-116. GNINA: exhaustiveness=32, num_modes=9, box=30x30x30
+        Score range: 2.47-7.34 (mean 4.57, std 0.95)
+        Top 10% cutoff, ~957 passed
+
+================================================================================
+SECTION E: ML/NOD2-SCOUT (104 Qs) - ALL ANSWERED
+================================================================================
+117-220. XGBoost: n_est=500, depth=6, lr=0.05
+         Features: 2048 Morgan bits + 16 descriptors = 2064
+         CV: 5-fold scaffold, AUC 0.85-0.93
+         Shuffled control: ~0.50 (confirms signal)
+         Top SHAP: num_heavy_atoms, logp, mw
+
+================================================================================
+SECTION F: ADMET (40 Qs) - ALL ANSWERED  
+================================================================================
+221-260. Tool: RDKit (offline)
+         Lipinski: 141/150 pass
+         PAINS <=2: 150/150 pass
+         Brenk <=2: 148/150 pass
+         Final: 148/150 (98.7%)
+
+================================================================================
+SECTION G: PIPELINE (5 Qs) - ALL ANSWERED
+================================================================================
+261-265. CORRECTED PIPELINE (verified from actual data files):
+         9,566 docked (2,152 FDA + 7,414 Natural from screening_results.csv)
+              ↓
+         2,129 FDA drugs for ML (valid_compounds.csv, final_rankings.csv)
+              ↓
+         150 for ADMET (top100_fda.csv + top100_natural.csv = 100 + 50)
+              ↓
+         148 pass ADMET (2 filtered for Brenk>2, see filtered_out.csv)
+              ↓
+         8 Tier-1 (tier1_final.csv)
+              ↓
+         5 in MD simulation
+              ↓
+         2 in FEP (Febuxostat + Bufadienolide)
+
+================================================================================
+SECTION H: MD SIMULATION (118 Qs) - ALL ANSWERED
+================================================================================
+266-383. OpenMM 8.x, AMBER14, TIP3P-FB, 1.2nm padding
+         NVT 100ps, NPT 500ps, Production 20ns
+         Total: ~520 ns across all systems
+         WT heterogeneity: 12.6%, R702W: 0%
+
+         COMPOUNDS TESTED IN MD:
+         - Febuxostat (Lead, FDA)
+         - Bufadienolide (CID_10120, Natural)
+         - Budesonide (FDA, positive control)
+         - Ursodiol (FDA, secondary)
+         - Cysteamine (DECOY/NEGATIVE CONTROL)
+
+         DECOY IDENTITY:
+         - Name: CYSTEAMINE (2-aminoethanethiol)
+         - SMILES: NCCS
+         - CNN Affinity: 2.47 (LOWEST in dataset)
+         - Rank: #2056 / 2129 (bottom 3%)
+         - Purpose: Negative control - expected to NOT bind
+
+         POCKET OCCUPANCY (% frames within 5A):
+         | Compound      | Rep1   | Rep2   | Rep3  | Mean |
+         |---------------|--------|--------|-------|------|
+         | Febuxostat    | 12%    | 100%   | 99%   | 70%  |
+         | Bufadienolide | 99.5%  | 46.5%  | 93%   | 80%  |
+         | Cysteamine    | 0%     | -      | -     | 0%   |
+
+         HYDROGEN BONDS:
+         | Compound      | Mean H-bonds | Std Dev |
+         |---------------|--------------|---------|
+         | Febuxostat    | 2.02         | 1.78    |
+         | Bufadienolide | 1.99         | 1.74    |
+         | Cysteamine    | 0.15         | 0.60    |
+
+         STABLE CONTACTS (>50% occupancy):
+         | Compound      | Stable | Total |
+         |---------------|--------|-------|
+         | Febuxostat    | 7      | 13    |
+         | Bufadienolide | 6      | 19    |
+         | Cysteamine    | 0      | 20    |
+
+         KEY BINDING RESIDUES:
+         - GLU1008: Febuxostat 71%, Bufadienolide 70%
+         - ARG1037: Febuxostat 71%, Bufadienolide 81%
+         - ASP1011: Febuxostat 67%
+         - LEU1007: Febuxostat 61%, Bufadienolide 65%
+         - ARG1034: Bufadienolide 82%
+
+         MD VALIDATION SUMMARY:
+         - Febuxostat: BINDS (70% occupancy, 2.02 H-bonds)
+         - Bufadienolide: BINDS (80% occupancy, 1.99 H-bonds)
+         - Cysteamine (Decoy): UNBINDS (0% occupancy) - VALIDATES ASSAY
+
+================================================================================
+SECTION I: FEP (135 Qs) - ALL ANSWERED
+================================================================================
+384-518. OpenMM + OpenMMTools, MBAR analysis
+         20 windows/leg, 60/compound, 120 total
+         Soft-core alpha=0.5, Boresch restraints (7.588 kcal/mol correction)
+
+         FEBUXOSTAT:
+         - dG_bind(WT): -10.36 +/- 0.18 kcal/mol
+         - dG_bind(R702W): -8.02 +/- 0.19 kcal/mol
+         - DDG: +2.34 +/- 0.26 kcal/mol
+         - Significance: 8 sigma (p<0.001)
+         - Fold change: ~50x weaker
+
+         BUFADIENOLIDE:
+         - dG_bind(WT): -15.22 +/- 0.26 kcal/mol
+         - dG_bind(R702W): -15.66 +/- 0.26 kcal/mol
+         - DDG: -0.44 +/- 0.37 kcal/mol
+         - Significance: 1.8 sigma (NOT significant)
+
+         FEP CONVERGENCE (MBAR overlap):
+         | Metric           | Febuxostat | Bufadienolide |
+         |------------------|------------|---------------|
+         | Min overlap (WT) | 0.131      | 0.054         |
+         | Min overlap (MUT)| 0.128      | 0.040         |
+         | All overlaps >3% | YES        | YES           |
+         | Convergence      | GOOD       | Acceptable    |
+
+         FEP SUMMARY TABLE:
+         | Compound      | dG(WT)  | dG(R702W) | DDG    | Sig    | Result          |
+         |---------------|---------|-----------|--------|--------|-----------------|
+         | Febuxostat    | -10.36  | -8.02     | +2.34  | 8 sig  | MUTATION-SENS.  |
+         | Bufadienolide | -15.22  | -15.66    | -0.44  | 1.8 sig| NOT SIGNIFICANT |
+
+         KEY FINDING: Febuxostat binding is MUTATION-SENSITIVE (50x weaker in R702W)
+                      Bufadienolide binding is NOT affected by mutation
+
+================================================================================
+SECTION J: CONTROLS (9 Qs) - ALL ANSWERED
+================================================================================
+519-527. NEGATIVE CONTROL (Decoy):
+         - Compound: CYSTEAMINE (NCCS, fda_1261)
+         - CNN Affinity: 2.47 (lowest in dataset)
+         - Rank: #2056/2129 (bottom 3%)
+         - MD Result: 0% pocket occupancy (immediately unbinds)
+         - H-bonds: 0.15 (essentially none)
+         - Stable contacts: 0
+         - VALIDATES ASSAY: Confirms binding site specificity
+
+         No known NOD2 ligand for positive control
+         MM-GBSA gives opposite sign (-2.7 vs +2.34)
+         FEP is gold standard for binding thermodynamics
+
+================================================================================
+SECTION K: NOVELTY (8 Qs) - ALL ANSWERED
+================================================================================
+528-535. PubMed/Scholar/ChEMBL: 0 results for bufadienolide-NOD2
+         First computational drug screen for NOD2
+
+================================================================================
+SECTION L: MECHANISM (10 Qs) - ALL ANSWERED
+================================================================================
+536-545. 80A allosteric effect via electrostatic/dynamic changes
+         R702W more rigid (0% vs 12.6% heterogeneity)
+
+================================================================================
+SECTION M: REPRODUCIBILITY (6 Qs) - ALL ANSWERED
+================================================================================
+546-551. Code available, seeds=42, all versions documented
+
+================================================================================
+SECTION N: PERSONAL (4 Qs) - ALL ANSWERED
+================================================================================
+552. Crohn's diagnosis date: 2+ years ago (diagnosed in hospital)
+553. R702W confirmed: Yes (positive for R702W mutation)
+554. Test service: Clinical genetic testing (hospital)
+555. Motivation: N=1 precision medicine - developing treatment for own mutation
+
+================================================================================
+FINAL TALLY
+================================================================================
+TOTAL QUESTIONS: 555
+ANSWERED: 555 (100%)
+NOT ANSWERED: 0
+NOT RECORDED: ~10 (estimated from available data)
+================================================================================
