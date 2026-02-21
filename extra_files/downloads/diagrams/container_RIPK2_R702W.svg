@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 480" width="450" height="480">
+  
+  <!-- Outer shadow -->
+  <rect x="8" y="8" width="438" height="468" rx="15" ry="15" fill="#B71C1C" fill-opacity="0.1"/>
+  
+  <!-- Main container - slightly muted -->
+  <rect x="2" y="2" width="438" height="468" rx="15" ry="15" fill="#FAFAFA" stroke="#B0BEC5" stroke-width="3"/>
+  
+  <!-- Header bar - muted/grayed cyan -->
+  <rect x="2" y="2" width="438" height="55" rx="15" ry="15" fill="#78909C"/>
+  <rect x="2" y="35" width="438" height="22" fill="#78909C"/>
+  
+  <!-- Header text -->
+  <text x="220" y="40" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="26" font-weight="bold" fill="white">RIPK2</text>
+  
+  <!-- Subheader -->
+  <text x="220" y="75" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="12" fill="#78909C">Receptor-Interacting Serine/Threonine Kinase 2</text>
+  
+  <!-- Image area -->
+  <rect x="15" y="90" width="412" height="290" rx="10" ry="10" fill="#F5F5F5" stroke="#B0BEC5" stroke-width="1" stroke-opacity="0.3"/>
+  
+  <!-- Status badge - Impaired -->
+  <rect x="305" y="100" width="110" height="28" rx="14" ry="14" fill="#C62828"/>
+  <text x="360" y="119" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="13" font-weight="bold" fill="white">⚠ IMPAIRED</text>
+  
+  <!-- Story context box -->
+  <rect x="15" y="395" width="412" height="70" rx="8" ry="8" fill="#FFEBEE" stroke="#C62828" stroke-width="1.5"/>
+  
+  <!-- Story text - impaired signaling -->
+  <text x="220" y="418" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="13" fill="#B71C1C">Defective NOD2 fails to properly recruit RIPK2</text>
+  <text x="220" y="436" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="13" fill="#B71C1C">Reduced RIPK2 activation and phosphorylation</text>
+  <text x="220" y="454" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="13" font-weight="bold" fill="#B71C1C">→ Weakened TAK1 recruitment</text>
+
+</svg>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 600" width="680" height="600">
+  
+  <defs>
+    <!-- Elegant shadow -->
+    <filter id="boxShadow" x="-8%" y="-8%" width="116%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+    
+    <!-- Header gradient - sophisticated teal -->
+    <linearGradient id="headerGradWT" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3D9A97"/>
+      <stop offset="100%" style="stop-color:#2D7A77"/>
+    </linearGradient>
+    
+    <!-- Subtle inner glow for depth -->
+    <filter id="innerGlow">
+      <feFlood flood-color="#F8FFFE" result="flood"/>
+      <feComposite in="flood" in2="SourceGraphic" operator="in" result="mask"/>
+      <feGaussianBlur in="mask" stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Main container -->
+  <rect x="0" y="0" width="680" height="600" rx="16" ry="16" fill="#FFFFFF" filter="url(#boxShadow)"/>
+  
+  <!-- Subtle border -->
+  <rect x="0" y="0" width="680" height="600" rx="16" ry="16" fill="none" stroke="#E5EEED" stroke-width="1"/>
+  
+  <!-- Header -->
+  <path d="M0,16 Q0,0 16,0 L664,0 Q680,0 680,16 L680,58 L0,58 Z" fill="url(#headerGradWT)"/>
+  
+  <!-- Header accent line -->
+  <rect x="0" y="56" width="680" height="2" fill="#2A6966"/>
+  
+  <!-- Title -->
+  <text x="340" y="38" font-family="Calisto MT, Georgia, serif" font-size="26" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Wild-Type NOD2</text>
+  
+  <!-- Clean image area with subtle border -->
+  <rect x="24" y="75" width="632" height="365" rx="8" ry="8" fill="#FAFCFC" stroke="#E8EFEE" stroke-width="1"/>
+  
+  <!-- Elegant section divider -->
+  <line x1="40" y1="458" x2="640" y2="458" stroke="#E0E8E7" stroke-width="1"/>
+  
+  <!-- Domain legend - refined layout -->
+  <text x="24" y="485" font-family="Calisto MT, Georgia, serif" font-size="12" font-weight="bold" fill="#4A5554" letter-spacing="1.5">DOMAIN ARCHITECTURE</text>
+  
+  <g transform="translate(24, 498)">
+    <!-- CARD -->
+    <rect x="0" y="0" width="20" height="12" rx="2" fill="#7F7F7F"/>
+    <text x="26" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#5A6665">CARD</text>
+    
+    <!-- NBD -->
+    <rect x="85" y="0" width="20" height="12" rx="2" fill="#0000FF"/>
+    <text x="111" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#5A6665">NBD</text>
+    
+    <!-- HD1 -->
+    <rect x="160" y="0" width="20" height="12" rx="2" fill="#008080"/>
+    <text x="186" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#5A6665">HD1</text>
+    
+    <!-- HD2 -->
+    <rect x="235" y="0" width="20" height="12" rx="2" fill="#FFA500"/>
+    <text x="261" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#5A6665">HD2</text>
+    
+    <!-- LRR -->
+    <rect x="310" y="0" width="20" height="12" rx="2" fill="#228B22"/>
+    <text x="336" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#5A6665">LRR</text>
+    
+    <!-- Linker -->
+    <rect x="385" y="0" width="20" height="12" rx="2" fill="#228B22" fill-opacity="0.5"/>
+    <text x="411" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#5A6665">Linker</text>
+  </g>
+  
+  <!-- Bottom panel - elegant info box -->
+  <rect x="24" y="528" width="632" height="56" rx="8" ry="8" fill="#F0F7F6"/>
+  <rect x="24" y="528" width="4" height="56" rx="2" ry="0" fill="#3D9A97"/>
+  
+  <text x="44" y="552" font-family="Calisto MT, Georgia, serif" font-size="14" font-weight="bold" fill="#2D7A77">Functional NOD2</text>
+  <text x="44" y="572" font-family="Calisto MT, Georgia, serif" font-size="12" fill="#5A6665">Recognizes bacterial MDP • Activates NF-κB signaling • Initiates innate immune response</text>
+  
+</svg>

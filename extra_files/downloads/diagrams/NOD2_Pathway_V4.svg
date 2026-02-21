@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 1920" width="1440" height="1920">
+  <defs>
+    <!-- Arrow marker -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#E8825E"/>
+    </marker>
+    
+    <!-- Thick arrow marker -->
+    <marker id="arrowheadBig" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#555"/>
+    </marker>
+    
+    <!-- Drop shadow -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+    
+    <!-- Mutation highlight glow -->
+    <filter id="mutationGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1440" height="1920" fill="#FAFAFA"/>
+  
+  <!-- ==================== HEADER - SOLID COLOR ==================== -->
+  <rect x="40" y="30" width="1360" height="70" rx="20" fill="#E8825E" filter="url(#shadow)"/>
+  <text x="720" y="75" font-family="Georgia, serif" font-size="36" font-weight="bold" fill="white" text-anchor="middle">NOD2 Structure and Pathway</text>
+  
+  <!-- ==================== SECTION 1: BACTERIAL TRIGGER ==================== -->
+  <g transform="translate(0, 120)">
+    <!-- MDP molecule box -->
+    <rect x="520" y="0" width="400" height="120" rx="25" fill="white" stroke="#E8825E" stroke-width="3" filter="url(#shadow)"/>
+    <text x="720" y="35" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="#333" text-anchor="middle">Bacterial Signal</text>
+    <text x="720" y="70" font-family="Georgia, serif" font-size="32" font-weight="bold" fill="#E8825E" text-anchor="middle">MDP</text>
+    <text x="720" y="95" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">Muramyl Dipeptide (from bacterial cell wall)</text>
+    
+    <!-- Explanation box -->
+    <rect x="950" y="10" width="280" height="100" rx="15" fill="#FFF8E1" stroke="#FFB74D" stroke-width="1"/>
+    <text x="1090" y="35" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#E65100" text-anchor="middle">What is MDP?</text>
+    <text x="970" y="55" font-family="Arial, sans-serif" font-size="11" fill="#333">Fragment of bacterial peptidoglycan</text>
+    <text x="970" y="72" font-family="Arial, sans-serif" font-size="11" fill="#333">Triggers innate immune response</text>
+    <text x="970" y="89" font-family="Arial, sans-serif" font-size="11" fill="#333">Recognized by NOD2 in cytoplasm</text>
+    
+    <!-- Arrow down -->
+    <line x1="720" y1="125" x2="720" y2="165" stroke="#E8825E" stroke-width="4" marker-end="url(#arrowhead)"/>
+    <text x="750" y="150" font-family="Arial, sans-serif" font-size="11" fill="#E8825E" font-style="italic">binds to</text>
+  </g>
+  
+  <!-- ==================== SECTION 2: NOD2 RECOGNITION ==================== -->
+  <g transform="translate(0, 300)">
+    <!-- Section header -->
+    <rect x="40" y="0" width="1360" height="45" rx="15" fill="#E8825E" opacity="0.2"/>
+    <text x="720" y="30" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#E8825E" text-anchor="middle">NOD2 RECOGNITION - How the Protein Sees Bacteria</text>
+    
+    <!-- WT Structure box -->
+    <g transform="translate(60, 60)">
+      <rect x="0" y="0" width="620" height="480" rx="25" fill="white" stroke="#4A90A4" stroke-width="2" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="620" height="50" rx="25" fill="#4A90A4"/>
+      <rect x="0" y="25" width="620" height="25" fill="#4A90A4"/>
+      <text x="310" y="35" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="white" text-anchor="middle">Wild-Type NOD2</text>
+      
+      <!-- IMAGE PLACEHOLDER -->
+      <rect x="10" y="60" width="600" height="320" rx="15" fill="#E3F2FD" stroke="#1976D2" stroke-width="2"/>
+      <text x="310" y="200" font-family="Arial, sans-serif" font-size="18" fill="#1976D2" text-anchor="middle" font-weight="bold">INSERT: img1_wt_full_ISEF.png</text>
+      <text x="310" y="230" font-family="Arial, sans-serif" font-size="13" fill="#1976D2" text-anchor="middle">Full NOD2 structure with domain coloring</text>
+      <text x="310" y="255" font-family="Arial, sans-serif" font-size="12" fill="#666" text-anchor="middle">Magenta spheres = drug binding site in LRR</text>
+      
+      <!-- Domain legend -->
+      <g transform="translate(10, 390)">
+        <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">Domain Colors:</text>
+        <rect x="0" y="10" width="20" height="14" fill="#808080" rx="3"/>
+        <text x="25" y="22" font-family="Arial, sans-serif" font-size="11" fill="#555">CARD (signaling)</text>
+        <rect x="140" y="10" width="20" height="14" fill="#3366CC" rx="3"/>
+        <text x="165" y="22" font-family="Arial, sans-serif" font-size="11" fill="#555">NBD (ATP binding)</text>
+        <rect x="300" y="10" width="20" height="14" fill="#FF9933" rx="3"/>
+        <text x="325" y="22" font-family="Arial, sans-serif" font-size="11" fill="#555">HD2 (helical)</text>
+        <rect x="430" y="10" width="20" height="14" fill="#339933" rx="3"/>
+        <text x="455" y="22" font-family="Arial, sans-serif" font-size="11" fill="#555">LRR (sensing)</text>
+      </g>
+      
+      <!-- Explanation -->
+      <rect x="10" y="425" width="600" height="45" rx="12" fill="#E8F5E9"/>
+      <text x="310" y="445" font-family="Arial, sans-serif" font-size="12" fill="#2E7D32" text-anchor="middle" font-weight="bold">Normal function: Recognizes MDP and triggers immune response</text>
+      <text x="310" y="462" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">Drug binding site located in LRR domain (green region)</text>
+    </g>
+    
+    <!-- R702W Structure box -->
+    <g transform="translate(760, 60)">
+      <rect x="0" y="0" width="620" height="480" rx="25" fill="white" stroke="#C75050" stroke-width="2" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="620" height="50" rx="25" fill="#C75050"/>
+      <rect x="0" y="25" width="620" height="25" fill="#C75050"/>
+      <text x="310" y="35" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="white" text-anchor="middle">R702W Mutant NOD2</text>
+      
+      <!-- IMAGE PLACEHOLDER with mutation circle instruction -->
+      <rect x="10" y="60" width="600" height="320" rx="15" fill="#FFEBEE" stroke="#C62828" stroke-width="2"/>
+      <text x="310" y="180" font-family="Arial, sans-serif" font-size="18" fill="#C62828" text-anchor="middle" font-weight="bold">INSERT: img2_r702w_full_ISEF.png</text>
+      <text x="310" y="210" font-family="Arial, sans-serif" font-size="13" fill="#C62828" text-anchor="middle">R702W mutant with cyan highlighting</text>
+      
+      <!-- MUTATION CIRCLE INSTRUCTION -->
+      <circle cx="310" cy="280" r="45" fill="none" stroke="#FF0000" stroke-width="4" stroke-dasharray="8,4" filter="url(#mutationGlow)"/>
+      <text x="310" y="285" font-family="Arial, sans-serif" font-size="11" fill="#C62828" text-anchor="middle" font-weight="bold">CIRCLE THE</text>
+      <text x="310" y="300" font-family="Arial, sans-serif" font-size="11" fill="#C62828" text-anchor="middle" font-weight="bold">MUTATION HERE</text>
+      
+      <text x="310" y="350" font-family="Arial, sans-serif" font-size="12" fill="#666" text-anchor="middle">Cyan = R702W mutation location (HD2 domain)</text>
+      
+      <!-- Mutation callout box -->
+      <g transform="translate(10, 390)">
+        <rect x="0" y="0" width="600" height="35" rx="12" fill="#FFCDD2"/>
+        <circle cx="20" cy="17" r="12" fill="#00FFFF" stroke="#C62828" stroke-width="3"/>
+        <text x="45" y="15" font-family="Arial, sans-serif" font-size="12" fill="#C62828" font-weight="bold">R702W Mutation</text>
+        <text x="45" y="30" font-family="Arial, sans-serif" font-size="11" fill="#555">Arginine to Tryptophan at position 702 (HD2 domain)</text>
+        <text x="400" y="22" font-family="Arial, sans-serif" font-size="14" fill="#C62828" font-weight="bold">79.4 A from binding site!</text>
+      </g>
+      
+      <!-- Explanation -->
+      <rect x="10" y="430" width="600" height="40" rx="12" fill="#FFEBEE"/>
+      <text x="310" y="450" font-family="Arial, sans-serif" font-size="12" fill="#C62828" text-anchor="middle" font-weight="bold">Crohn Disease Risk: 3x higher | Impaired bacterial sensing</text>
+      <text x="310" y="465" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">Mutation affects binding through ALLOSTERIC mechanism (long-range)</text>
+    </g>
+    
+    <!-- VS connector -->
+    <circle cx="720" cy="360" r="30" fill="white" stroke="#E8825E" stroke-width="3"/>
+    <text x="720" y="367" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#E8825E" text-anchor="middle">vs</text>
+  </g>
+  
+  <!-- Arrow down to drug binding -->
+  <line x1="720" y1="850" x2="720" y2="895" stroke="#E8825E" stroke-width="4" marker-end="url(#arrowhead)"/>
+  <text x="750" y="880" font-family="Arial, sans-serif" font-size="12" fill="#E8825E" font-style="italic">drug binds here</text>
+  
+  <!-- ==================== SECTION 3: DRUG BINDING ==================== -->
+  <g transform="translate(0, 910)">
+    <!-- Section header -->
+    <rect x="40" y="0" width="1360" height="45" rx="15" fill="#E8825E" opacity="0.2"/>
+    <text x="720" y="30" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#E8825E" text-anchor="middle">DRUG BINDING COMPARISON - Which Drug Works for Mutant Patients?</text>
+    
+    <!-- Bufadienolide box -->
+    <g transform="translate(60, 60)">
+      <rect x="0" y="0" width="620" height="400" rx="25" fill="white" stroke="#00CED1" stroke-width="2" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="620" height="50" rx="25" fill="#00CED1"/>
+      <rect x="0" y="25" width="620" height="25" fill="#00CED1"/>
+      <text x="310" y="35" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="white" text-anchor="middle">Bufadienolide (Lead Compound)</text>
+      
+      <!-- IMAGE PLACEHOLDER -->
+      <rect x="10" y="60" width="600" height="200" rx="15" fill="#E0F7FA" stroke="#00ACC1" stroke-width="2"/>
+      <text x="310" y="150" font-family="Arial, sans-serif" font-size="18" fill="#00838F" text-anchor="middle" font-weight="bold">INSERT: pocket_bufa_wt.png</text>
+      <text x="310" y="175" font-family="Arial, sans-serif" font-size="13" fill="#00838F" text-anchor="middle">Cyan spheres = Bufadienolide in LRR pocket</text>
+      <text x="310" y="195" font-family="Arial, sans-serif" font-size="12" fill="#666" text-anchor="middle">White surface = binding pocket shape</text>
+      
+      <!-- FEP Data boxes -->
+      <g transform="translate(10, 270)">
+        <rect x="0" y="0" width="290" height="70" rx="15" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+        <text x="145" y="20" font-family="Arial, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">Wild-Type Binding</text>
+        <text x="145" y="48" font-family="Georgia, serif" font-size="24" fill="#2E7D32" text-anchor="middle" font-weight="bold">-9.2 kcal/mol</text>
+        <text x="145" y="65" font-family="Arial, sans-serif" font-size="10" fill="#666" text-anchor="middle">Strong binding</text>
+        
+        <rect x="310" y="0" width="290" height="70" rx="15" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+        <text x="455" y="20" font-family="Arial, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">R702W Mutant Binding</text>
+        <text x="455" y="48" font-family="Georgia, serif" font-size="24" fill="#2E7D32" text-anchor="middle" font-weight="bold">-9.0 kcal/mol</text>
+        <text x="455" y="65" font-family="Arial, sans-serif" font-size="10" fill="#666" text-anchor="middle">Still strong!</text>
+      </g>
+      
+      <!-- Status badge -->
+      <rect x="160" y="355" width="300" height="35" rx="17" fill="#4CAF50" filter="url(#shadow)"/>
+      <text x="310" y="378" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold">MUTATION RESISTANT</text>
+    </g>
+    
+    <!-- Febuxostat box -->
+    <g transform="translate(760, 60)">
+      <rect x="0" y="0" width="620" height="400" rx="25" fill="white" stroke="#FF8C00" stroke-width="2" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="620" height="50" rx="25" fill="#FF8C00"/>
+      <rect x="0" y="25" width="620" height="25" fill="#FF8C00"/>
+      <text x="310" y="35" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="white" text-anchor="middle">Febuxostat (Control)</text>
+      
+      <!-- IMAGE PLACEHOLDER -->
+      <rect x="10" y="60" width="600" height="200" rx="15" fill="#FFF3E0" stroke="#FF9800" stroke-width="2"/>
+      <text x="310" y="150" font-family="Arial, sans-serif" font-size="18" fill="#E65100" text-anchor="middle" font-weight="bold">INSERT: pocket_febu_wt.png</text>
+      <text x="310" y="175" font-family="Arial, sans-serif" font-size="13" fill="#E65100" text-anchor="middle">Orange spheres = Febuxostat in LRR pocket</text>
+      <text x="310" y="195" font-family="Arial, sans-serif" font-size="12" fill="#666" text-anchor="middle">Same pocket, different binding behavior</text>
+      
+      <!-- FEP Data boxes -->
+      <g transform="translate(10, 270)">
+        <rect x="0" y="0" width="290" height="70" rx="15" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+        <text x="145" y="20" font-family="Arial, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">Wild-Type Binding</text>
+        <text x="145" y="48" font-family="Georgia, serif" font-size="24" fill="#2E7D32" text-anchor="middle" font-weight="bold">-8.5 kcal/mol</text>
+        <text x="145" y="65" font-family="Arial, sans-serif" font-size="10" fill="#666" text-anchor="middle">Good binding</text>
+        
+        <rect x="310" y="0" width="290" height="70" rx="15" fill="#FFEBEE" stroke="#F44336" stroke-width="2"/>
+        <text x="455" y="20" font-family="Arial, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">R702W Mutant Binding</text>
+        <text x="455" y="48" font-family="Georgia, serif" font-size="24" fill="#C62828" text-anchor="middle" font-weight="bold">-6.1 kcal/mol</text>
+        <text x="455" y="65" font-family="Arial, sans-serif" font-size="10" fill="#C62828" text-anchor="middle">WEAK! 50x worse</text>
+      </g>
+      
+      <!-- Status badge -->
+      <rect x="160" y="355" width="300" height="35" rx="17" fill="#F44336" filter="url(#shadow)"/>
+      <text x="310" y="378" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold">MUTATION SENSITIVE</text>
+    </g>
+    
+    <!-- VS connector -->
+    <circle cx="720" cy="260" r="30" fill="white" stroke="#E8825E" stroke-width="3"/>
+    <text x="720" y="267" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#E8825E" text-anchor="middle">vs</text>
+    
+    <!-- Explanation callout -->
+    <rect x="520" y="410" width="400" height="55" rx="15" fill="#FFF8E1" stroke="#FFB74D" stroke-width="2"/>
+    <text x="720" y="432" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#E65100" text-anchor="middle">Why the difference?</text>
+    <text x="720" y="452" font-family="Arial, sans-serif" font-size="11" fill="#333" text-anchor="middle">Both drugs bind same pocket, but Febuxostat is sensitive to</text>
+    <text x="720" y="465" font-family="Arial, sans-serif" font-size="11" fill="#333" text-anchor="middle">allosteric changes caused by R702W mutation 79.4 A away</text>
+  </g>
+  
+  <!-- Arrow down to signaling -->
+  <line x1="720" y1="1395" x2="720" y2="1435" stroke="#E8825E" stroke-width="4" marker-end="url(#arrowhead)"/>
+  
+  <!-- ==================== SECTION 4: DOWNSTREAM SIGNALING ==================== -->
+  <g transform="translate(0, 1450)">
+    <!-- Section header -->
+    <rect x="40" y="0" width="1360" height="45" rx="15" fill="#E8825E" opacity="0.2"/>
+    <text x="720" y="30" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#E8825E" text-anchor="middle">SIGNALING CASCADE - From Detection to Inflammation</text>
+    
+    <!-- Signaling pathway boxes -->
+    <g transform="translate(0, 60)">
+      <!-- NOD2 -->
+      <rect x="80" y="15" width="140" height="80" rx="20" fill="#E8825E" filter="url(#shadow)"/>
+      <text x="150" y="45" font-family="Georgia, serif" font-size="18" fill="white" text-anchor="middle" font-weight="bold">NOD2</text>
+      <text x="150" y="65" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">Activated by</text>
+      <text x="150" y="78" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">MDP binding</text>
+      
+      <line x1="225" y1="55" x2="295" y2="55" stroke="#555" stroke-width="3" marker-end="url(#arrowheadBig)"/>
+      
+      <!-- RIPK2 -->
+      <rect x="300" y="15" width="140" height="80" rx="20" fill="#5C6BC0" filter="url(#shadow)"/>
+      <text x="370" y="45" font-family="Georgia, serif" font-size="18" fill="white" text-anchor="middle" font-weight="bold">RIPK2</text>
+      <text x="370" y="65" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">Kinase</text>
+      <text x="370" y="78" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">phosphorylates</text>
+      
+      <line x1="445" y1="55" x2="515" y2="55" stroke="#555" stroke-width="3" marker-end="url(#arrowheadBig)"/>
+      
+      <!-- IKK -->
+      <rect x="520" y="15" width="140" height="80" rx="20" fill="#7E57C2" filter="url(#shadow)"/>
+      <text x="590" y="45" font-family="Georgia, serif" font-size="18" fill="white" text-anchor="middle" font-weight="bold">IKK</text>
+      <text x="590" y="65" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">Complex</text>
+      <text x="590" y="78" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">releases NF-kB</text>
+      
+      <line x1="665" y1="55" x2="735" y2="55" stroke="#555" stroke-width="3" marker-end="url(#arrowheadBig)"/>
+      
+      <!-- NF-kB -->
+      <rect x="740" y="15" width="140" height="80" rx="20" fill="#AB47BC" filter="url(#shadow)"/>
+      <text x="810" y="45" font-family="Georgia, serif" font-size="18" fill="white" text-anchor="middle" font-weight="bold">NF-kB</text>
+      <text x="810" y="65" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">Transcription</text>
+      <text x="810" y="78" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">Factor</text>
+      
+      <line x1="885" y1="55" x2="955" y2="55" stroke="#555" stroke-width="3" marker-end="url(#arrowheadBig)"/>
+      
+      <!-- Inflammation -->
+      <rect x="960" y="5" width="200" height="100" rx="20" fill="#EF5350" filter="url(#shadow)"/>
+      <text x="1060" y="35" font-family="Georgia, serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold">IMMUNE</text>
+      <text x="1060" y="55" font-family="Georgia, serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold">RESPONSE</text>
+      <text x="1060" y="75" font-family="Arial, sans-serif" font-size="9" fill="white" text-anchor="middle">IL-1B, IL-6, TNF-a</text>
+      <text x="1060" y="90" font-family="Arial, sans-serif" font-size="9" fill="white" text-anchor="middle">Defensins, Autophagy</text>
+      
+      <!-- Drug target indicator -->
+      <line x1="150" y1="100" x2="150" y2="130" stroke="#00CED1" stroke-width="3"/>
+      <rect x="60" y="130" width="180" height="40" rx="12" fill="#E0F7FA" stroke="#00CED1" stroke-width="2"/>
+      <text x="150" y="148" font-family="Arial, sans-serif" font-size="11" fill="#00838F" text-anchor="middle" font-weight="bold">Bufadienolide</text>
+      <text x="150" y="163" font-family="Arial, sans-serif" font-size="10" fill="#555" text-anchor="middle">Binds LRR - Modulates NOD2</text>
+    </g>
+  </g>
+  
+  <!-- ==================== ALLOSTERIC MECHANISM BOX (replaces Key Finding) ==================== -->
+  <g transform="translate(0, 1680)">
+    <rect x="80" y="0" width="1280" height="100" rx="25" fill="white" stroke="#FF9800" stroke-width="3" filter="url(#shadow)"/>
+    <rect x="80" y="0" width="1280" height="50" rx="25" fill="#FF9800"/>
+    <rect x="80" y="25" width="1280" height="25" fill="#FF9800"/>
+    <text x="720" y="38" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="white" text-anchor="middle">ALLOSTERIC MECHANISM</text>
+    
+    <text x="720" y="75" font-family="Georgia, serif" font-size="16" fill="#333" text-anchor="middle">
+      R702W mutation in HD2 domain affects drug binding 79.4 Angstroms away in LRR domain
+    </text>
+    <text x="720" y="95" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">
+      Long-range conformational changes explain why some drugs lose efficacy in mutant patients
+    </text>
+  </g>
+  
+  <!-- ==================== FOOTER ==================== -->
+  <rect x="40" y="1810" width="1360" height="90" rx="15" fill="#f5f5f5" stroke="#ddd"/>
+  <text x="720" y="1840" font-family="Arial, sans-serif" font-size="11" fill="#666" text-anchor="middle">
+    Methods: AlphaFold2 structure prediction | GNINA deep learning docking | GROMACS molecular dynamics | FEP+ free energy calculations | XGBoost ML classifier
+  </text>
+  <text x="720" y="1870" font-family="Georgia, serif" font-size="14" fill="#E8825E" text-anchor="middle" font-weight="bold">
+    Deep Learning Guided Discovery and FEP Validation of NOD2 Binders for the R702W Crohn Disease Mutation
+  </text>
+  
+</svg>

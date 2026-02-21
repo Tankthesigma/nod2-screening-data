@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" width="760" height="340">
+  
+  <!-- Main box -->
+  <rect x="0" y="0" width="760" height="340" rx="8" ry="8" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  
+  <!-- Header bar -->
+  <rect x="0" y="0" width="760" height="55" rx="8" ry="8" fill="#00897B"/>
+  <rect x="0" y="30" width="760" height="25" fill="#00897B"/>
+  
+  <!-- Header text -->
+  <text x="380" y="38" font-family="Calisto MT, Cambria, Georgia, serif" font-size="26" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3. NOD2-SCOUT</text>
+  
+  <!-- Body text -->
+  <text x="380" y="89" font-family="Arial, sans-serif" font-size="19" fill="#37474F" text-anchor="middle">
+    <tspan>Custom </tspan><tspan font-weight="bold" fill="#00897B">XGBoost</tspan><tspan> classifier. Training: pseudo-labels from docking</tspan>
+  </text>
+  
+  <text x="380" y="114" font-family="Arial, sans-serif" font-size="19" fill="#37474F" text-anchor="middle">
+    <tspan>(top/bottom 20%), stratified across </tspan><tspan font-weight="bold">5 MW bins</tspan><tspan> (856 compounds).</tspan>
+  </text>
+  
+  <text x="380" y="146" font-family="Arial, sans-serif" font-size="19" fill="#37474F" text-anchor="middle">
+    <tspan>Features: </tspan><tspan font-weight="bold">2,048-bit Morgan fingerprints</tspan><tspan> (radius=2) +</tspan>
+  </text>
+  
+  <text x="380" y="173" font-family="Arial, sans-serif" font-size="19" fill="#37474F" text-anchor="middle">
+    <tspan font-weight="bold">10 physicochemical descriptors</tspan><tspan> (LogP, TPSA, HBD, HBA, etc.).</tspan>
+  </text>
+  
+  <text x="380" y="207" font-family="Arial, sans-serif" font-size="19" fill="#37474F" text-anchor="middle">
+    <tspan>Validated: </tspan><tspan font-weight="bold" fill="#00897B">5-fold scaffold-split CV</tspan><tspan> (zero scaffold overlap).</tspan>
+  </text>
+  
+  <text x="380" y="241" font-family="Arial, sans-serif" font-size="19" fill="#37474F" text-anchor="middle">
+    <tspan>Performance: </tspan><tspan font-weight="bold" fill="#00897B">AUC = 0.92 ± 0.03</tspan><tspan>. Shuffled control: AUC = 0.48.</tspan>
+  </text>
+  
+  <text x="380" y="290" font-family="Arial, sans-serif" font-size="21" fill="#37474F" text-anchor="middle">
+    <tspan>Filtered to top </tspan><tspan font-weight="bold" font-size="23">2,129 compounds</tspan><tspan>.</tspan>
+  </text>
+  
+</svg>

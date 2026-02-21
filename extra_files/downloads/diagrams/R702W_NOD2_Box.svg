@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 560" width="620" height="560">
+  
+  <!-- Main white box with rounded corners -->
+  <rect x="0" y="0" width="620" height="560" rx="30" ry="30" fill="#FFFFFF" stroke="#C75050" stroke-width="3"/>
+  
+  <!-- Header bar with matching rounded top corners -->
+  <path d="M30,0 L590,0 Q620,0 620,30 L620,55 L0,55 L0,30 Q0,0 30,0 Z" fill="#C75050"/>
+  <text x="310" y="40" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="#FFFFFF" text-anchor="middle">R702W Mutant NOD2</text>
+  
+  <!-- Image placeholder box - EMPTY -->
+  <rect x="15" y="70" width="590" height="340" rx="20" ry="20" fill="#FFEBEE" stroke="#C75050" stroke-width="2"/>
+  
+  <!-- Mutation callout box -->
+  <rect x="15" y="420" width="590" height="45" rx="15" ry="15" fill="#FFCDD2"/>
+  <circle cx="40" cy="442" r="18" fill="#00FFFF" stroke="#C62828" stroke-width="3"/>
+  <text x="70" y="437" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#C62828">R702W Mutation</text>
+  <text x="70" y="455" font-family="Arial, sans-serif" font-size="12" fill="#555555">Arginine to Tryptophan at position 702</text>
+  <text x="480" y="448" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#C62828">79.4 A away!</text>
+  
+  <!-- Red explanation box at bottom -->
+  <rect x="15" y="475" width="590" height="70" rx="15" ry="15" fill="#FFEBEE"/>
+  <text x="310" y="518" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#C62828" text-anchor="middle">Crohn Disease Risk: 3x higher | Affects binding through ALLOSTERIC mechanism</text>
+  
+</svg>

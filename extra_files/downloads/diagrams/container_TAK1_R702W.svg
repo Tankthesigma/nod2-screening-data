@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 180" width="800" height="180">
+  
+  <!-- Outer shadow -->
+  <rect x="5" y="5" width="790" height="170" rx="10" ry="10" fill="#B71C1C" fill-opacity="0.1"/>
+  
+  <!-- Main container -->
+  <rect x="2" y="2" width="790" height="170" rx="10" ry="10" fill="#FAFAFA" stroke="#B0BEC5" stroke-width="3"/>
+  
+  <!-- Top header bar - muted -->
+  <rect x="2" y="2" width="790" height="35" rx="10" ry="10" fill="#78909C"/>
+  <rect x="2" y="22" width="790" height="15" fill="#78909C"/>
+  
+  <!-- Header text -->
+  <text x="18" y="26" font-family="Calisto MT, Cambria, Georgia, serif" font-size="20" font-weight="bold" fill="white">TAK1</text>
+  <text x="75" y="25" font-family="Calisto MT, Cambria, Georgia, serif" font-size="12" fill="white" fill-opacity="0.9">TGF-β Activated Kinase 1</text>
+  
+  <!-- Impaired badge -->
+  <rect x="680" y="7" width="100" height="24" rx="12" ry="12" fill="#C62828"/>
+  <text x="730" y="24" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="12" font-weight="bold" fill="white">⚠ IMPAIRED</text>
+  
+  <!-- BIG Image area -->
+  <rect x="10" y="45" width="480" height="122" rx="8" ry="8" fill="#F5F5F5" stroke="#B0BEC5" stroke-width="1" stroke-opacity="0.3"/>
+  
+  <!-- Story context box -->
+  <rect x="500" y="45" width="285" height="122" rx="8" ry="8" fill="#FFEBEE" stroke="#C62828" stroke-width="1"/>
+  
+  <!-- Story text -->
+  <text x="515" y="72" font-family="Calisto MT, Cambria, Georgia, serif" font-size="13" fill="#B71C1C">Reduced RIPK2 activity fails</text>
+  <text x="515" y="92" font-family="Calisto MT, Cambria, Georgia, serif" font-size="13" fill="#B71C1C">to fully recruit TAK1 complex</text>
+  <text x="515" y="118" font-family="Calisto MT, Cambria, Georgia, serif" font-size="13" fill="#B71C1C">Diminished IKK phosphorylation</text>
+  <text x="515" y="155" font-family="Calisto MT, Cambria, Georgia, serif" font-size="14" font-weight="bold" fill="#B71C1C">→ Weakened NF-κB activation</text>
+
+</svg>

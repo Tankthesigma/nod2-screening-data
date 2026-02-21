@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  
+  <rect x="0" y="0" width="800" height="400" rx="8" ry="8" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  
+  <rect x="0" y="0" width="800" height="70" rx="8" ry="8" fill="#00897B"/>
+  <rect x="0" y="35" width="800" height="35" fill="#00897B"/>
+  
+  <text x="400" y="35" font-family="Calisto MT, Cambria, Georgia, serif" font-size="26" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3. NOD2-SCOUT</text>
+  <text x="400" y="58" font-family="Arial, sans-serif" font-size="14" font-style="italic" fill="#B2DFDB" text-anchor="middle">ML reranks hits (docking alone has ~0.5 correlation with experiment)</text>
+  
+  <text x="400" y="105" font-family="Arial, sans-serif" font-size="20" fill="#37474F" text-anchor="middle">
+    <tspan font-weight="bold" fill="#00897B">XGBoost</tspan><tspan> classifier (500 trees, depth=6, lr=0.05) on docking pseudo-labels:</tspan>
+  </text>
+  
+  <text x="400" y="138" font-family="Arial, sans-serif" font-size="20" fill="#37474F" text-anchor="middle">
+    <tspan>Top 20% = binders, bottom 20% = non-binders, stratified by </tspan><tspan font-weight="bold">5 MW bins</tspan><tspan>.</tspan>
+  </text>
+  
+  <text x="400" y="171" font-family="Arial, sans-serif" font-size="20" fill="#37474F" text-anchor="middle">
+    <tspan font-weight="bold">856 labeled compounds</tspan><tspan> (728 training, 128 test).</tspan>
+  </text>
+  
+  <text x="400" y="212" font-family="Arial, sans-serif" font-size="20" fill="#37474F" text-anchor="middle">
+    <tspan>Features: </tspan><tspan font-weight="bold">2,048-bit Morgan fingerprints</tspan><tspan> + </tspan><tspan font-weight="bold">10 descriptors</tspan><tspan> = </tspan><tspan font-weight="bold">2,058 total</tspan><tspan>.</tspan>
+  </text>
+  
+  <text x="400" y="253" font-family="Arial, sans-serif" font-size="20" fill="#37474F" text-anchor="middle">
+    <tspan font-weight="bold" fill="#00897B">5-fold scaffold-split CV</tspan><tspan>: entire scaffolds held out (stricter than random).</tspan>
+  </text>
+  
+  <text x="400" y="294" font-family="Arial, sans-serif" font-size="20" fill="#37474F" text-anchor="middle">
+    <tspan>Performance: </tspan><tspan font-weight="bold" fill="#00897B">AUC = 0.85–0.93</tspan><tspan>. Shuffled control: </tspan><tspan font-weight="bold">AUC = 0.50</tspan><tspan> (random).</tspan>
+  </text>
+  
+  <text x="400" y="365" font-family="Arial, sans-serif" font-size="24" fill="#37474F" text-anchor="middle">
+    <tspan>Filtered to top </tspan><tspan font-weight="bold" font-size="28">2,129 compounds</tspan><tspan>.</tspan>
+  </text>
+  
+</svg>

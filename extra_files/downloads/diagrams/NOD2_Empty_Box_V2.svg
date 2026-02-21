@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1920" width="1440" height="1920">
+  
+  <!-- Main white box with rounded corners -->
+  <rect x="40" y="40" width="1360" height="1840" rx="30" ry="30" fill="#FFFFFF" stroke="#DDDDDD" stroke-width="2"/>
+  
+  <!-- Header bar with matching rounded top corners -->
+  <path d="M70,40 L1370,40 Q1400,40 1400,70 L1400,120 L40,120 L40,70 Q40,40 70,40 Z" fill="#E8825E"/>
+  
+  <!-- Title text -->
+  <text x="720" y="92" font-family="Georgia, serif" font-size="36" font-weight="bold" fill="#FFFFFF" text-anchor="middle">NOD2 Structure and Pathway</text>
+  
+</svg>

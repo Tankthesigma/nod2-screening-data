@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 500" width="450" height="500">
+  
+  <!-- Outer shadow -->
+  <rect x="8" y="8" width="438" height="488" rx="15" ry="15" fill="#B71C1C" fill-opacity="0.15"/>
+  
+  <!-- Main container -->
+  <rect x="2" y="2" width="438" height="488" rx="15" ry="15" fill="#FFFFFF" stroke="#C62828" stroke-width="3"/>
+  
+  <!-- Header bar -->
+  <rect x="2" y="2" width="438" height="55" rx="15" ry="15" fill="#C62828"/>
+  <rect x="2" y="35" width="438" height="22" fill="#C62828"/>
+  
+  <!-- Header text -->
+  <text x="220" y="40" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="26" font-weight="bold" fill="white">R702W Mutant NOD2</text>
+  
+  <!-- Image area -->
+  <rect x="15" y="70" width="412" height="320" rx="10" ry="10" fill="#F9F9F9" stroke="#C62828" stroke-width="1" stroke-opacity="0.3"/>
+  
+  <!-- Domain Architecture Key -->
+  <text x="25" y="410" font-family="Calisto MT, Cambria, Georgia, serif" font-size="12" font-weight="bold" fill="#B71C1C">DOMAIN ARCHITECTURE</text>
+  
+  <!-- Domain key row - no linker -->
+  <rect x="25" y="420" width="20" height="16" rx="3" ry="3" fill="#808080"/>
+  <text x="50" y="433" font-family="Calisto MT, Cambria, Georgia, serif" font-size="12" fill="#333">CARD</text>
+  
+  <rect x="105" y="420" width="20" height="16" rx="3" ry="3" fill="#1565C0"/>
+  <text x="130" y="433" font-family="Calisto MT, Cambria, Georgia, serif" font-size="12" fill="#333">NBD</text>
+  
+  <rect x="180" y="420" width="20" height="16" rx="3" ry="3" fill="#2E7D32"/>
+  <text x="205" y="433" font-family="Calisto MT, Cambria, Georgia, serif" font-size="12" fill="#333">HD1</text>
+  
+  <rect x="255" y="420" width="20" height="16" rx="3" ry="3" fill="#EF6C00"/>
+  <text x="280" y="433" font-family="Calisto MT, Cambria, Georgia, serif" font-size="12" fill="#333">HD2</text>
+  
+  <rect x="330" y="420" width="20" height="16" rx="3" ry="3" fill="#1B5E20"/>
+  <text x="355" y="433" font-family="Calisto MT, Cambria, Georgia, serif" font-size="12" fill="#333">LRR</text>
+  
+  <!-- Mutation marker -->
+  <circle cx="405" cy="428" r="9" fill="#E91E63"/>
+  <text x="418" y="433" font-family="Calisto MT, Cambria, Georgia, serif" font-size="11" fill="#333">Mut</text>
+  
+  <!-- Story context box -->
+  <rect x="15" y="448" width="412" height="40" rx="8" ry="8" fill="#FFEBEE" stroke="#C62828" stroke-width="1.5"/>
+  
+  <!-- Story text - connecting to impaired signaling -->
+  <text x="220" y="465" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="13" fill="#B71C1C">R702W in HD2 allosterically impairs MDP sensing</text>
+  <text x="220" y="481" text-anchor="middle" font-family="Calisto MT, Cambria, Georgia, serif" font-size="13" font-weight="bold" fill="#B71C1C">→ Weakened RIPK2 recruitment (3× Crohn's risk)</text>
+
+</svg>

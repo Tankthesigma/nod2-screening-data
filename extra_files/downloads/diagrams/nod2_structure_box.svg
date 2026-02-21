@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2100" width="1600" height="2100">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- WHITE BACKGROUND with ROUNDED CORNERS -->
+  <rect x="0" y="0" width="1600" height="2100" rx="20" ry="20" fill="white"/>
+  
+  <!-- Main container with rounded corners -->
+  <rect x="0" y="0" width="1600" height="2100" rx="20" ry="20" fill="white" stroke="#E0E0E0" stroke-width="1" filter="url(#shadow)"/>
+  
+  <!-- Header bar with rounded top corners -->
+  <path d="M20,0 L1580,0 Q1600,0 1600,20 L1600,70 L0,70 L0,20 Q0,0 20,0 Z" fill="#DC7E99"/>
+  
+  <!-- Header text -->
+  <text x="800" y="48" font-family="Georgia, serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle">NOD2 Structure and Pathway</text>
+
+</svg>

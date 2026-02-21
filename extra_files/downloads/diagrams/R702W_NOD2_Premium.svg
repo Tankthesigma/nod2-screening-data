@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 600" width="680" height="600">
+  
+  <defs>
+    <!-- Elegant shadow -->
+    <filter id="boxShadow" x="-8%" y="-8%" width="116%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+    
+    <!-- Header gradient - refined red -->
+    <linearGradient id="headerGradMut" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C45C5C"/>
+      <stop offset="100%" style="stop-color:#A34545"/>
+    </linearGradient>
+    
+    <!-- Mutation glow -->
+    <filter id="mutationGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Main container -->
+  <rect x="0" y="0" width="680" height="600" rx="16" ry="16" fill="#FFFFFF" filter="url(#boxShadow)"/>
+  
+  <!-- Subtle border -->
+  <rect x="0" y="0" width="680" height="600" rx="16" ry="16" fill="none" stroke="#F0E5E5" stroke-width="1"/>
+  
+  <!-- Header -->
+  <path d="M0,16 Q0,0 16,0 L664,0 Q680,0 680,16 L680,58 L0,58 Z" fill="url(#headerGradMut)"/>
+  
+  <!-- Header accent line -->
+  <rect x="0" y="56" width="680" height="2" fill="#8B3A3A"/>
+  
+  <!-- Title -->
+  <text x="340" y="38" font-family="Calisto MT, Georgia, serif" font-size="26" font-weight="bold" fill="#FFFFFF" text-anchor="middle">R702W Mutant NOD2</text>
+  
+  <!-- Clean image area -->
+  <rect x="24" y="75" width="632" height="340" rx="8" ry="8" fill="#FFFAFA" stroke="#F5EAEA" stroke-width="1"/>
+  
+  <!-- Mutation callout bar - elegant design -->
+  <rect x="24" y="428" width="632" height="44" rx="6" ry="6" fill="#FFF5F5" stroke="#F0DADA" stroke-width="1"/>
+  
+  <!-- Mutation indicator with glow -->
+  <circle cx="52" cy="450" r="14" fill="#FF00FF" filter="url(#mutationGlow)"/>
+  <circle cx="52" cy="450" r="10" fill="#FF00FF"/>
+  
+  <text x="78" y="446" font-family="Calisto MT, Georgia, serif" font-size="13" font-weight="bold" fill="#A34545">R702W Mutation</text>
+  <text x="78" y="462" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#7A6565">Arginine → Tryptophan at position 702 (HD2 domain)</text>
+  
+  <!-- Distance badge -->
+  <rect x="540" y="438" width="100" height="24" rx="12" ry="12" fill="#A34545"/>
+  <text x="590" y="455" font-family="Calisto MT, Georgia, serif" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">79.4 Å</text>
+  
+  <!-- Section divider -->
+  <line x1="40" y1="488" x2="640" y2="488" stroke="#E8E0E0" stroke-width="1"/>
+  
+  <!-- Domain legend -->
+  <text x="24" y="510" font-family="Calisto MT, Georgia, serif" font-size="12" font-weight="bold" fill="#5A5050" letter-spacing="1.5">DOMAIN ARCHITECTURE</text>
+  
+  <g transform="translate(24, 522)">
+    <!-- CARD -->
+    <rect x="0" y="0" width="20" height="12" rx="2" fill="#7F7F7F"/>
+    <text x="26" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#6A6060">CARD</text>
+    
+    <!-- NBD -->
+    <rect x="85" y="0" width="20" height="12" rx="2" fill="#0000FF"/>
+    <text x="111" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#6A6060">NBD</text>
+    
+    <!-- HD1 -->
+    <rect x="160" y="0" width="20" height="12" rx="2" fill="#008080"/>
+    <text x="186" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#6A6060">HD1</text>
+    
+    <!-- HD2 -->
+    <rect x="235" y="0" width="20" height="12" rx="2" fill="#FFA500"/>
+    <text x="261" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#6A6060">HD2</text>
+    
+    <!-- LRR -->
+    <rect x="310" y="0" width="20" height="12" rx="2" fill="#228B22"/>
+    <text x="336" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#6A6060">LRR</text>
+    
+    <!-- Mutation -->
+    <circle cx="400" cy="6" r="6" fill="#FF00FF"/>
+    <text x="414" y="10" font-family="Calisto MT, Georgia, serif" font-size="11" fill="#6A6060">Mutation</text>
+  </g>
+  
+  <!-- Bottom panel - warning style -->
+  <rect x="24" y="548" width="632" height="38" rx="6" ry="6" fill="#FDF5F5"/>
+  <rect x="24" y="548" width="4" height="38" rx="2" ry="0" fill="#C45C5C"/>
+  
+  <text x="44" y="572" font-family="Calisto MT, Georgia, serif" font-size="12" fill="#6A5555">
+    <tspan font-weight="bold" fill="#A34545">Crohn's Disease Risk Variant</tspan>
+    <tspan fill="#7A6565">  •  3× increased risk  •  Impaired MDP sensing  •  Allosteric effect on LRR binding</tspan>
+  </text>
+  
+</svg>
