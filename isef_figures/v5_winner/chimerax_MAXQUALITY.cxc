@@ -1,0 +1,84 @@
+# ============================================================
+# ISEF 2026 - ChimeraX MAXIMUM QUALITY (Codex Improved)
+# 2 Figures: Full NOD2 + R702W Closeup
+# 6K resolution with ray tracing
+# ============================================================
+
+# Load structure
+open C:/Users/vasud/nod2-screening-data/PHASE_6/structures/NOD2_alphafold_full.pdb
+
+# Display / quality baseline
+set bgColor white
+graphics silhouettes true
+graphics silhouetteWidth 2
+
+# Lighting for publication
+lighting soft
+lighting shadows true
+
+# Cartoon rendering
+cartoon
+cartoon style rounded
+
+# ============================================================
+# FIGURE 1: FULL NOD2 STRUCTURE
+# ============================================================
+
+# Color domains (matching your key)
+color #1:1-93 gray
+color #1:104-191 gray
+color #1:273-577 #0066cc
+color #1:578-628 #00cccc
+color #1:629-743 #ff8c00
+color #1:744-1040 #32cd32
+
+# R702 mutation site - LARGE RED SPHERES
+show #1:702 atoms
+style #1:702 sphere
+color #1:702 red
+size #1:702 atomRadius 2.0
+
+# Binding pocket - LARGE MAGENTA SPHERES
+show #1:1007,1008,1011,1034,1036,1037 atoms
+style #1:1007,1008,1011,1034,1036,1037 sphere
+color #1:1007,1008,1011,1034,1036,1037 magenta
+size #1:1007,1008,1011,1034,1036,1037 atomRadius 1.5
+
+# View
+view orient
+view all
+
+# Output: 6K with supersampling
+save C:/Users/vasud/nod2-screening-data/isef_figures/v5_winner/ppt_photos/fig1_chimerax_full.png width 6000 height 4500 supersample 4
+
+# ============================================================
+# FIGURE 2: R702W MUTATION CLOSEUP
+# ============================================================
+
+# Reset view
+hide atoms
+hide cartoons
+
+# Show region around R702 (residues 690-714)
+show #1:690-714 cartoons
+color #1:690-714 #ff8c00
+
+# Show R702 as sticks - RED
+show #1:702 atoms
+style #1:702 stick
+color #1:702 red
+
+# Show nearby residues as thin sticks
+show #1:697-707&~#1:702 atoms
+style #1:697-707&~#1:702 stick
+color #1:697-707&~#1:702 gray
+
+# Zoom to mutation site
+view #1:702
+
+# Output: 6K with supersampling
+save C:/Users/vasud/nod2-screening-data/isef_figures/v5_winner/ppt_photos/fig2_chimerax_r702w.png width 6000 height 4500 supersample 4
+
+# ============================================================
+# DONE!
+# ============================================================

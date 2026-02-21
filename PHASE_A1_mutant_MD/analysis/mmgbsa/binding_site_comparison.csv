@@ -1,0 +1,13 @@
+resid,resname,febuxostat,natural,category
+1004,LEU,NO,YES,natural_unique
+1007,LEU,YES,YES,shared
+1008,GLU,YES,YES,shared
+1009,ARG,YES,NO,febuxostat_unique
+1010,ASN,YES,NO,febuxostat_unique
+1011,ASP,YES,YES,shared
+1012,THR,YES,NO,febuxostat_unique
+1013,ILE,YES,NO,febuxostat_unique
+1014,LEU,YES,NO,febuxostat_unique
+1034,ARG,NO,YES,natural_unique
+1035,ASP,YES,YES,shared
+1037,ARG,YES,YES,shared

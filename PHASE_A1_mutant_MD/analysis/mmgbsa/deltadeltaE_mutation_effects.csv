@@ -1,0 +1,5 @@
+mutation,ligand,WT_mean,WT_mean_no_outlier,mutant_mean,mutant_mean_no_outlier,DeltaDeltaE_all,DeltaDeltaE_clean,interpretation
+R702W,Febuxostat,-18.9,-24.6,-25.2,-25.2,-6.3,-0.6,Similar binding (outlier-driven artifact)
+R702W,Natural,-25.5,-25.5,-29.4,-29.4,-3.9,-3.9,Stronger binding to mutant (robust)
+G908R,Febuxostat,-18.9,-24.6,-23.3,-27.5,-4.4,-2.9,Stronger binding to mutant
+G908R,Natural,-25.5,-25.5,-24.4,-27.3,+1.1,-1.8,Similar/stronger binding (outlier-driven)

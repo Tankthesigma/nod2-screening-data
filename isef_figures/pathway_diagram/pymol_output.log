@@ -1,0 +1,92 @@
+ PyMOL(TM) Molecular Graphics System, Version 3.1.0.
+ Copyright (c) Schrodinger, LLC.
+ All Rights Reserved.
+ 
+    Created by Warren L. DeLano, Ph.D. 
+ 
+    PyMOL is user-supported open-source software.  Although some versions
+    are freely available, PyMOL is not in the public domain.
+ 
+    If PyMOL is helpful in your work or study, then please volunteer 
+    support for our ongoing efforts to create open and affordable scientific
+    software by purchasing a PyMOL Maintenance and/or Support subscription.
+
+    More information can be found at "http://www.pymol.org".
+ 
+    Enter "help" for a list of commands.
+    Enter "help <command-name>" for information on a specific command.
+
+ Hit ESC anytime to toggle between text and graphics.
+
+ Setting: ray_trace_mode set to 1.
+ Setting: ray_shadow set to on.
+ Setting: ray_shadow_fudge set to 0.60000.
+ Setting: antialias set to 2.
+ Setting: ray_trace_gain set to 0.10000.
+ Setting: cartoon_sampling set to 20.
+ Setting: cartoon_smooth_loops set to on.
+ Setting: cartoon_fancy_helices set to on.
+ Setting: cartoon_tube_radius set to 0.50000.
+ Setting: cartoon_loop_radius set to 0.30000.
+ Setting: cartoon_oval_length set to 1.40000.
+ Setting: cartoon_oval_width set to 0.60000.
+ Setting: ambient set to 0.40000.
+ Setting: direct set to 0.60000.
+ Setting: specular set to 0.30000.
+ Setting: shininess set to 20.00000.
+ Setting: reflect set to 0.00000.
+ Setting: surface_quality set to 2.
+ Setting: orthoscopic set to on.
+ Setting: ray_opaque_background set to 0.
+HEADER                                            01-AUG-25
+TITLE     ALPHAFOLD MONOMER V2.0 PREDICTION FOR NUCLEOTIDE-BINDING
+TITLE    2 OLIGOMERIZATION DOMAIN-CONTAINING PROTEIN 2 (Q9HC29)
+COMPND    MOL_ID: 1;
+COMPND   2 MOLECULE: NUCLEOTIDE-BINDING OLIGOMERIZATION DOMAIN-CONTAINING
+COMPND   3 PROTEIN 2;
+COMPND   4 CHAIN: A
+ ObjectMolecule: Read crystal symmetry information.
+ CmdLoad: "" loaded as "wt_nod2".
+ ObjectMolecule: Read crystal symmetry information.
+ CmdLoad: "" loaded as "r702w_nod2".
+ ObjectMoleculeReadStr: read through molecule 1.
+ ObjectMoleculeReadStr: read through molecule 2.
+ ObjectMoleculeReadStr: read through molecule 3.
+ ObjectMoleculeReadStr: read through molecule 4.
+ ObjectMoleculeReadStr: read through molecule 5.
+ ObjectMoleculeReadStr: read through molecule 6.
+ ObjectMoleculeReadStr: read through molecule 7.
+ ObjectMoleculeReadStr: read through molecule 8.
+ ObjectMoleculeReadStr: read through molecule 9.
+ CmdLoad: "C:/Users/vasud/nod2-screening-data/PHASE_6/structures/natural_top_docked.sdf" loaded as "bufadienolide".
+ ObjectMoleculeReadStr: read through molecule 1.
+ ObjectMoleculeReadStr: read through molecule 2.
+ ObjectMoleculeReadStr: read through molecule 3.
+ ObjectMoleculeReadStr: read through molecule 4.
+ ObjectMoleculeReadStr: read through molecule 5.
+ ObjectMoleculeReadStr: read through molecule 6.
+ ObjectMoleculeReadStr: read through molecule 7.
+ ObjectMoleculeReadStr: read through molecule 8.
+ ObjectMoleculeReadStr: read through molecule 9.
+ CmdLoad: "C:/Users/vasud/nod2-screening-data/PHASE_6/structures/febuxostat_docked.sdf" loaded as "febuxostat".
+ Selector: selection "wt_card1" defined with 731 atoms.
+ Selector: selection "wt_card2" defined with 710 atoms.
+ Selector: selection "wt_nbd" defined with 2419 atoms.
+ Selector: selection "wt_hd1" defined with 392 atoms.
+ Selector: selection "wt_hd2" defined with 880 atoms.
+ Selector: selection "wt_lrr" defined with 2276 atoms.
+ Selector: selection "mut_card1" defined with 1414 atoms.
+ Selector: selection "mut_card2" defined with 1406 atoms.
+ Selector: selection "mut_nbd" defined with 4840 atoms.
+ Selector: selection "mut_hd1" defined with 786 atoms.
+ Selector: selection "mut_hd2" defined with 1757 atoms.
+ Selector: selection "mut_lrr" defined with 4600 atoms.
+ Selector: selection "w702_site" defined with 4 atoms.
+ Selector: selection "wt_binding_res" defined with 47 atoms.
+ Selector: selection "mut_binding_res" defined with 94 atoms.
+ Executive: Colored 731 atoms.
+ Executive: Colored 710 atoms.
+ Executive: Colored 2419 atoms.
+ Executive: Colored 392 atoms.
+ Executive: Colored 880 atoms.
+ Executive: Colored 2276 atoms.

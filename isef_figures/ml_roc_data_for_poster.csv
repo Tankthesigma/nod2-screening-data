@@ -1,0 +1,11 @@
+Fold,AUC
+1,0.87
+2,0.85
+3,0.93
+4,0.89
+5,0.91
+Mean,0.89
+Std,0.03
+Range_Min,0.85
+Range_Max,0.93
+Shuffled_Control,0.50

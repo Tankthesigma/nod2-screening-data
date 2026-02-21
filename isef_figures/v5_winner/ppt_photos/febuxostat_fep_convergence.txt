@@ -1,0 +1,67 @@
+======================================================================
+FEBUXOSTAT FEP CONVERGENCE ANALYSIS
+======================================================================
+Generated: January 2026
+Source: fep_complete/fep_pmx/
+
+MBAR ANALYSIS RESULTS
+----------------------------------------------------------------------
+
+SOLVENT LEG:
+  dG_decouple = 51.067 +/- 0.065 kcal/mol
+  Min adjacent overlap: 0.122 at windows 5-6
+  Adjacent overlaps:
+    0.26 0.19 0.15 0.13 0.12 0.12 0.13 0.14 0.17 0.13
+    0.16 0.22 0.22 0.22 0.20 0.35 0.23 0.20 0.39
+
+WT COMPLEX LEG:
+  dG_decouple = 55.070 +/- 0.081 kcal/mol
+  Min adjacent overlap: 0.131 at windows 9-10
+  Adjacent overlaps:
+    0.27 0.19 0.16 0.14 0.14 0.13 0.14 0.15 0.19 0.13
+    0.19 0.24 0.23 0.22 0.35 0.22 0.18 0.17 0.35
+
+MUT COMPLEX LEG (R702W):
+  dG_decouple = 54.074 +/- 0.090 kcal/mol
+  Min adjacent overlap: 0.128 at windows 9-10
+  Adjacent overlaps:
+    0.25 0.19 0.16 0.14 0.13 0.13 0.13 0.15 0.18 0.13
+    0.20 0.23 0.24 0.22 0.35 0.17 0.15 0.20 0.32
+
+======================================================================
+CONVERGENCE METRICS
+======================================================================
+
+Overlap Assessment:
+  Solvent:     min = 0.122 (>3% threshold) [PASS]
+  WT complex:  min = 0.131 (>3% threshold) [PASS]
+  MUT complex: min = 0.128 (>3% threshold) [PASS]
+
+  All adjacent overlaps > 3%: YES
+  Convergence status: GOOD
+
+Statistical Significance:
+  DDG significance: 8 sigma (p < 0.001)
+
+======================================================================
+FINAL VERIFIED VALUES (from create_master_summary.py)
+======================================================================
+
+  Febuxostat:
+    dG_bind (WT):    -10.36 +/- 0.18 kcal/mol
+    dG_bind (R702W): -8.02 +/- 0.19 kcal/mol
+    DDG:             +2.34 kcal/mol
+    Significance:    8 sigma (p < 0.001)
+    Interpretation:  50x weaker binding in R702W mutant
+
+======================================================================
+COMPARISON: FEBUXOSTAT vs BUFADIENOLIDE
+======================================================================
+
+                    Febuxostat      Bufadienolide
+Min overlap (WT):   0.131           0.054
+Min overlap (MUT):  0.128           0.040
+DDG:                +2.34           -0.44
+Significance:       8 sigma ***     1.8 sigma (NS)
+
+Febuxostat shows BETTER convergence than Bufadienolide.

@@ -1,0 +1,38 @@
+# ChimeraX FIXED script - correct syntax
+# Run: open C:/Users/vasud/nod2-screening-data/isef_figures/v5_winner/chimerax_FIXED.cxc
+
+# Load structure
+open C:/Users/vasud/nod2-screening-data/PHASE_6/structures/NOD2_alphafold_full.pdb
+
+# Background and lighting
+set bgColor white
+lighting soft
+
+# Show cartoon
+cartoon
+
+# Color domains
+color :1-93 gray
+color :104-191 gray
+color :273-577 #0066cc
+color :578-628 #00cccc
+color :629-743 #ff8c00
+color :744-1040 #32cd32
+
+# R702 - RED SPHERES
+show :702 atoms
+style :702 sphere
+color :702 red
+size :702 atomRadius 2.0
+
+# Binding pocket - MAGENTA SPHERES
+show :1007,1008,1011,1034,1036,1037 atoms
+style :1007,1008,1011,1034,1036,1037 sphere
+color :1007,1008,1011,1034,1036,1037 magenta
+size :1007,1008,1011,1034,1036,1037 atomRadius 1.5
+
+# Orient
+view
+
+# Save Figure 1
+save C:/Users/vasud/nod2-screening-data/isef_figures/v5_winner/ppt_photos/fig1_chimerax_full.png width 6000 height 4500 supersample 4

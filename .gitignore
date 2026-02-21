@@ -37,3 +37,31 @@ Thumbs.db
 *.tmp
 *.temp
 .aider*
+nul
+
+# Massive local-only directories (too large for any git host)
+mechanism_validation/
+PHASE_A1_mutant_MD/vast_downloads/
+PHASE_A1_mutant_MD/trajectories/
+PHASE_A1_mutant_MD/checkpoints/
+fep_complete/
+fep_pmx/
+fep_pmx_natural/mut_complex/
+fep_pmx_natural/wt_complex/
+fep_pmx_natural/solvent/
+fep_pmx_canary/
+fep_study/
+
+# Large archive files (>100MB, need LFS or Azure DevOps)
+PHASE_6/5090_1_extras.tar.gz
+PHASE_6/5090_2_extras.tar.gz
+fep_natural_deploy.tar
+fep_pmx_complete.zip
+fep_pmx_natural_complete.tar.gz
+mut_results.tar
+wt_results.tar
+fep_data.tar.gz
+solvent_fep_deployment.zip
+
+# CLAUDE.md files (auto-generated)
+**/CLAUDE.md

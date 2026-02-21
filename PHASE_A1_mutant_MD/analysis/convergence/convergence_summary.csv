@@ -1,0 +1,10 @@
+system,ligand,avg_range,pct_converged,notes
+G908R,Febuxostat,3.592000000000033,100.0,All replicates converged
+G908R,Natural,5.890666666666742,33.333333333333336,1/3 converged
+R702W,Febuxostat,4.229333333333366,66.66666666666667,2/3 converged
+R702W,Natural,15.346666666666826,0.0,NO replicates converged
+WT,Budesonide,5.8813333333333775,66.66666666666667,2/3 converged
+WT,Decoy,2.3799999999999977,100.0,All replicates converged
+WT,Febuxostat,7.406666666666698,33.333333333333336,1/3 converged
+WT,Natural,13.237333333333423,33.333333333333336,1/3 converged
+WT,Ursodiol,13.661333333333431,66.66666666666667,2/3 converged
